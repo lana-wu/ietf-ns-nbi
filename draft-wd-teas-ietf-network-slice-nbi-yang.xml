@@ -1,0 +1,1781 @@
+<?xml version="1.0" encoding="US-ASCII"?>
+<!-- edited with XMLSPY v5 rel. 3 U (http://www.xmlspy.com)
+     by Daniel M Kohn (private) -->
+<!DOCTYPE rfc SYSTEM "rfc2629.dtd" [
+<!ENTITY rfc2119 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.2119.xml">
+<!ENTITY RFC3775 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.3775.xml">
+<!ENTITY RFC4225 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.4225.xml">
+<!ENTITY RFC4866 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.4866.xml">
+<!ENTITY RFC5213 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.5213.xml">
+<!-- added by sjjeong: -->
+<!ENTITY I-D.ietf-netlmm-pmip6-ipv4-support PUBLIC "" "http://xml.resource.org/public/rfc/bibxml3/reference.I-D.ietf-netlmm-pmip6-ipv4-support.xml">
+<!ENTITY I-D.ietf-netlmm-grekey-option PUBLIC "" "http://xml.resource.org/public/rfc/bibxml3/reference.I-D.ietf-netlmm-grekey-option.xml">
+]>
+<rfc category="std" docName="draft-wd-teas-ietf-network-slice-nbi-yang-01"
+     ipr="trust200902">
+  <?xml-stylesheet type='text/xsl' href='rfc2629.xslt' ?>
+
+  <?rfc toc="yes" ?>
+
+  <?rfc symrefs="yes" ?>
+
+  <?rfc sortrefs="yes"?>
+
+  <?rfc iprnotified="no" ?>
+
+  <?rfc strict="yes" ?>
+
+  <front>
+    <title abbrev="IETF Network Slice NBI YANG model">A Yang Data Model for
+    IETF Network Slice NBI</title>
+
+    <author fullname="Bo Wu" initials="B." surname="Wu">
+      <organization>Huawei Technologies</organization>
+
+      <address>
+        <postal>
+          <street>101 Software Avenue, Yuhua District</street>
+
+          <city>Nanjing</city>
+
+          <region>Jiangsu</region>
+
+          <code>210012</code>
+
+          <country>China</country>
+        </postal>
+
+        <email>lana.wubo@huawei.com</email>
+      </address>
+    </author>
+
+    <author fullname="Dhruv Dhody" initials="D." surname="Dhody">
+      <organization>Huawei Technologies</organization>
+
+      <address>
+        <postal>
+          <street>Divyashree Techno Park</street>
+
+          <city>Bangalore</city>
+
+          <region>Karnataka</region>
+
+          <code>560066</code>
+
+          <country>India</country>
+        </postal>
+
+        <email>dhruv.ietf@gmail.com</email>
+      </address>
+    </author>
+
+    <author fullname="Liuyan Han" initials="L." surname="Han">
+      <organization>China Mobile</organization>
+
+      <address>
+        <email>hanliuyan@chinamobile.com</email>
+      </address>
+    </author>
+
+    <author fullname="Reza Rokui" initials="R." surname="Rokui">
+      <organization>Nokia</organization>
+
+      <address>
+        <email>reza.rokui@nokia.com</email>
+      </address>
+    </author>
+
+    <date year="2021"/>
+
+    <area>Routing Area</area>
+
+    <workgroup/>
+
+    <abstract>
+      <t>This document provides a YANG data model for the IETF Network Slice
+      NBI (Northbound Interface). The model can be used by a higher level
+      system to request configuration, and management IETF Network Slices from
+      IETF Network Slice Controller (NSC).</t>
+
+      <t>The YANG modules in this document conforms to the Network Management
+      Datastore Architecture (NMDA) defined in RFC 8342.</t>
+    </abstract>
+  </front>
+
+  <middle>
+    <section title="Introduction">
+      <t>This document provides a YANG <xref target="RFC7950"/> data model for
+      the IETF Network Slice NBI.</t>
+
+      <t>The YANG model discussed in this document is defined based on the
+      description of the IETF Network Slice in <xref
+      target="I-D.ietf-teas-ietf-network-slice-definition"/> and <xref
+      target="I-D.nsdt-teas-ns-framework"/>, which is used to operate IETF
+      Network Slice during the IETF Network Slice instantiation. This YANG
+      model supports various oprations on IETF Network Slices such as
+      creation, modification, deletion, and monitoring of IETF Network
+      Slices.</t>
+
+      <t>The IETF Network Slice Controller (NSC) provides a Northbound
+      Interface (NBI) that allows consumers of network slices to request and
+      monitor IETF network slices. Consumers operate on abstract IETF network
+      slices, with details related to their realization hidden. </t>
+
+      <t>The NSC takes requests from a management system or other application
+      via an NBI. This interface carries data objects the IETF network slice
+      user provides, describing the needed IETF network slices in terms of
+      topology, applicable service level objectives (SLO), and any monitoring
+      and reporting requirements that may apply. The NBI conveys the generic
+      IETF network slice requirements. These may then be realized using an SBI
+      within the NSC. </t>
+
+      <t>The YANG model discussed in this document describes the requirements
+      of an IETF Network Slice from the point of view of the consumer, which
+      is classified as Customer Service Model in <xref target="RFC8309"/>.</t>
+
+      <t>It will be up to the management system or NSC (IETF Network Slice
+      controller) to take this model as an input and use other management
+      system or specific configuration models to configure the different
+      network elements to deliver an IETF Network Slice. The YANG models can
+      be used with network management protocols such as NETCONF <xref
+      target="RFC6241"/> or RESTCONF <xref target="RFC8040"/>. The details of
+      how the IETF network slices are realized by NSC is out of scope for this
+      document.</t>
+
+      <t>The IETF Network Slice operational state is included in the same tree
+      as the configuration consistent with Network Management Datastore
+      Architecture <xref target="RFC8342"/>.</t>
+    </section>
+
+    <section title="Conventions used in this document">
+      <t>The keywords "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT",
+      "SHOULD", "SHOULD NOT", "RECOMMENDED", "NOT RECOMMENDED", "MAY", and
+      "OPTIONAL" in this document are to be interpreted as described in BCP14,
+      <xref target="RFC2119"/>, <xref target="RFC8174"/> when, and only when,
+      they appear in all capitals, as shown here.</t>
+
+      <t>The following terms are defined in <xref target="RFC6241"/> and are
+      used in this specification: <list style="symbols">
+          <t>client</t>
+
+          <t>configuration data</t>
+
+          <t>state data</t>
+        </list></t>
+
+      <t>This document makes use of the following terminology introduced in
+      the YANG 1.1 Data Modeling Language <xref target="RFC7950"/>: <list
+          style="symbols">
+          <t>augment</t>
+
+          <t>data model</t>
+
+          <t>data node</t>
+        </list></t>
+
+      <t>This document also makes use of the following terminology introduced
+      in the IETF Network Slice definition draft <xref
+      target="I-D.ietf-teas-ietf-network-slice-definition"/>:</t>
+
+      <t><list style="symbols">
+          <t>DAN: Device,Application,Network Function</t>
+
+          <t>NBI: Northbound Interface</t>
+
+          <t>NS: IETF Network Slice</t>
+
+          <t>NSC: IETF Network Slice Controller</t>
+
+          <t>NSE: Network Slice Endpoint</t>
+
+          <t>SLO: Service Level Objective</t>
+        </list></t>
+
+      <t>This document defines the following new terminology: <list
+          style="symbols">
+          <t>IETF Network Slice Member (Network-Slice-Member): In context of
+          an IETF Network Slice, an IETF Network-Slice-Member is an abstract
+          entity which represents a particular connection between a pair of
+          NSEs. An IETF Network Slice can has one or multiple members.</t>
+        </list></t>
+
+      <section anchor="tree-diagrams" title="Tree Diagrams">
+        <t>Tree diagrams used in this document follow the notation defined in
+        <xref target="RFC8340"/>.</t>
+      </section>
+    </section>
+
+    <section title="IETF Network Slice NBI Model Usage">
+      <t>The intention of the IETF Network Slice NBI model is to allow the
+      consumer, e.g. a higher level management system, to request and monitor
+      IETF Network Slices. In particular, the model allows consumers to
+      operate in an abstract, technology-agnostic manner, with realization
+      details hidden.</t>
+
+      <t>According to the <xref
+      target="I-D.ietf-teas-ietf-network-slice-definition"/> description, the
+      NBI model is applicable to use case such as (but not limited to) Network
+      wholesale services, Network infrastructure sharing among operators, NFV
+      connectivity and Data Center Interconnect and 5G E2E network slice.</t>
+
+      <t>As <xref target="ns-arch"/> shows, in all these use-cases, the NBI
+      model is used by the higher management system (i.e the consumer of the
+      IETF network slice controller ) to communicate with IETF Network Slice
+      controller for life cycle manage of IETF Network Slices including both
+      enablement and monitoring. For example, in 5G E2E network slicing
+      use-case the E2E network slice orchestrator acts as the higher layer
+      system to request the IETF Network Slices. The interface is used to
+      support dynamic IETF Network Slice creation and its lifecycle management
+      to facilitate end-to-end network slice services. </t>
+
+      <figure anchor="ns-arch" title="IETF Network Slice NBI Model Context ">
+        <artwork><![CDATA[          +----------------------------------------+
+          |   IETF Network Slice Consumer          |
+          |                                        |
+          +----------------+-----------------------+
+                           |
+                           |
+                           |IETF Network Slice NBI YANG
+                           |
+     +---------------------+--------------------------+
+     |      IETF Network Slice Controller (NSC)       |
+     +------------------------------------------------+
+]]></artwork>
+      </figure>
+    </section>
+
+    <section title="IETF Network Slice NBI Model Overview">
+      <t>As defined in <xref
+      target="I-D.ietf-teas-ietf-network-slice-definition"/>, an IETF network
+      slice is a logical network topology connecting a number of endpoints
+      with SLO specified. The topology can be a point-to-point or
+      multipoint-to-multipoint topology. The endpoint is named as NSE (Network
+      Slice Endpoint). In addition, a minimum set of SLOs is defined,
+      including but not limited to bandwidth, delay, and etc.</t>
+
+      <t>Regarding the definition draft, though the boundary of the IETF
+      network slice is on the edge device of the IETF network, there are two
+      types of network slice endpoints (NSEs). From a consumer perspective,
+      two examples of an IETF Network Slice are shown below.</t>
+
+      <figure anchor="ns-eg1" title="NSE in Customer Scoped Network">
+        <artwork><![CDATA[                       IETF scoped Network
+  DAN1         +---------------------------------+       DAN3
++--------+    +------+                           |     +--------+
+|     o  +---o|  A   |                     +------+    |        |
+|   NSE1 +---o|      |                     |  C   |o---+        |
++--------+    +------+                     +------+    |        |
+               |                                 |     |  o     |
++--------+     |                           +------+    |  NSE3  |
+|        |    +------+                     |  D   |o---+        |
+|        o---o|  B   |                     +------+    |        |
+|   NSE2 |    +------+                           |     |        |
++--------+     |                                 |     +--------+
+  DAN2         +---------------------------------+
+      |                                                       |
+      |                                                       |
+      |<----------------IETF Network Slice 1----------------->|
+Legend:DAN (Device,Application,Network Function)
+]]></artwork>
+      </figure>
+
+      <t>As shown in <xref target="ns-eg1"/>, an IETF Network Slice (NS) could
+      link together NSEs at the DANs in customer network, which are endpoints
+      that request an IETF Network Slice. At each customer DAN or IETF Network
+      edge device, one or multiple NSEs could be connected to the IETF Network
+      Slice.</t>
+
+      <t><figure anchor="ns-eg2" title="NSEs in IETF scoped Network">
+          <artwork><![CDATA[ Customer  |           IETF scoped Network           |   Customer
+ Network   |   +---------------------------------+   |   Network
++--------+ |  +------+                           |   | +--------+
+|        o----+ o  A |                     +------+NSE3|        |
+|        o----+ NSE1 |                     |  C   |o---+        |
++--------+ |  +------+                     +------+  | |        |
+           |                                     |   | |        |
++--------+ |   |                           +------+  | |        |
+|        | |  +------+                     |  D   |o---+        |
+|        o---o|NSE2 B|                     +------+NSE4|        |
+|        | |  +------+                           |   | |        |
++--------+ |   |                                 |   | +--------+
+           |   +---------------------------------+   |
+           |                                         |
+           |                                         |
+           |<-----------IETF Network Slice 1-------->|
+           |                                         |
+]]></artwork>
+        </figure></t>
+
+      <t>As shown in <xref target="ns-eg2"/>, an IETF Network Slice (NS) could
+      also ink together NSEs at the IETF Network edge devices.</t>
+
+      <t>The IETF Network Slice ("ietf-network-slice") is defined to manage
+      network slices in the IETF network. In particular, the
+      'ietf-network-slice' module can be used to create, modify, and monitor
+      network slices of an IETF network.</t>
+
+      <t>The 'ietf-network-slice' module uses two main nodes: list
+      'ietf-network-slice' and container 'ns-templates' (see <xref
+      target="ns-yang"/>).</t>
+
+      <t>The 'ietf-network-slice' list includes the set of IETF Network slices
+      managed within IETF network. 'ietf-network-slice' is the data structure
+      that abstracts an IETF Network Slice. Under the "ietf-network-slice",
+      list "ns-endpoint" is used to cover both NSE types in the examples
+      above. This model does not distinguish the two types of NSEs. For the
+      NSC, how the type of NSE is decided to use is out of scope for this
+      document.</t>
+
+      <t>The 'ns-templates' container is used by the NSC to maintain a set of
+      common network slice templates that apply to one or several IETF Network
+      Slices.</t>
+
+      <t>The figure below describes the overall structure of the YANG
+      module:</t>
+
+      <figure anchor="ns-yang">
+        <artwork><![CDATA[module: ietf-network-slice
+  +--rw ietf-network-slices
+     +--rw ns-templates
+     |  +--rw slo-template* [id]
+     |     +--rw id                      string
+     |     +--rw template-description?   string
+     +--rw ietf-network-slice* [ns-id]
+        +--rw ns-id                 string
+        +--rw ns-description?       string
+        +--rw ns-tag*               string
+        +--rw ns-topology?          identityref
+        +--rw (ns-slo-policy)?
+        |  +--:(standard)
+        |  |  +--rw slo-template?   -> /ietf-network-slices/ns-templates/slo-template/id
+        |  +--:(custom)
+        |     +--rw slo-policy
+        |        +--rw policy-description?   string
+        |        +--rw ns-metric-bounds
+        |           +--rw ns-metric-bound* [metric-type]
+        |              +--rw metric-type          identityref
+        |              +--rw metric-unit          string
+        |              +--rw value-description?   string
+        |              +--rw boundary?            uint64
+        +--rw status
+        |  +--rw admin-enabled?   boolean
+        |  +--ro oper-status?     operational-type
+        +--rw ns-endpoint* [ep-id]
+        |  +--rw ep-id                string
+        |  +--rw ep-description?      string
+        |  +--rw ep-role*             identityref
+        |  +--rw location
+        |  |  +--rw altitude?    int64
+        |  |  +--rw latitude?    decimal64
+        |  |  +--rw longitude?   decimal64
+        |  +--rw node-id?             string
+        |  +--rw ep-ip?               inet:host
+        |  +--rw ns-match-criteria
+        |  |  +--rw ns-match-criteria* [match-type]
+        |  |     +--rw match-type    identityref
+        |  |     +--rw value?        string
+        |  +--rw ep-ingress-links* [ep-access-id]
+        |  |  +--rw ep-ingress-id             string
+        |  |  +--rw ep-ingress-description?   string
+        |  |  +--rw tp-id?                   string
+        |  |  +--rw tp-ip?                   inet:host
+        |  +--rw rate-limit
+        |  |  +--rw incoming-throughput
+        |  |  |  +--rw maximum-throughput?   te-types:te-bandwidth
+        |  |  +--rw outgoing-throughput
+        |  |     +--rw maximum-throughput?   te-types:te-bandwidth
+        |  +--rw routing
+        |  +--rw status
+        |  |  +--rw admin-enabled?   boolean
+        |  |  +--ro oper-status?     operational-type
+        |  +--ro ep-monitoring
+        |     +--ro incoming-utilized-bandwidth?   te-types:te-bandwidth
+        |     +--ro incoming-bw-utilization        decimal64
+        |     +--ro outgoing-utilized-bandwidth?   te-types:te-bandwidth
+        |     +--ro outgoing-bw-utilization        decimal64
+        +--rw ns-member* [ns-member-id]
+           +--rw ns-member-id             uint32
+           +--rw ns-member-description?   string
+           +--rw src
+           |  +--rw src-ep-id?   -> /ietf-network-slices/ietf-network-slice/ns-endpoint/ep-id
+           +--rw dest
+           |  +--rw dest-ep-id?   -> /ietf-network-slices/ietf-network-slice/ns-endpoint/ep-id
+           +--rw monitoring-type?         ns-monitoring-type
+           +--ro ns-member-monitoring
+              +--ro latency?      yang:gauge64
+              +--ro jitter?       yang:gauge32
+              +--ro loss-ratio?   decimal64
+
+]]></artwork>
+      </figure>
+    </section>
+
+    <section title="IETF Network Slice templates">
+      <t>The 'ns-templates' container (<xref target="ns-yang"/>) is used by
+      service provider of the NSC to define and maintain a set of common IETF
+      Network Slice tempates that apply to one or several IETF Network Slices.
+      The exact definition of the profiles is deployment specific to each
+      network provider. The model includes only the identifiers of
+      SLO-templates. When creation of IETF Network slice, the SLO policies can
+      be easily identified.</t>
+
+      <t>The following shows an example where two network slice templates can
+      be retrieved by the upper layer management system:<figure>
+          <artwork><![CDATA[{
+  "ietf-network-slices": { 
+    "ns-templates": {   
+      "slo-template": [
+       {
+         "id":"GOLD-template",
+         "template-description": "Bandwidth: 1 Gbps, delay 100ms "
+        },
+       {
+         "id":"PLATINUM-template",
+         "template-description": "Bandwidth: 1 Gbps, delay 50ms "
+        },
+       ],
+      }
+   }
+}
+]]></artwork>
+        </figure></t>
+
+      <t/>
+    </section>
+
+    <section title="IETF Network Slice Modeling Description">
+      <t>The 'ietf-network-slice' is the data structure that abstracts an IETF
+      Network Slice of the IETF network. Each ''ietf-network-slice' is
+      uniquely identified by an identifier: 'ns-id'.</t>
+
+      <t>An IETF Network Slice has the following main parameters:</t>
+
+      <t><list style="symbols">
+          <t>"ns-id": Is an identifier that is used to uniquely identify the
+          IETF Network Slice within NSC.</t>
+
+          <t>"ns-description": May be provided to help identify an IETF
+          Network Slice.</t>
+
+          <t>"ns-topology": Indicates the network topology for the IETF
+          Network Slice: Hub-Spoke, Any-to-Any, and Custom</t>
+
+          <t>"status": Enable the control of the operative and administrative
+          status of the IETF Network Slice, can be used as indicator to detect
+          network slice anomalies.</t>
+
+          <t>"ns-tag": The list is to show the correlation between higher
+          level function and the IETF network slices. If provided, this
+          parameter may be used by IETF Network Slice Controller (NSC) during
+          the realization. It may also be used by NSC for monitoring and
+          assurance of the IETF network slices where NSC can notify the higher
+          system by issuing the notifications. It is noted that a single
+          higher level consumer might have multiple IETF Network Slices for a
+          single application. This attribute may be used by NSC to also
+          correlated multiple IETF network slices for a single
+          application.</t>
+
+          <t>"ns-slo-policy": Defines SLO policy for the "ietf-network-slice".
+          More description are provided in <xref target="ns-topo"/></t>
+        </list></t>
+
+      <t>The "ns-endpoint" is an abstrac entity that represents a set of
+      matching rules applied to an IETFnetwork edge device or a customer
+      network edge device involved in the IETF Network Slice and each
+      'ns-endpoint' belongs to a single 'ietf-network-slice'. More description
+      are provided in <xref target="nse"/></t>
+
+      <section anchor="ns-topo" title="IETF Network Slice Topology">
+        <t>An IETF Network Slice can be point-to-point (P2P),
+        point-to-multipoint (P2MP), multipoint-to-point (MP2P), or
+        multipoint-to-multipoint (MP2MP) based on the consumer's traffic
+        pattern requirements.</t>
+
+        <t>Therefore, the "ns-topology" under the node "ietf-network-slice" is
+        required for configuration. The model supports any-to-any, Hub and
+        Spoke (where Hubs can exchange traffic), and the different
+        combinations. New topologies could be added via augmentation. By
+        default, the any-to-any topology is used.</t>
+
+        <t>In addition, "ep-role" under the node "ns-endpoint" also needs to
+        be defined, which specifies the role of the NSE in a particular
+        Network Slice topology. In the any-to-any topology, all NSEs MUST have
+        the same role, which will be "any-to-any-role". In the Hub-and-Spoke
+        topology, NSEs MUST have a Hub role or a Spoke role.</t>
+      </section>
+
+      <section title="IETF Network Slice SLO Policy">
+        <t>As defined in <xref
+        target="I-D.ietf-teas-ietf-network-slice-definition"/>, the SLO policy
+        of an IETF Network Slice defines the minimum IETF Network Slice SLO
+        attributes, and additional attributes can be added as needed.</t>
+
+        <t>"ns-slo-policy" is used to represent a specific SLO policy. During
+        the creation of an IETF Network Slice, the policy can be specified
+        either by a standard SLO template or a customized SLO policy.</t>
+
+        <t>The model allows multiple SLO attributes to be combined to meet the
+        SLO requirements of different IETF NSs. For example, some NSs are used
+        for video services and require high bandwidth, some NSs are used for
+        key business services and request low latency and reliability, and
+        some NSs need to provide connections for a large number of NSEs. That
+        is, not all SLO attributes must be specified to meet the particular
+        requirements of a slice.</t>
+
+        <t>&rdquo;ns-metric-bounds&ldquo; contains all these variations, which
+        includes a list of "ns-metric-bound" and each "ns-metric-bound" could
+        specify a particular &rdquo;metric-type&ldquo;. &rdquo;metric-type" is
+        defined with YANG identity and the YANG module supports the following
+        options:</t>
+
+        <t><list style="hanging">
+            <t>"network-slice-slo-bandwidth": Indicates the guaranteed minimum
+            bandwidth between any two NSE. The unit is data rate per second.
+            And the bandwidth is unidirectional.</t>
+
+            <t>"network-slice-slo-one-way-delay": Indicates the maximum
+            one-way latency between two NSE. The unit is micro seconds.</t>
+
+            <t>"network-slice-slo-two-way-delay": Indicates the maximum round
+            trip latency between two NSE. The unit is micro seconds.</t>
+
+            <t>"network-slice-slo-jitter": Indicates the jitter constraint of
+            the slice maximum permissible delay variation, and is measured by
+            the difference in the one- way delay between sequential packets in
+            a flow.</t>
+
+            <t>"network-slice-slo-loss": Indicates maximum permissible packet
+            loss rate, which is defined by the ratio of packets dropped to
+            packets transmitted between two endpoints.</t>
+
+            <t>"network-slice-slo-availability": Is defined as the ratio of
+            up-time to total_time(up-time+down-time), where up-time is the
+            time the IETF Network Slice is available in accordance with the
+            SLOs associated with it.</t>
+          </list></t>
+
+        <t>Some other Network Slice objectives, such as MTU and security which
+        can be added when needed. MTU specifies the maximum packet length that
+        the network slice guarantee to be able to carry across.</t>
+
+        <t>Note: About the definition of SLO parameters, the author is
+        discussing to reuse the TE-Types grouping definition as much as
+        possible, to avoid duplication of definitions.</t>
+
+        <t>The following shows an example where a network slice policy can be
+        configured:<figure>
+            <artwork><![CDATA[{
+  "ietf-network-slices": { 
+    "ietf-network-slice": { 
+      "slo-policy": {
+        "policy-description":"video-service-policy",
+        "ns-metric-bounds": {
+            "ns-metric-bound": [
+             {
+                "metric-type": "network-slice-slo-bandwidth",
+                "metric-unit": "mbps"
+                "boundary": "1000"
+             },
+             {
+                "metric-type": "network-slice-slo-availability",
+                "boundary": "99.9%"
+             }, 
+            ],
+         }   
+      }
+    }
+  }
+} ]]></artwork>
+          </figure></t>
+      </section>
+
+      <section anchor="nse" title="IETF Network Slice Endpoint (NSE)">
+        <t>An IETF Network Slice Endpoint has several characteristics:</t>
+
+        <t><list style="symbols">
+            <t>&rdquo;ep-id&ldquo;: Uniquely identifies the NSE within Network
+            Slice Controller (NSC). The identifier is a string that allows any
+            encoding for the local administration of the IETF Network
+            Slice.</t>
+
+            <t>"location": is NSE location information that facilities NSC
+            easy identification of a NSE.</t>
+
+            <t>Topology role: An IETF Network Slice has a particular service
+            topology, as described in <xref target="ns-topo"/>. As a
+            consequence, each NSE belonging to a IETF network slice is
+            assigned with a particular role in this topology. The ep-role leaf
+            defines the role of the endpointin a particular VPN topology. In
+            the any-to-any VPN service topology, all sites MUST have the same
+            role, which will be "any-to-any-role".</t>
+
+            <t>"node-id": is NSE node information that facilities NSC easy
+            identification of a NSE.</t>
+
+            <t>"ep-ip": is NSE IP information that facilities NSC easy
+            identification of a NSE.</t>
+
+            <t>"ns-match-criteria": Is used to define matching policies to
+            apply on a given NSE.</t>
+
+            <t>"ep-ingress-links": Is the list that includes the interfaces
+            attached to an edge device of the IETF Network Slice by which the
+            customer traffic is received.</t>
+
+            <t>"ep-rate-limit": Is to set rate-limiting policies to apply on a
+            given NSE, including ingress and egress traffic to ensure access
+            security. When applied in the incoming direction, the rate-limit
+            is applicable to the traffic from the NSE to the IETF scope
+            Network that passes through the external interface. When Bandwidth
+            is applied to the outgoing direction, it is applied to the traffic
+            from the IETF Network to the NSE of that particular NS.</t>
+
+            <t>"status": Enable the control of the operative and
+            administrative status of the NSE, can be used as indicator to
+            detect NSE anomalies.</t>
+          </list></t>
+
+        <t>An NSE belong to a single IETF Network Slice. An IETF Network Slice
+        involves two or more NSEs. An IETF Network Slice can be modified by
+        adding new "ns-endpoint" or removing existing "ns-endpoint".</t>
+
+        <t>A NSE is used to define the matching policy on the customer traffic
+        that can be injected to an IETF Network Slice. Classification can be
+        based on many criteria such as:</t>
+
+        <t><list style="symbols">
+            <t>a physical interface: Indicates all the traffic received from
+            the interface belongs to the IETF Network Slice.</t>
+
+            <t>a logical interface: for example, a given VLAN ID is used to
+            identify an IETF Network Slice.</t>
+
+            <t>Encapsulation in the traffic header: for example, a source IP
+            address is used to identify an IETF Network Slice.</t>
+          </list></t>
+
+        <t>"network-slice-match-criteria" is defined to support all these
+        options.</t>
+
+        <t>Additionally, a number of slice interconnection parameters need to
+        be agreed with a customer DAN and the IETF network, such as routing
+        etc. "routing" container is provided for further augmentation.</t>
+
+        <t/>
+      </section>
+    </section>
+
+    <section title="IETF Network Slice Monitoring ">
+      <t>An IETF Network Slice is a connectivity with specific SLO
+      characteristics, including bandwidth, QoS metric, etc. The connectivity
+      is a combination of logical connections, represented by
+      Network-Slice-Members.</t>
+
+      <t>This model also describes performance status of an IETF Network
+      Slice. The statistics are described in the following granularity:<list
+          style="symbols">
+          <t>Per NS connection: specified in 'network-slice-member-monitoring'
+          under the "network-slice-member"</t>
+
+          <t>Per NS Endpoint: specified in 'endpoint-monitoring' under the
+          "network-slice-endpoint"</t>
+        </list></t>
+
+      <t>This model does not define monitoring enabling methods. The mechanism
+      defined in <xref target="RFC8640"/> and <xref target="RFC8641"/> can be
+      used for either periodic or on-demand subscription.</t>
+
+      <t>By specifying subtree filters or xpath filters to 'ns-member' or
+      'ns-endpoint' ,so that only interested contents will be sent. These
+      mechanisms can be used for monitoring the IETF Network Slice performance
+      status so that the client management system could initiate modification
+      based on the IETF Network Slice running status.</t>
+
+      <t/>
+    </section>
+
+    <section title="IETF Network Slice NBI Module">
+      <figure>
+        <artwork><![CDATA[<CODE BEGINS> file "ietf-network-slice@2021-01-27.yang"
+module ietf-network-slice {
+  yang-version 1.1;
+  namespace "urn:ietf:params:xml:ns:yang:ietf-network-slice";
+  prefix ietf-ns;
+
+  import ietf-inet-types {
+    prefix inet;
+  }
+  import ietf-yang-types {
+    prefix yang;
+    reference
+      "RFC 6991: Common YANG Types.";
+  }
+  import ietf-te-types {
+    prefix te-types;
+  }
+
+  organization
+    "IETF Traffic Engineering Architecture and Signaling (TEAS)
+     Working Group";
+  contact
+    "WG Web:  <https://tools.ietf.org/wg/teas/>
+     WG List:  <mailto:teas@ietf.org>
+     Editor: Bo Wu <lana.wubo@huawei.com>
+           : Dhruv Dhody <dhruv.ietf@gmail.com>";
+  description
+    "This module contains a YANG module for the IETF Network Slice.
+
+     Copyright (c) 2021 IETF Trust and the persons identified as
+     authors of the code.  All rights reserved.
+
+     Redistribution and use in source and binary forms, with or
+     without modification, is permitted pursuant to, and subject to
+     the license terms contained in, the Simplified BSD License set
+     forth in Section 4.c of the IETF Trust's Legal Provisions
+     Relating to IETF Documents
+     (http://trustee.ietf.org/license-info).
+
+     This version of this YANG module is part of RFC XXXX; see the
+     RFC itself for full legal notices.";
+
+  revision 2021-01-27 {
+    description
+      "initial version.";
+    reference
+      "RFC XXXX: A Yang Data Model for IETF Network Slice Operation";
+  }
+
+  /* Features */
+  /* Identities */
+
+  identity network-slice-topology {
+    description
+      "Base identity for IETF Network Slice topology.";
+  }
+
+  identity point-to-point {
+    base network-slice-topology;
+    description
+      "Identity for point-to-point (P2P) IETF Network Slice topology.";
+  }
+
+  identity point-to-multipoint {
+    base network-slice-topology;
+    description
+      "Identity for point to multipoint (P2MP) IETF Network Slice topology.";
+  }
+
+  identity multipoint-to-multipoint {
+    base network-slice-topology;
+    description
+      "Identity for multi-point to multi-point (MP2MP) IETF Network
+       Slice topology.";
+  }
+
+  identity endpoint-role {
+    description
+      "Network Slice Endpoint Role in an IETF Network Slice topology ";
+  }
+
+  identity leaf-role {
+    base endpoint-role;
+    description
+      "Network Slice Endpoint as the leaf role in
+       a P2MP IETF Network Slice.";
+  }
+
+  identity root-role {
+    base endpoint-role;
+    description
+      "Network Slice Endpoint as the root role in a P2P, MP2MP, or P2MP
+       IETF Network Slice.";
+  }
+
+  identity network-slice-slo-metric-type {
+    description
+      "Base identity for Network Slice SLO metric type";
+  }
+
+  identity network-slice-slo-two-way-delay {
+    base network-slice-slo-metric-type;
+    description
+      "SLO delay metric.";
+  }
+
+  identity network-slice-slo-one-way-delay {
+    base network-slice-slo-metric-type;
+    description
+      "SLO delay metric.";
+  }
+
+  identity network-slice-slo-jitter {
+    base network-slice-slo-metric-type;
+    description
+      "SLO jitter metric.";
+  }
+
+  identity network-slice-slo-loss {
+    base network-slice-slo-metric-type;
+    description
+      "SLO loss metric .";
+  }
+
+  identity network-slice-slo-availability {
+    base network-slice-slo-metric-type;
+    description
+      "SLO availability level.";
+  }
+
+  identity network-slice-slo-bandwidth {
+    base network-slice-slo-metric-type;
+    description
+      "SLO bandwidth metric.";
+  }
+
+  identity network-slice-match-type {
+    description
+      "Base identity for Network Slice traffic match type";
+  }
+
+  identity network-slice-phy-interface-match {
+    base network-slice-match-type;
+    description
+      "VLAN as Network Slice traffic match criteria.";
+  }  
+  
+  identity network-slice-vlan-match {
+    base network-slice-match-type;
+    description
+      "VLAN as Network Slice traffic match criteria.";
+  }
+
+  identity network-slice-label-match {
+    base network-slice-match-type;
+    description
+      "Label as Network Slice traffic match criteria.";
+  }
+
+  /*
+   * Identity for availability-type
+   */
+
+  identity availability-type {
+    description
+      "Base identity from which specific availability
+       types are derived.";
+  }
+
+  identity level-1 {
+    base availability-type;
+    description
+      "level 1: 99.9999%";
+  }
+
+  identity level-2 {
+    base availability-type;
+    description
+      "level 2: 99.999%";
+  }
+
+  identity level-3 {
+    base availability-type;
+    description
+      "level 3: 99.99%";
+  }
+
+  identity level-4 {
+    base availability-type;
+    description
+      "level 4: 99.9%";
+  }
+
+  identity level-5 {
+    base availability-type;
+    description
+      "level 5: 99%";
+  }
+
+  /* typedef */
+
+  typedef operational-type {
+    type enumeration {
+      enum up {
+        value 0;
+        description
+          "Operational status UP.";
+      }
+      enum down {
+        value 1;
+        description
+          "Operational status DOWN";
+      }
+      enum unknown {
+        value 2;
+        description
+          "Operational status UNKNOWN";
+      }
+    }
+    description
+      "This is a read-only attribute used to determine the
+       status of a particular element";
+  }
+
+  typedef ns-monitoring-type {
+    type enumeration {
+      enum one-way {
+        description
+          "represents one-way monitoring type";
+      }
+      enum two-way {
+        description
+          "represents two-way monitoring type";
+      }
+    }
+    description
+      "enumerated type of monitoring on a network-slice-member ";
+  }
+
+  /* Groupings */
+
+  grouping status-params {
+    description
+      "Grouping used to join operational and administrative status";
+    container status {
+      description
+        "Container for status of administration and operational";
+      leaf admin-enabled {
+        type boolean;
+        description
+          "Administrative Status UP/DOWN";
+      }
+      leaf oper-status {
+        type operational-type;
+        config false;
+        description
+          "Operations status";
+      }
+    }
+  }
+
+  grouping network-slice-match-criteria {
+    description
+      "Grouping for Network Slice match definition.";
+    container ns-match-criteria {
+      description
+        "Describes Network Slice match criteria.";
+      list ns-match-criteria {
+        key "match-type";
+        description
+          "List of Network Slice traffic criteria";
+        leaf match-type {
+          type identityref {
+            base network-slice-match-type;
+          }
+          description
+            "Identifies an entry in the list of match-type for
+             the Network Slice.";
+        }
+        leaf value {
+          type string;
+          description
+            "Describes Network Slice match criteria,e.g. IP address,
+             VLAN, etc.";
+        }
+      }
+    }
+  }
+
+  grouping network-slice-metric-bounds {
+    description
+      "Network Slice metric bounds grouping";
+    container ns-metric-bounds {
+      description
+        "Network Slice metric bounds container";
+      list ns-metric-bound {
+        key "metric-type";
+        description
+          "List of Network Slice metric bounds";
+        leaf metric-type {
+          type identityref {
+            base network-slice-slo-metric-type;
+          }
+          description
+            "Identifies an entry in the list of metric-types
+             bound for the Network Slice.";
+        }
+        leaf metric-unit {
+          type string;
+          mandatory true;
+          description
+            "The metric unit of the parameter.
+             For example, s, ms, ns, and so on.";
+        }
+        leaf value-description {
+          type string;
+          description
+            "The description of previous value. ";
+        }
+        leaf boundary {
+          type uint64;
+          default "0";
+          description
+            "Boundary on network-slice-member metric. A zero indicate
+             an unbounded upper limit for the specific metric-type";
+        }
+      }
+    }
+  }
+
+  grouping ep-access-info {
+    description
+      "Grouping for endpoint peering definition.";
+    list ep-access-links {
+      key "ep-access-id";
+      description
+        "IETF Network Slice endpoint access related information";
+      leaf ep-access-id {
+        type string;
+        description
+          "unique identifier for the referred endpoint access link ";
+      }
+      leaf ep-access-description {
+        type string;
+        description
+          "endpoint access link description";
+      }
+      leaf tp-id {
+        type string;
+        description
+          "Type STRING.";
+      }
+      leaf tp-ip {
+        type inet:host;
+        description
+          "The address of the link IP address.";
+      }
+    }
+  }
+
+  grouping endpoint-monitoring-parameters {
+    description
+      "Grouping for endpoint-monitoring-parameters.";
+    container ep-monitoring {
+      config false;
+      description
+        "Container for endpoint-monitoring-parameters.";
+      leaf incoming-utilized-bandwidth {
+        type te-types:te-bandwidth;
+        description
+          "Bandwidth utilization that represents the actual
+           utilization of the incoming endpoint.";
+      }
+      leaf incoming-bw-utilization {
+        type decimal64 {
+          fraction-digits 5;
+          range "0..100";
+        }
+        units "percent";
+        mandatory true;
+        description
+          "To be used to define the bandwidth utilization
+           as a percentage of the available bandwidth.";
+      }
+      leaf outgoing-utilized-bandwidth {
+        type te-types:te-bandwidth;
+        description
+          "Bandwidth utilization that represents the actual
+           utilization of the incoming endpoint.";
+      }
+      leaf outgoing-bw-utilization {
+        type decimal64 {
+          fraction-digits 5;
+          range "0..100";
+        }
+        units "percent";
+        mandatory true;
+        description
+          "To be used to define the bandwidth utilization
+           as a percentage of the available bandwidth.";
+      }
+    }
+  }
+
+  grouping common-monitoring-parameters {
+    description
+      "Grouping for link-monitoring-parameters.";
+    leaf latency {
+      type yang:gauge64;
+      units "usec";
+      description
+        "The latency statistics per Network Slice member.
+         [RFC2681] and [RFC7679] discuss round trip times and one-way
+         metrics, respectively";
+    }
+    leaf jitter {
+      type yang:gauge32;
+      description
+        "The jitter statistics per Network Slice member
+         as defined by [RFC3393].";
+    }
+    leaf loss-ratio {
+      type decimal64 {
+        fraction-digits 6;
+        range "0 .. 50.331642";
+      }
+      description
+        "Packet loss as a percentage of the total traffic
+         sent over a configurable interval. The finest precision is
+         0.000003%. where the maximum 50.331642%.";
+      reference
+        "RFC 7810, section-4.4";
+    }
+  }
+
+  grouping geolocation-container {
+    description
+      "A grouping containing a GPS location.";
+    container location {
+      description
+        "A container containing a GPS location.";
+      leaf altitude {
+        type int64;
+        units "millimeter";
+        description
+          "Distance above the sea level.";
+      }
+      leaf latitude {
+        type decimal64 {
+          fraction-digits 8;
+          range "-90..90";
+        }
+        description
+          "Relative position north or south on the Earth's surface.";
+      }
+      leaf longitude {
+        type decimal64 {
+          fraction-digits 8;
+          range "-180..180";
+        }
+        description
+          "Angular distance east or west on the Earth's surface.";
+      }
+    }
+    // gps-location
+  }
+
+  // geolocation-container
+
+  grouping endpoint {
+    description
+      "IETF Network Slice endpoint related information";
+    leaf ep-id {
+      type string;
+      description
+        "unique identifier for the referred IETF Network
+         Slice endpoint";
+    }
+    leaf ep-description {
+      type string;
+      description
+        "endpoint name";
+    }
+    leaf-list ep-role {
+      type identityref {
+        base endpoint-role;
+      }
+      default "root-role";
+      description
+        "Role of the endpoint in the IETF Network Slice.";
+    }
+    uses geolocation-container;
+    leaf node-id {
+      type string;
+      description
+        "Uniquely identifies an edge node within the IETF slice
+         network.";
+    }
+    leaf ep-ip {
+      type inet:host;
+      description
+        "The address of the endpoint IP address.";
+    }
+    uses network-slice-match-criteria;
+    uses ep-access-info;
+    container rate-limit {
+      description
+        "Container for the asymmetric traffic control";
+      container incoming-throughput {
+        description
+          "Container for the incoming traffic policy";
+        leaf maximum-throughput {
+          type te-types:te-bandwidth;
+          description
+            "If maximum-throughput is 0, it means best effort, no
+             minimum throughput is guaranteed.";
+        }
+      }
+      container outgoing-throughput {
+        description
+          "Container for the bandwidth policy";
+        leaf maximum-throughput {
+          type te-types:te-bandwidth;
+          description
+            "If maximum-throughput is 0, it means best effort, no
+             minimum throughput is guaranteed.";
+        }
+      }
+    }
+    container routing {
+      description
+        "Describes protocol between Network Slice Endpoint and IETF
+         scoped network edge device.";
+    }
+    uses status-params;
+    uses endpoint-monitoring-parameters;
+  }
+
+  //network-slice-endpoint
+
+  grouping network-slice-member {
+    description
+      "network-slice-member is described by this container";
+    leaf ns-member-id {
+      type uint32;
+      description
+        "network-slice-member identifier";
+    }
+    leaf ns-member-description {
+      type string;
+      description
+        "network-slice-member description";
+    }
+    container src {
+      description
+        "the source of Network Slice link";
+      leaf src-ep-id {
+        type leafref {
+          path "/ietf-network-slices/ietf-network-slice/"
+             + "ns-endpoint/ep-id";
+        }
+        description
+          "reference to source Network Slice endpoint";
+      }
+    }
+    container dest {
+      description
+        "the destination of Network Slice link ";
+      leaf dest-ep-id {
+        type leafref {
+          path "/ietf-network-slices/ietf-network-slice"
+             + "/ns-endpoint/ep-id";
+        }
+        description
+          "reference to dest Network Slice endpoint";
+      }
+    }
+    leaf monitoring-type {
+      type ns-monitoring-type;
+      description
+        "One way or two way monitoring type.";
+    }
+    container ns-member-monitoring {
+      config false;
+      description
+        "SLO status Per network-slice endpoint to endpoint ";
+      uses common-monitoring-parameters;
+    }
+  }
+
+  //network-slice-member
+
+  grouping slice-template {
+    description
+      "Grouping for slice-templates.";
+    container ns-templates {
+      description
+        "Contains a set of network slice templates to
+         reference in the IETF network slice.";
+      list slo-template {
+        key "id";
+        leaf id {
+          type string;
+          description
+            "Identification of the SLO Template to be used.
+             Local administration meaning.";
+        }
+        leaf template-description {
+          type string;
+          description
+            "Description of the SLO policy template.";
+        }
+        description
+          "List for SLO template identifiers.";
+      }
+    }
+  }
+
+  /* Configuration data nodes */
+
+  container ietf-network-slices {
+    description
+      "IETF network-slice configurations";
+    uses slice-template;
+    list ietf-network-slice {
+      key "ns-id";
+      description
+        "a network-slice is identified by a network-slice-id";
+      leaf ns-id {
+        type string;
+        description
+          "A unique network-slice identifier across an IETF NSC ";
+      }
+      leaf ns-description {
+        type string;
+        description
+          "Give more description of the network slice";
+      }
+      leaf-list ns-tag {
+        type string;
+        description
+          "Network Slice tag for operational management";
+      }
+      leaf ns-topology {
+        type identityref {
+          base network-slice-topology;
+        }
+        default "multipoint-to-multipoint";
+        description
+          "Network Slice topology.";
+      }
+      choice ns-slo-policy {
+        description
+          "Choice for SLO policy template.
+           Can be standard template or customized template.";
+        case standard {
+          description
+            "Standard SLO template.";
+          leaf slo-template {
+            type leafref {
+              path "/ietf-network-slices"
+                 + "/ns-templates/slo-template/id";
+            }
+            description
+              "Standard SLO template to be used.";
+          }
+        }
+        case custom {
+          description
+            "Customized SLO template.";
+          container slo-policy {
+            description
+              "Contains the SLO policy.";
+            leaf policy-description {
+              type string;
+              description
+                "Description of the SLO policy.";
+            }
+            uses network-slice-metric-bounds;
+          }
+        }
+      }
+      uses status-params;
+      list ns-endpoint {
+        key "ep-id";
+        uses endpoint;
+        description
+          "list of endpoints in this slice";
+      }
+      list ns-member {
+        key "ns-member-id";
+        description
+          "List of network-slice-member in a slice";
+        uses network-slice-member;
+      }
+    }
+    //ietf-network-slice list
+  }
+}
+
+<CODE ENDS>
+]]></artwork>
+      </figure>
+
+      <t/>
+    </section>
+
+    <section title="Security Considerations">
+      <t>The YANG module defined in this document is designed to be accessed
+      via network management protocols such as NETCONF <xref
+      target="RFC6241"/> or RESTCONF <xref target="RFC8040"/>. The lowest
+      NETCONF layer is the secure transport layer, and the
+      mandatory-to-implement secure transport is Secure Shell (SSH) <xref
+      target="RFC6242"/>. The lowest RESTCONF layer is HTTPS, and the
+      mandatory-to-implement secure transport is TLS <xref
+      target="RFC8446"/>.</t>
+
+      <t>The NETCONF access control model <xref target="RFC8341"/> provides
+      the means to restrict access for particular NETCONF or RESTCONF users to
+      a preconfigured subset of all available NETCONF or RESTCONF protocol
+      operations and content.</t>
+
+      <t>There are a number of data nodes defined in this YANG module that are
+      writable/creatable/deletable (i.e., config true, which is the default).
+      These data nodes may be considered sensitive or vulnerable in some
+      network environments. Write operations (e.g., edit-config) to these data
+      nodes without proper protection can have a negative effect on network
+      operations.</t>
+
+      <t>o /ietf-network-slice/ietf-network-slices/ietf-network-slice</t>
+
+      <t>The entries in the list above include the whole network
+      configurations corresponding with the slice which the higher management
+      system requests, and indirectly create or modify the PE or P device
+      configurations. Unexpected changes to these entries could lead to
+      service disruption and/or network misbehavior.</t>
+    </section>
+
+    <section title="IANA Considerations">
+      <t>This document registers a URI in the IETF XML registry <xref
+      target="RFC3688"/>. Following the format in <xref target="RFC3688"/>,
+      the following registration is requested to be made:</t>
+
+      <figure>
+        <artwork><![CDATA[
+   URI: urn:ietf:params:xml:ns:yang:ietf-network-slice
+   Registrant Contact: The IESG.
+   XML: N/A, the requested URI is an XML namespace.
+
+
+]]></artwork>
+      </figure>
+
+      <t>This document requests to register a YANG module in the YANG Module
+      Names registry <xref target="RFC7950"/>.</t>
+
+      <figure>
+        <artwork><![CDATA[
+           Name: ietf-network-slice
+           Namespace: urn:ietf:params:xml:ns:yang:ietf-network-slice
+           Prefix: ietf-ns
+           Reference: RFC XXXX 
+]]></artwork>
+      </figure>
+    </section>
+
+    <section title="Acknowledgments">
+      <t>The authors wish to thank Sergio Belotti, Qin Wu, Susan Hares, Eric
+      Grey, and many other NS DT members for their helpful comments and
+      suggestions.</t>
+    </section>
+  </middle>
+
+  <back>
+    <references title="Normative References">
+      <?rfc include='reference.I-D.ietf-teas-ietf-network-slice-definition'?>
+
+      <?rfc include='reference.I-D.nsdt-teas-ns-framework'?>
+
+      <?rfc include='reference.RFC.2119'?>
+
+      <?rfc include='reference.RFC.3688'?>
+
+      <?rfc include='reference.RFC.6241'?>
+
+      <?rfc include='reference.RFC.6242'?>
+
+      <?rfc include='reference.RFC.8340'?>
+
+      <?rfc include='reference.RFC.7950'?>
+
+      <?rfc include='reference.RFC.8040'?>
+
+      <?rfc include='reference.RFC.6991'?>
+
+      <?rfc include='reference.RFC.8174'?>
+
+      <?rfc include='reference.RFC.8341'?>
+
+      <?rfc include='reference.RFC.8342'?>
+
+      <?rfc include='reference.RFC.8446'?>
+
+      <?rfc include='reference.RFC.8640'?>
+
+      <?rfc include='reference.RFC.8641'?>
+    </references>
+
+    <references title="Informative References">
+      <?rfc include='reference.I-D.liu-teas-transport-network-slice-yang'?>
+
+      <?rfc include='reference.I-D.ietf-teas-actn-vn-yang'?>
+
+      <?rfc include='reference.RFC.8309'?>
+
+      <?rfc include='reference.I-D.geng-teas-network-slice-mapping'?>
+    </references>
+
+    <section title="IETF Network Slice NBI Model Usage Example">
+      <t>The following example describes a simplified service configuration of
+      two IETF Network slice instances:<list style="symbols">
+          <t>IETF Network Slice 1 on Device1, Device3, and Device4, with
+          any-to-any connection type</t>
+
+          <t>IETF Network Slice 2 on Device2, Device3, with any-to-any
+          connection type</t>
+        </list></t>
+
+      <figure>
+        <artwork><![CDATA[
+     192.0.2.2 VLAN1
++--------+
+|Device1 o------/
++--------+      |       +------+
++--------+      +------o|  A   +---------------+
+|Device2 o-------/-----o|      |               |
++--------+              +---+--+               |
+      198.51.100.2          |                  |
+       VLAN2                |              +---+--+      192.0.2.4 VLAN1
+                            |              |      |           +--------+
+      192.0.2.3 VLAN1       |              |   C  o-----/-----oDevice4 |
++--------+                  |              +---+--+           +--------+
+|        o------/           |                  |
+|        |      |       +---+--+               |
+| Device3|      +------o|  B   +---------------+
+|        o-------/-----o|      |
++--------+              +------+
+      198.51.100.3
+       VLAN2
+]]></artwork>
+      </figure>
+
+      <t/>
+
+      <figure>
+        <artwork><![CDATA[   POST: /restconf/data/ietf-network-slice:ietf-network-slices
+   Host: example.com
+   Content-Type: application/yang-data+json
+
+{
+  "ietf-network-slices": {
+    "ietf-network-slice": [
+      {
+        "network-slice-id": 1,
+        "network-slice-name": "slice1",
+        "network-slice-topology": "any-to-any",
+        "network-slice-endpoint": [
+          {
+           "endpoint-id": 11,
+           "endpoint-name": "device1-ep1",
+           "endpoint-role": "any-to-any-role",
+           "network-slice-match-criteria": [
+            {
+              "match-type": "network-slice-vlan-match",
+              "value": "1"
+            }
+           ]
+         },
+         {   
+          "endpoint-id": 12,
+          "endpoint-name": "device3-ep1",
+          "endpoint-role": "any-to-any-role",  
+          "network-slice-match-criteria": [
+            {
+              "match-type": "network-slice-vlan-match",
+              "value": "1"
+            }
+           ]   
+         },
+         {
+           "endpoint-id": 13,
+           "endpoint-name": "device4-ep1",
+           "endpoint-role": "any-to-any-role",   
+           "network-slice-match-criteria": [
+             {
+               "match-type": "network-slice-vlan-match",
+               "value": "1"
+             }
+           ]
+         }
+       ]
+     },
+    {
+      "network-slice-id": 2,
+      "network-slice-name": "slice2",
+      "network-slice-topology": "any-to-any",
+      "network-slice-endpoint": [
+        {
+          "endpoint-id": 21,
+          "endpoint-name": "device2-ep1",
+          "endpoint-role": "any-to-any-role",
+          "network-slice-match-criteria": [
+            {
+              "match-type": "network-slice-vlan-match",
+              "value": "2"
+            }
+          ]
+        },
+       {
+         "endpoint-id": 22,
+         "endpoint-name": "device3-ep2",
+         "endpoint-role": "any-to-any-role",
+         "network-slice-match-criteria": [
+           {
+             "match-type": "network-slice-vlan-match",
+             "value": "2"
+           }
+          ]
+        }
+      ]
+     }
+   ]
+  }
+} 
+
+]]></artwork>
+      </figure>
+
+      <t/>
+    </section>
+
+    <section title="Comparison with Other Possible Design choices for IETF Network Slice NBI">
+      <t>According to the 3.3.1. Northbound Inteface (NBI) <xref
+      target="I-D.nsdt-teas-ns-framework"/>, the IETF Network Slice NBI is a
+      technology-agnostic interface, which is used for a consumer to express
+      requirements for a particular IETF Network Slice. Consumers operate on
+      abstract IETF Network Slices, with details related to their realization
+      hidden. As classified by <xref target="RFC8309"/>, the IETF Network
+      Slice NBI is classified as Customer Service Model.</t>
+
+      <t>This draft analyzes the following existing IETF models to identify
+      the gap between the IETF Network Slice NBI requirements.</t>
+
+      <section title="ACTN VN Model Augmentation">
+        <t>The difference between the ACTN VN model and the IETF Network Slice
+        NBI requirements is that the IETF Network Slice NBI is a
+        technology-agnostic interface, whereas the VN model is bound to the
+        IETF TE Topologies. The realization of the IETF Network Slice does not
+        necessarily require the slice network to support the TE
+        technology.</t>
+
+        <t>The ACTN VN (Virtual Network) model introduced in<xref
+        target="I-D.ietf-teas-actn-vn-yang"> </xref> is the abstract consumer
+        view of the TE network. Its YANG structure includes four components:
+        <list style="symbols">
+            <t>VN: A Virtual Network (VN) is a network provided by a service
+            provider to a customer for use and two types of VN has defined.
+            The Type 1 VN can be seen as a set of edge-to-edge abstract links.
+            Each link is an abstraction of the underlying network which can
+            encompass edge points of the customer's network, access links,
+            intra-domain paths, and inter-domain links.</t>
+
+            <t>AP: An AP is a logical identifier used to identify the access
+            link which is shared between the customer and the IETF scoped
+            Network.</t>
+
+            <t>VN-AP: A VN-AP is a logical binding between an AP and a given
+            VN.</t>
+
+            <t>VN-member: A VN-member is an abstract edge-to-edge link between
+            any two APs or VN-APs. Each link is formed as an E2E tunnel across
+            the underlying networks.</t>
+          </list>The Type 1 VN can be used to describe IETF Network Slice
+        connection requirements. However, the Network Slice SLO and Network
+        Slice Endpoint are not clearly defined and there's no direct
+        equivalent. For example, the SLO requirement of the VN is defined
+        through the IETF TE Topologies YANG model, but the TE Topologies model
+        is related to a specific implementation technology. Also, VN-AP does
+        not define "network-slice-match-criteria&ldquo; to specify a specific
+        NSE belonging to an IETF Network Slice.</t>
+      </section>
+
+      <section title="RFC8345 Augmentation Model">
+        <t>The difference between the IETF Network Slice NBI requirements and
+        the IETF basic network model is that the IETF Network Slice NBI
+        requests abstract consumer IETF Network Slices, with details related
+        to the slice Network hidden. But the IETF network model is used to
+        describe the interconnection details of a Network. The customer
+        service model does not need to provide details on the Network.</t>
+
+        <t>For example, IETF Network Topologies YANG data model extension
+        introduced in <xref
+        target="I-D.liu-teas-transport-network-slice-yang">Transport Network
+        Slice YANG Data Model </xref> includes three major parts:<list
+            style="symbols">
+            <t>Network: a transport network list and an list of nodes
+            contained in the network</t>
+
+            <t>Link: "links" list and "termination points" list describe how
+            nodes in a network are connected to each other</t>
+
+            <t>Support network: vertical layering relationships between IETF
+            Network Slice networks and underlay networks</t>
+          </list>Based on this structure, the IETF Network Slice-specific SLO
+        attributes nodes are augmented on the Network Topologies model,, e.g.
+        isolation etc. However, this modeling design requires the slice
+        network to expose a lot of details of the network, such as the actual
+        topology including nodes interconnection and different network layers
+        interconnection.</t>
+      </section>
+    </section>
+
+    <section title="Appendix B IETF Network Slice Match Criteria">
+      <t>5G is a use case of the IETF Network Slice and 5G End-to-end Network
+      Slice Mapping from the view of IETF Network<xref
+      target="I-D.geng-teas-network-slice-mapping"> </xref></t>
+
+      <t>defines two types of Network Slice interconnection and
+      differentiation methods: by physical interface or by TNSII (Transport
+      Network Slice Interworking Identifier). TNSII is a field in the packet
+      header when different 5G wireless network slices are transported through
+      a single physical interfaces of the IETF scoped Network. In the 5G
+      scenario, &ldquo;network-slice-match-criteria&rdquo; refers to
+      TNSII.</t>
+
+      <figure>
+        <artwork><![CDATA[    +------------------------------------------------------------+
+    |          5G E2E network slice orchestrator                 |
+    ++-----------------------------------------------------+-----+
+     |                        |                            |
+     |                IETF Network Slice NBI               |
+ +---+-------+                  |                    +-----+-----+
+ |           |          +------------------+         |           |
+ |RAN Slice  |          |IETF Network Slice|         |Core Slice |
+ |controller |          |    controller    |         | controller|
+ +----+------+          +-------+----------+         +-----+-----+
+      |                         |                          |
+      |                         |                          |
+  +---+--+         +------------+----------------+        ++-----+
+  |      |         |                             |        |      |
+  |      |         |                             |        |      |
+  |+----+|         |                             |        |      |
+  ||    ||NS1-NSE1 |         Network Slice 1     |        |+----+|
+  ||gNB1|+---------+-----+-----------------------+--------+|UPF1||
+  ||    |+************  /                        |NS1-NSE3|+----+|
+  |+----+|NS2-NSE1 |  */                         |        |      |
+  |                |  /*                         |        |      |
+  |+----+|NS1-NSE2 | /  *                        |        |      |
+  ||    |+----------     *   Network Slice 2     |NS2-NSE3|+----+|
+  ||gNB2|+************************************************+|UPF2||
+  ||    ||NS2-NSE2 |                             |        |+----+|
+  |+----+|         |                             |               |
+  |      |         |                             |        |      |
+  |      |         |                             |        |      |
+  +------+         +----------- -----------------+        +------+
+
+]]></artwork>
+      </figure>
+
+      <t>As shown in the figure, gNodeB 1 and gNodeB 2 use IP gNB1 and IP gNB2
+      to communicate with the IETF network, respectively. In addition, the
+      traffic of NS1 and NS2 on gNodeB 1 and gNodeB 2 is transmitted through
+      the same access links to the IETF slice network. The IETF slice network
+      need to to distinguish different IETF Network Slice traffic of same gNB.
+      Therefore, in addition to using "node-id" and "port-id" to identify a
+      Network Slice Endpont, other information is needed along with these
+      parameters to uniquely distinguish a NSE. For example, VLAN IDs in the
+      user traffic can be used to distinguish the NSEs of gNBs and UPFs.</t>
+
+      <t/>
+    </section>
+  </back>
+</rfc>
