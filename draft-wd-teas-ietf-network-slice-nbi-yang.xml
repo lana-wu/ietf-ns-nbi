@@ -245,69 +245,142 @@
     </section>
 
     <section title="IETF Network Slice NBI Model Overview">
-      <t>As defined in <xref
-      target="I-D.ietf-teas-ietf-network-slice-definition"/>, an IETF network
-      slice is a logical network topology connecting a number of endpoints
-      with SLO specified. The topology can be a point-to-point or
-      multipoint-to-multipoint topology. The endpoint is named as NSE (Network
-      Slice Endpoint). In addition, a minimum set of SLOs is defined,
-      including but not limited to bandwidth, delay, and etc.</t>
+      <t>
+        As defined in <xref target="I-D.ietf-teas-ietf-network-slice-definition"/> 
+        an IETF network slice is a logical network connecting a number of
+        endpoints with specified SLOs.  The connectivity can be point-to-point,
+        multipoint-to-point, point-to-multipoint or multipoint-to-multipoint. 
+        In addition, a minimum set of SLOs is defined, including but not limited to 
+        bandwidth, delay, and etc.
+      </t>
 
-      <t>Regarding the definition draft, though the boundary of the IETF
-      network slice is on the edge device of the IETF network, there are two
-      types of network slice endpoints (NSEs). From a consumer perspective,
-      two examples of an IETF Network Slice are shown below.</t>
+      <t>
+        Draft <xref target="I-D.ietf-teas-ietf-network-slice-definition"/> 
+       introduces the IETF network slice endpoints (NSEs) which are conceptual 
+       points of connection to IETF network slice. As such, they are ingress/egress 
+       point where the traffic enters/exits the IETF network slice. 
+       In other words, they are the edge of the IETF network slices.
+      </t>
 
-      <figure anchor="ns-eg1" title="NSE in Customer Scoped Network">
-        <artwork><![CDATA[                       IETF scoped Network
-  DAN1         +---------------------------------+       DAN3
-+--------+    +------+                           |     +--------+
-|     o  +---o|  A   |                     +------+    |        |
-|   NSE1 +---o|      |                     |  C   |o---+        |
-+--------+    +------+                     +------+    |        |
-               |                                 |     |  o     |
-+--------+     |                           +------+    |  NSE3  |
-|        |    +------+                     |  D   |o---+        |
-|        o---o|  B   |                     +------+    |        |
-|   NSE2 |    +------+                           |     |        |
-+--------+     |                                 |     +--------+
-  DAN2         +---------------------------------+
-      |                                                       |
-      |                                                       |
-      |<----------------IETF Network Slice 1----------------->|
-Legend:DAN (Device,Application,Network Function)
-]]></artwork>
-      </figure>
+      <t>
+        When IETF network slice controller (NSC) receives a message via its NBI
+        for creation/modification of an IETF network slice, it uses the provided 
+        IETF network slice endpoints to map them to appropriate services/tunnels/paths 
+        endpoints in the underlay IETF network. It then uses services/tunnels/paths 
+        endpoints to realize the IETF network slice. 
+      </t>
 
-      <t>As shown in <xref target="ns-eg1"/>, an IETF Network Slice (NS) could
-      link together NSEs at the DANs in customer network, which are endpoints
-      that request an IETF Network Slice. At each customer DAN or IETF Network
-      edge device, one or multiple NSEs could be connected to the IETF Network
-      Slice.</t>
+      <t>
+        To illustrate the mapping between IETF network slice endpoints (NSE) 
+        and underlay IETF network, Consider Figure 2 of RFC3985 as a reference 
+        model for the underlay IETF network. Depends on the IETF network slice 
+        use case, the IETF network slice endpoints (NSEs) might be mapped to physical 
+        or logical interface on CEs or PEs nodes. The following use-cases are provided 
+        for clarity (see Section 1 of <xref target="I-D.ietf-teas-ietf-network-slice-definition"/>):
+      </t>
 
-      <t><figure anchor="ns-eg2" title="NSEs in IETF scoped Network">
-          <artwork><![CDATA[ Customer  |           IETF scoped Network           |   Customer
- Network   |   +---------------------------------+   |   Network
-+--------+ |  +------+                           |   | +--------+
-|        o----+ o  A |                     +------+NSE3|        |
-|        o----+ NSE1 |                     |  C   |o---+        |
-+--------+ |  +------+                     +------+  | |        |
-           |                                     |   | |        |
-+--------+ |   |                           +------+  | |        |
-|        | |  +------+                     |  D   |o---+        |
-|        o---o|NSE2 B|                     +------+NSE4|        |
-|        | |  +------+                           |   | |        |
-+--------+ |   |                                 |   | +--------+
-           |   +---------------------------------+   |
-           |                                         |
-           |                                         |
-           |<-----------IETF Network Slice 1-------->|
-           |                                         |
-]]></artwork>
-        </figure></t>
+      <t><list style="symbols">
+          <t>
+            Data center interconnect use-case: As shown in <xref target="usecase_1"/> in this use case, consumer of the 
+            IETF network slice would like to connect two or more data centers 
+            to satisfy specific SLOs(e.g., guaranteed minimum bandwidth 
+            with guaranteed maximum latency). In this case, the IETF network slice 
+            endpoints are mapped to services and tunnels endpoints of PE nodes where they acts as data 
+            center gateway (DCGW). The IETF network slice controller (NSC) uses the 
+            provided SLOs and all or subset of NSEs attributes to find the optimal PE 
+            nodes and services/tunnels/paths endpoints on these nodes.
+            <figure anchor="usecase_1" title="IETF Network Slice for data center Interconnect use-case">
+            <artwork><![CDATA[          
+                  |<-------- IETF Network Slice --------->|
+                  |                                       |                                    
+                  |    |<---------- S1 --------- -->|     |     
+                  |    |                            |     |     
+                  |    |    |<----- T1 ------->|    |     |     
+                  |    v    v                  v    v     |     
+                  |    +----+                  +----+     |    
+                  v    | PE1|==================| PE2|     v 
+                  O....|    |                  |    |.....O
+                       |    |                  |    |     
+                       |    |==================|    |          
+                       +----+                  +----+       
+                        DCGW1                   DCGW2                                                           
+Legend:
+   S1: L0/L1/L2/L3 services used for realization of IETF network slice
+   T1: Tunnels used for realization of IETF network slice
+   O: Representation of the IETF network slice endpoints (NSE)
+            ]]></artwork>
+            </figure>            
+          </t>
 
-      <t>As shown in <xref target="ns-eg2"/>, an IETF Network Slice (NS) could
-      also ink together NSEs at the IETF Network edge devices.</t>
+          <t>
+            Network wholesale services use-case: As shown in <xref target="usecase_2"/> in this scenario a network operator 
+            sells the wholesale connectivity (i.e., IETF network slice) to another 
+            operator (e.g., network operator sells connectivity to other mobile operators). 
+            In the case the IETF network slice endpoints are mapped to endpoints on 
+            PE nodes. The IETF network slice controller (NSC) uses the provided SLOs 
+            and all or subset of the NSEs attributes to find the optimal PE nodes 
+            and services/tunnels/paths endpoints on these nodes.
+
+            <figure anchor="usecase_2" title="IETF Network Slice for Network wholesale services use-case">
+            <artwork><![CDATA[          
+                  |<-------- IETF Network Slice --------->|
+                  |                                       |     
+                  |    |<---------- S1 --------- -->|     |      
+                  |    |                            |     |      
+                  |    |    |<----- T1 ------->|    |     |      
+                  |    v    v                  v    v     |      
+                  |    +----+                  +----+     |    
+                  v    | PE1|==================| PE2|     v 
+                  O....|    |                  |    |.....O
+                       |    |                  |    |     
+                       |    |==================|    |          
+                       +----+                  +----+       
+                      Provider                Provider
+                      Edge 1                  Edge 2                                                            
+Legend:
+   S1: L0/L1/L2/L3 services used for realization of IETF network slice
+   T1: Tunnels used for realization of IETF network slice
+   O: Representation of the IETF network slice endpoints (NSE)
+            ]]></artwork>
+            </figure>            
+           </t>
+
+           <t>
+            5G network slicing use-case: As shown in <xref target="usecase_3"/> in this case, the mobile operator uses 
+            the IETF network slices to provide connectivity between transport portion 
+            of 5G RAN to 5G Core network functions. In this scenario, the IETF network 
+            slice endpoints (NSE) might be mapped to tunnels endpoints on CE nodes 
+            (see 3GPP TS 28.541 V17.1.0 section 6.3.17 EP_Transport). The IETF 
+            network slice controller (NSC) uses the provided SLOs and all or 
+            subset of attributes of the NSEs to find the CE nodes, optimal PE 
+            nodes and services/tunnels/paths endpoints on PE nodes.
+
+            <figure anchor="usecase_3" title="IETF Network Slice for 5G network slicing use-case">
+            <artwork><![CDATA[          
+         |<----------------- IETF Network Slice ----------------->|
+         |                                                        |
+         |             |<----------- S1 ----------->|             |
+         |             |                            |             |
+         |             |    |<------ T1 ------>|    |             |
+         |             v    v                  v    v             |
+         v       AC    +----+                  +----+     AC      v
+      +-----+    |     | PE1|==================| PE2|     |    +-----+
+      |     |----------|    |                  |    |     |    |     | 
+      |  O  |    |     |    |                  |    |----------|  O  |
+      |     |----------|                       |    |     |    |     | 
+      +-----+    |     |    |==================|    |     |    +-----+
+                       +----+                  +----+     |    ^
+      Customer         Provider                Provider         Customer
+      Edge 1           Edge 1                  Edge 2           Edge 2
+                                                          
+Legend:
+   S1: L0/L1/L2/L3 services used for realization of IETF network slice
+   T1: Tunnels used for realization of IETF network slice
+   O: Representation of the IETF network slice endpoints (NSE)
+            ]]></artwork>
+            </figure>            
+          </t>         
+        </list></t>
 
       <t>The IETF Network Slice ("ietf-network-slice") is defined to manage
       network slices in the IETF network. In particular, the
