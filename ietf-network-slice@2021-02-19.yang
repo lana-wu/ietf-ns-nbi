@@ -39,7 +39,7 @@ module ietf-network-slice {
      This version of this YANG module is part of RFC XXXX; see the
      RFC itself for full legal notices.";
 
-  revision 2021-02-19 {
+  revision 2021-05-07 {
     description
       "initial version.";
     reference
@@ -49,25 +49,25 @@ module ietf-network-slice {
   /* Features */
   /* Identities */
 
-  identity network-slice-topology {
+  identity ns-connectivity-type {
     description
       "Base identity for IETF Network Slice topology.";
   }
 
   identity any-to-any {
-    base network-slice-topology;
+    base ns-connectivity-type;
     description
       "Identity for any-to-any IETF Network Slice topology.";
   }
 
   identity hub-spoke {
-    base network-slice-topology;
+    base ns-connectivity-type;
     description
       "Identity for Hub-and-Spoke IETF Network Slice topology.";
   }
 
   identity custom {
-    base network-slice-topology;
+    base ns-connectivity-type;
     description
       "Identity of a custom NS topology where Hubs
        can act as Spoke for certain parts of
@@ -103,66 +103,72 @@ module ietf-network-slice {
       "A NSE is custom role in the NS.";
   }
 
-  identity network-slice-slo-metric-type {
+  identity ns-slo-metric-type {
     description
       "Base identity for Network Slice SLO metric type";
   }
 
-  identity network-slice-slo-two-way-delay {
-    base network-slice-slo-metric-type;
+  identity ns-slo-two-way-delay {
+    base ns-slo-metric-type;
     description
       "SLO delay metric.";
   }
 
-  identity network-slice-slo-one-way-delay {
-    base network-slice-slo-metric-type;
+  identity ns-slo-one-way-delay {
+    base ns-slo-metric-type;
     description
       "SLO delay metric.";
   }
 
-  identity network-slice-slo-jitter {
-    base network-slice-slo-metric-type;
+  identity ns-slo-jitter {
+    base ns-slo-metric-type;
     description
       "SLO jitter metric.";
   }
 
-  identity network-slice-slo-loss {
-    base network-slice-slo-metric-type;
+  identity ns-slo-loss {
+    base ns-slo-metric-type;
     description
       "SLO loss metric .";
   }
 
-  identity network-slice-slo-availability {
-    base network-slice-slo-metric-type;
+  identity ns-slo-availability {
+    base ns-slo-metric-type;
     description
       "SLO availability level.";
   }
 
-  identity network-slice-slo-bandwidth {
-    base network-slice-slo-metric-type;
+  identity ns-slo-bandwidth {
+    base ns-slo-metric-type;
     description
       "SLO bandwidth metric.";
   }
 
-  identity network-slice-match-type {
+  identity ns-match-type {
     description
       "Base identity for Network Slice traffic match type";
   }
 
-  identity network-slice-phy-interface-match {
-    base network-slice-match-type;
+  identity ns-phy-interface-match {
+    base ns-match-type;
     description
       "VLAN as Network Slice traffic match criteria.";
   }
 
-  identity network-slice-vlan-match {
-    base network-slice-match-type;
+  identity ns-vlan-match {
+    base ns-match-type;
     description
       "VLAN as Network Slice traffic match criteria.";
   }
 
-  identity network-slice-label-match {
-    base network-slice-match-type;
+  identity ns-route-target-match {
+    base ns-match-type;
+    description
+      "Label as Network Slice traffic match criteria.";
+  }
+
+  identity ns-label-match {
+    base ns-match-type;
     description
       "Label as Network Slice traffic match criteria.";
   }
@@ -244,7 +250,7 @@ module ietf-network-slice {
       }
     }
     description
-      "enumerated type of monitoring on a network-slice-member ";
+      "enumerated type of monitoring on a ns-connection ";
   }
 
   /* Groupings */
@@ -269,19 +275,19 @@ module ietf-network-slice {
     }
   }
 
-  grouping network-slice-match-criteria {
+  grouping ns-match-criteria {
     description
       "Grouping for Network Slice match definition.";
     container ns-match-criteria {
       description
         "Describes Network Slice match criteria.";
-      list ns-match-criteria {
+      list ns-match-criterion {
         key "match-type";
         description
           "List of Network Slice traffic criteria";
         leaf match-type {
           type identityref {
-            base network-slice-match-type;
+            base ns-match-type;
           }
           description
             "Identifies an entry in the list of match-type for
@@ -297,7 +303,7 @@ module ietf-network-slice {
     }
   }
 
-  grouping network-slice-metric-bounds {
+  grouping ns-metric-bounds {
     description
       "Network Slice metric bounds grouping";
     container ns-metric-bounds {
@@ -309,7 +315,7 @@ module ietf-network-slice {
           "List of Network Slice metric bounds";
         leaf metric-type {
           type identityref {
-            base network-slice-slo-metric-type;
+            base ns-slo-metric-type;
           }
           description
             "Identifies an entry in the list of metric-types
@@ -331,44 +337,49 @@ module ietf-network-slice {
           type uint64;
           default "0";
           description
-            "Boundary on network-slice-member metric. A zero indicate
+            "Boundary on ns-connection metric. A zero indicate
              an unbounded upper limit for the specific metric-type";
         }
       }
     }
   }
 
-  grouping ep-network-accesses {
+  grouping ep-network-access-points {
     description
       "Grouping for endpoint network access definition.";
-    list ep-network-access {
-      key "network-access-id";
+    container ep-network-access-points {
       description
-        "IETF Network Slice endpoint network access related parameters";
-      leaf network-access-id {
-        type string;
+        "List of network accesses";
+      list ep-network-access-point {
+        key "network-access-id";
         description
-          "unique identifier for the referred endpoint network access";
-      }
-      leaf network-access-description {
-        type string;
-        description
-          "endpoint network access description";
-      }
-      leaf network-access-node-id {
-        type string;
-        description
-          "EP network access node ID in the case of multi-homing.";
-      }
-      leaf network-access-tp-id {
-        type string;
-        description
-          "EP network access termination port ID.";
-      }
-      leaf network-access-tp-ip {
-        type inet:host;
-        description
-          "The IP address of EP network access.";
+          "IETF Network Slice endpoint network access related parameters";
+        leaf network-access-id {
+          type string;
+          description
+            "unique identifier for the referred endpoint network access";
+        }
+        leaf network-access-description {
+          type string;
+          description
+            "endpoint network access description";
+        }
+        leaf network-access-node-id {
+          type string;
+          description
+            "EP network access node ID in the case of multi-homing.";
+        }
+        leaf network-access-tp-id {
+          type string;
+          description
+            "EP network access termination port ID.";
+        }
+        leaf network-access-tp-ip {
+          type inet:host;
+          description
+            "The IP address of EP network access.";
+        }
+        uses ns-rate-limit; /* Per ep-network-access-point rate limits */
       }
     }
   }
@@ -482,6 +493,25 @@ module ietf-network-slice {
 
   // geolocation-container
 
+  grouping ns-rate-limit {
+    description
+      "The Network Slice rate limit grouping.";
+    container ep-rate-limit {
+      description
+        "Container for the asymmetric traffic control";
+      leaf incoming-rate-limit {
+        type te-types:te-bandwidth;
+        description
+          "The rate-limit imposed on incoming traffic.";
+      }
+      leaf outgoing-rate-limit {
+        type te-types:te-bandwidth;
+        description
+          "The rate-limit imposed on outgoing traffic.";
+      }
+    }
+  }
+
   grouping endpoint {
     description
       "IETF Network Slice endpoint related information";
@@ -516,32 +546,9 @@ module ietf-network-slice {
       description
         "The address of the endpoint IP address.";
     }
-    uses network-slice-match-criteria;
-    uses ep-network-accesses;
-    container ep-rate-limit {
-      description
-        "Container for the asymmetric traffic control";
-      container incoming-throughput {
-        description
-          "Container for the incoming traffic policy";
-        leaf maximum-throughput {
-          type te-types:te-bandwidth;
-          description
-            "If maximum-throughput is 0, it means best effort, no
-             minimum throughput is guaranteed.";
-        }
-      }
-      container outgoing-throughput {
-        description
-          "Container for the bandwidth policy";
-        leaf maximum-throughput {
-          type te-types:te-bandwidth;
-          description
-            "If maximum-throughput is 0, it means best effort, no
-             minimum throughput is guaranteed.";
-        }
-      }
-    }
+    uses ns-match-criteria;
+    uses ep-network-access-points;
+    uses ns-rate-limit; /* Per NSE rate limits */
     container ep-protocol {
       description
         "Describes protocol for the Network Slice Endpoint.";
@@ -550,28 +557,28 @@ module ietf-network-slice {
     uses endpoint-monitoring-parameters;
   }
 
-  //network-slice-endpoint
+  //ns-endpoint
 
-  grouping network-slice-member {
+  grouping ns-connection {
     description
-      "network-slice-member is described by this container";
-    leaf ns-member-id {
+      "ns-connection is described by this container";
+    leaf ns-connection-id {
       type uint32;
       description
-        "network-slice-member identifier";
+        "ns-connection identifier";
     }
-    leaf ns-member-description {
+    leaf ns-connection-description {
       type string;
       description
-        "network-slice-member description";
+        "ns-connection description";
     }
     container src {
       description
         "the source of Network Slice link";
       leaf src-ep-id {
         type leafref {
-          path "/ietf-network-slices/ietf-network-slice/"
-             + "ns-endpoint/ep-id";
+          path "/network-slices/network-slice"
+             + "/ns-endpoints/ns-endpoint/ep-id";
         }
         description
           "reference to source Network Slice endpoint";
@@ -582,19 +589,22 @@ module ietf-network-slice {
         "the destination of Network Slice link ";
       leaf dest-ep-id {
         type leafref {
-          path "/ietf-network-slices/ietf-network-slice"
-             + "/ns-endpoint/ep-id";
+          path "/network-slices/network-slice"
+             + "/ns-endpoints/ns-endpoint/ep-id";
         }
         description
           "reference to dest Network Slice endpoint";
       }
     }
+    uses ns-slo-policy; /* Per connection ns-slo-policy overrides
+                         * the per network slice ns-slo-policy.
+                         */
     leaf monitoring-type {
       type ns-monitoring-type;
       description
         "One way or two way monitoring type.";
     }
-    container ns-member-monitoring {
+    container ns-connection-monitoring {
       config false;
       description
         "SLO status Per network-slice endpoint to endpoint ";
@@ -602,16 +612,16 @@ module ietf-network-slice {
     }
   }
 
-  //network-slice-member
+  //ns-connection
 
   grouping slice-template {
     description
       "Grouping for slice-templates.";
-    container ns-templates {
+    container ns-slo-templates {
       description
         "Contains a set of network slice templates to
          reference in the IETF network slice.";
-      list slo-template {
+      list ns-slo-template {
         key "id";
         leaf id {
           type string;
@@ -631,15 +641,50 @@ module ietf-network-slice {
   }
 
   /* Configuration data nodes */
+  grouping ns-slo-policy {
+    description
+      "Network Slice policy grouping.";
+    choice ns-slo-policy {
+      description
+        "Choice for SLO policy template.
+         Can be standard template or customized template.";
+      case standard {
+        description
+          "Standard SLO template.";
+        leaf slo-template {
+          type leafref {
+            path "/network-slices"
+               + "/ns-slo-templates/ns-slo-template/id";
+          }
+          description
+            "Standard SLO template to be used.";
+        }
+      }
+      case custom {
+        description
+          "Customized SLO template.";
+        container slo-policy {
+          description
+            "Contains the SLO policy.";
+          leaf policy-description {
+            type string;
+            description
+              "Description of the SLO policy.";
+          }
+          uses ns-metric-bounds;
+        }
+      }
+    }
+  }
 
-  container ietf-network-slices {
+  container network-slices {
     description
       "IETF network-slice configurations";
     uses slice-template;
-    list ietf-network-slice {
+    list network-slice {
       key "ns-id";
       description
-        "a network-slice is identified by a network-slice-id";
+        "a network-slice is identified by a ns-id";
       leaf ns-id {
         type string;
         description
@@ -655,57 +700,35 @@ module ietf-network-slice {
         description
           "Network Slice tag for operational management";
       }
-      leaf ns-topology {
+      leaf ns-connectivity-type {
         type identityref {
-          base network-slice-topology;
+          base ns-connectivity-type;
         }
         default "any-to-any";
         description
           "Network Slice topology.";
       }
-      choice ns-slo-policy {
-        description
-          "Choice for SLO policy template.
-           Can be standard template or customized template.";
-        case standard {
-          description
-            "Standard SLO template.";
-          leaf slo-template {
-            type leafref {
-              path "/ietf-network-slices"
-                 + "/ns-templates/slo-template/id";
-            }
-            description
-              "Standard SLO template to be used.";
-          }
-        }
-        case custom {
-          description
-            "Customized SLO template.";
-          container slo-policy {
-            description
-              "Contains the SLO policy.";
-            leaf policy-description {
-              type string;
-              description
-                "Description of the SLO policy.";
-            }
-            uses network-slice-metric-bounds;
-          }
-        }
-      }
+      uses ns-slo-policy;
       uses status-params;
-      list ns-endpoint {
-        key "ep-id";
-        uses endpoint;
+      container ns-endpoints {
         description
-          "list of endpoints in this slice";
+          "Endpoints";
+        list ns-endpoint {
+          key "ep-id";
+          uses endpoint;
+          description
+            "list of endpoints in this slice";
+        }
       }
-      list ns-member {
-        key "ns-member-id";
+      container ns-connections {
         description
-          "List of network-slice-member in a slice";
-        uses network-slice-member;
+          "Connections container";
+        list ns-connection {
+          key "ns-connection-id";
+          description
+            "List of ns-connections in a slice";
+          uses ns-connection;
+        }
       }
     }
     //ietf-network-slice list
