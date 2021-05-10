@@ -69,9 +69,8 @@ module ietf-network-slice {
   identity custom {
     base ns-connectivity-type;
     description
-      "Identity of a custom NS topology where Hubs
-       can act as Spoke for certain parts of
-       the network or Spokes as Hubs.";
+      "Identity of a custom NS topology where Hubs can act as
+       Spoke for certain parts of the network or Spokes as Hubs.";
   }
 
   identity endpoint-role {
@@ -105,7 +104,7 @@ module ietf-network-slice {
 
   identity ns-slo-metric-type {
     description
-      "Base identity for Network Slice SLO metric type";
+      "Base identity for IETF Network Slice SLO metric type.";
   }
 
   identity ns-slo-two-way-delay {
@@ -146,31 +145,35 @@ module ietf-network-slice {
 
   identity ns-match-type {
     description
-      "Base identity for Network Slice traffic match type";
+      "Base identity for IETF Network Slice traffic match type.";
   }
 
   identity ns-phy-interface-match {
     base ns-match-type;
     description
-      "VLAN as Network Slice traffic match criteria.";
+      "Use the physical interface as match criteria for the IETF
+       Network Slice traffic.";
   }
 
   identity ns-vlan-match {
     base ns-match-type;
     description
-      "VLAN as Network Slice traffic match criteria.";
+      "Use the VLAN ID as match criteria for the IETF Network Slice
+       traffic.";
   }
 
   identity ns-route-target-match {
     base ns-match-type;
     description
-      "Label as Network Slice traffic match criteria.";
+      "Use the reachability information route-target as match criteria
+       for the IETF Network Slice traffic.";
   }
 
   identity ns-label-match {
     base ns-match-type;
     description
-      "Label as Network Slice traffic match criteria.";
+      "Use the MPLS label as match criteria for the IETF Network
+       Slice traffic.";
   }
 
   /*
@@ -179,8 +182,8 @@ module ietf-network-slice {
 
   identity availability-type {
     description
-      "Base identity from which specific availability
-       types are derived.";
+      "Base identity from which specific availability types are
+       derived.";
   }
 
   identity level-1 {
@@ -225,79 +228,90 @@ module ietf-network-slice {
       enum down {
         value 1;
         description
-          "Operational status DOWN";
+          "Operational status DOWN.";
       }
       enum unknown {
         value 2;
         description
-          "Operational status UNKNOWN";
+          "Operational status UNKNOWN.";
       }
     }
     description
       "This is a read-only attribute used to determine the
-       status of a particular element";
+       status of a particular element.";
   }
 
   typedef ns-monitoring-type {
     type enumeration {
       enum one-way {
         description
-          "represents one-way monitoring type";
+          "Represents one-way measurments monitoring type.";
       }
       enum two-way {
         description
-          "represents two-way monitoring type";
+          "represents two-way measurements monitoring type.";
       }
     }
     description
-      "enumerated type of monitoring on a ns-connection ";
+      "An enumerated type for monitoring on a IETF Network Slice
+       connection.";
   }
 
   /* Groupings */
 
   grouping status-params {
     description
-      "Grouping used to join operational and administrative status";
+      "A grouping used to join operational and administrative status.";
     container status {
       description
-        "Container for status of administration and operational";
+        "A container for the administrative and operational state.";
       leaf admin-enabled {
         type boolean;
         description
-          "Administrative Status UP/DOWN";
+          "The administrative status.";
       }
       leaf oper-status {
         type operational-type;
         config false;
         description
-          "Operations status";
+          "The operational status.";
       }
     }
   }
 
   grouping ns-match-criteria {
     description
-      "Grouping for Network Slice match definition.";
+      "A grouping for the IETF Network Slice match definition.";
     container ns-match-criteria {
       description
-        "Describes Network Slice match criteria.";
+        "Describes the IETF Network Slice match criteria.";
       list ns-match-criterion {
         key "match-type";
         description
-          "List of Network Slice traffic criteria";
+          "List of the IETF Network Slice traffic match criteria.";
         leaf match-type {
           type identityref {
             base ns-match-type;
           }
           description
-            "Identifies an entry in the list of match-type for
-             the Network Slice.";
+            "Identifies an entry in the list of the IETF Network Slice
+             match criteria.";
         }
-        leaf value {
-          type string;
+        list values {
+          key "index";
           description
-            "Describes Network Slice match criteria,e.g. IP address,
-             VLAN, etc.";
+            "List of match criteria values.";
+          leaf index {
+            type uint8;
+            description
+              "Index of an entry in the list.";
+          }
+          leaf value {
+            type string;
+            description
+              "Describes the IETF Network Slice match criteria, e.g.
+               IP address, VLAN, etc.";
+          }
         }
       }
     }
@@ -305,40 +319,41 @@ module ietf-network-slice {
 
   grouping ns-metric-bounds {
     description
-      "Network Slice metric bounds grouping";
+      "IETF Network Slice metric bounds grouping.";
     container ns-metric-bounds {
       description
-        "Network Slice metric bounds container";
+        "IETF Network Slice metric bounds container.";
       list ns-metric-bound {
         key "metric-type";
         description
-          "List of Network Slice metric bounds";
+          "List of IETF Network Slice metric bounds.";
         leaf metric-type {
           type identityref {
             base ns-slo-metric-type;
           }
           description
-            "Identifies an entry in the list of metric-types
-             bound for the Network Slice.";
+            "Identifies an entry in the list of metric type
+             bounds for the IETF Network Slice.";
         }
         leaf metric-unit {
           type string;
           mandatory true;
           description
-            "The metric unit of the parameter.
-             For example, s, ms, ns, and so on.";
+            "The metric unit of the parameter. For example,
+             s, ms, ns, and so on.";
         }
         leaf value-description {
           type string;
           description
             "The description of previous value. ";
         }
-        leaf boundary {
+        leaf bound {
           type uint64;
           default "0";
           description
-            "Boundary on ns-connection metric. A zero indicate
-             an unbounded upper limit for the specific metric-type";
+            "The Bound on the Network Slice connection metric. A
+             zero indicate an unbounded upper limit for the
+             specific metric-type.";
         }
       }
     }
@@ -346,56 +361,59 @@ module ietf-network-slice {
 
   grouping ep-network-access-points {
     description
-      "Grouping for endpoint network access definition.";
+      "Grouping for the endpoint network access definition.";
     container ep-network-access-points {
       description
-        "List of network accesses";
+        "List of network access points.";
       list ep-network-access-point {
         key "network-access-id";
         description
-          "IETF Network Slice endpoint network access related parameters";
+          "The IETF Network Slice network access points
+           related parameters.";
         leaf network-access-id {
           type string;
           description
-            "unique identifier for the referred endpoint network access";
+            "Uniquely identifier a network access point.";
         }
         leaf network-access-description {
           type string;
           description
-            "endpoint network access description";
+            "The network access point description.";
         }
         leaf network-access-node-id {
           type string;
           description
-            "EP network access node ID in the case of multi-homing.";
+            "The network access point node ID in the case of
+             multi-homing.";
         }
         leaf network-access-tp-id {
           type string;
           description
-            "EP network access termination port ID.";
+            "The termination port ID of the EP network access
+             point.";
         }
         leaf network-access-tp-ip {
           type inet:host;
           description
-            "The IP address of EP network access.";
+            "The IP address of the EP network access point.";
         }
-        uses ns-rate-limit; /* Per ep-network-access-point rate limits */
+        /* Per ep-network-access-point rate limits */
+        uses ns-rate-limit;
       }
     }
   }
 
   grouping endpoint-monitoring-parameters {
     description
-      "Grouping for endpoint-monitoring-parameters.";
+      "Grouping for the endpoint monitoring parameters.";
     container ep-monitoring {
       config false;
       description
-        "Container for endpoint-monitoring-parameters.";
+        "Container for endpoint monitoring parameters.";
       leaf incoming-utilized-bandwidth {
         type te-types:te-bandwidth;
         description
-          "Bandwidth utilization that represents the actual
-           utilization of the incoming endpoint.";
+          "Incoming bandwidth utilization at an endpoint.";
       }
       leaf incoming-bw-utilization {
         type decimal64 {
@@ -411,8 +429,7 @@ module ietf-network-slice {
       leaf outgoing-utilized-bandwidth {
         type te-types:te-bandwidth;
         description
-          "Bandwidth utilization that represents the actual
-           utilization of the incoming endpoint.";
+          "Outoing bandwidth utilization at an endpoint.";
       }
       leaf outgoing-bw-utilization {
         type decimal64 {
@@ -435,15 +452,15 @@ module ietf-network-slice {
       type yang:gauge64;
       units "usec";
       description
-        "The latency statistics per Network Slice member.
-         [RFC2681] and [RFC7679] discuss round trip times and one-way
+        "The latency statistics per Network Slice connection.
+         RFC2681 and RFC7679 discuss round trip times and one-way
          metrics, respectively";
     }
     leaf jitter {
       type yang:gauge32;
       description
         "The jitter statistics per Network Slice member
-         as defined by [RFC3393].";
+         as defined by RFC3393.";
     }
     leaf loss-ratio {
       type decimal64 {
@@ -561,16 +578,16 @@ module ietf-network-slice {
 
   grouping ns-connection {
     description
-      "ns-connection is described by this container";
+      "The Network Slice connection is described in this container.";
     leaf ns-connection-id {
       type uint32;
       description
-        "ns-connection identifier";
+        "The Network Slice connection identifier";
     }
     leaf ns-connection-description {
       type string;
       description
-        "ns-connection description";
+        "The Network Slice connection description";
     }
     container src {
       description
@@ -596,9 +613,10 @@ module ietf-network-slice {
           "reference to dest Network Slice endpoint";
       }
     }
-    uses ns-slo-policy; /* Per connection ns-slo-policy overrides
-                         * the per network slice ns-slo-policy.
-                         */
+    uses ns-slo-policy;
+    /* Per connection ns-slo-policy overrides
+     * the per network slice ns-slo-policy.
+     */
     leaf monitoring-type {
       type ns-monitoring-type;
       description
@@ -641,6 +659,7 @@ module ietf-network-slice {
   }
 
   /* Configuration data nodes */
+
   grouping ns-slo-policy {
     description
       "Network Slice policy grouping.";
@@ -726,7 +745,7 @@ module ietf-network-slice {
         list ns-connection {
           key "ns-connection-id";
           description
-            "List of ns-connections in a slice";
+            "List of Network Slice connections.";
           uses ns-connection;
         }
       }
