@@ -317,6 +317,19 @@ module ietf-network-slice {
     }
   }
 
+  grouping ns-shared-metric-bounds {
+    description
+      "Grouping of Network Slice metric bounds that
+       are shared amongst multiple connections of a Network
+       Slice.";
+    leaf ns-slo-shared-bandwidth {
+      type te-types:te-bandwidth;
+      description
+        "A limit on the bandwidth that is shared amongst
+         multiple connections of an IETF Network Slice.";
+    }
+  }
+
   grouping ns-metric-bounds {
     description
       "IETF Network Slice metric bounds grouping.";
@@ -691,6 +704,7 @@ module ietf-network-slice {
               "Description of the SLO policy.";
           }
           uses ns-metric-bounds;
+          uses ns-shared-metric-bounds;
         }
       }
     }

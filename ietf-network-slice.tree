@@ -14,13 +14,15 @@ module: ietf-network-slice
         |  |  +--rw slo-template?     leafref
         |  +--:(custom)
         |     +--rw slo-policy
-        |        +--rw policy-description?   string
+        |        +--rw policy-description?        string
         |        +--rw ns-metric-bounds
-        |           +--rw ns-metric-bound* [metric-type]
-        |              +--rw metric-type          identityref
-        |              +--rw metric-unit          string
-        |              +--rw value-description?   string
-        |              +--rw boundary?            uint64
+        |        |  +--rw ns-metric-bound* [metric-type]
+        |        |     +--rw metric-type          identityref
+        |        |     +--rw metric-unit          string
+        |        |     +--rw value-description?   string
+        |        |     +--rw bound?               uint64
+        |        +--rw ns-slo-shared-bandwidth?
+        |                te-types:te-bandwidth
         +--rw status
         |  +--rw admin-enabled?   boolean
         |  +--ro oper-status?     operational-type
@@ -38,7 +40,9 @@ module: ietf-network-slice
         |     +--rw ns-match-criteria
         |     |  +--rw ns-match-criterion* [match-type]
         |     |     +--rw match-type    identityref
-        |     |     +--rw value?        string
+        |     |     +--rw values* [index]
+        |     |        +--rw index    uint8
+        |     |        +--rw value?   string
         |     +--rw ep-network-access-points
         |     |  +--rw ep-network-access-point* [network-access-id]
         |     |     +--rw network-access-id             string
@@ -78,13 +82,15 @@ module: ietf-network-slice
               |  |  +--rw slo-template?          leafref
               |  +--:(custom)
               |     +--rw slo-policy
-              |        +--rw policy-description?   string
+              |        +--rw policy-description?        string
               |        +--rw ns-metric-bounds
-              |           +--rw ns-metric-bound* [metric-type]
-              |              +--rw metric-type          identityref
-              |              +--rw metric-unit          string
-              |              +--rw value-description?   string
-              |              +--rw boundary?            uint64
+              |        |  +--rw ns-metric-bound* [metric-type]
+              |        |     +--rw metric-type          identityref
+              |        |     +--rw metric-unit          string
+              |        |     +--rw value-description?   string
+              |        |     +--rw bound?               uint64
+              |        +--rw ns-slo-shared-bandwidth?
+              |                te-types:te-bandwidth
               +--rw monitoring-type?             ns-monitoring-type
               +--ro ns-connection-monitoring
                  +--ro latency?      yang:gauge64
