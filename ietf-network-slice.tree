@@ -22,7 +22,16 @@ module: ietf-network-slice
         |        |     +--rw value-description?   string
         |        |     +--rw bound?               uint64
         |        +--rw ns-slo-shared-bandwidth?
-        |                te-types:te-bandwidth
+        |        |       te-types:te-bandwidth
+        |        +--rw security-sle*              identityref
+        |        +--rw geo-sles
+        |           +--rw include-geo*           string
+        |           +--rw exclude-geo*           string
+        |           +--rw max-occupancy-level?   uint8
+        |           +--rw isolation?             identityref
+        |           +--rw diverse-connections
+        |              +--rw diverse-connection* [connection]
+        |                 +--rw connection    leafref
         +--rw status
         |  +--rw admin-enabled?   boolean
         |  +--ro oper-status?     operational-type
@@ -90,7 +99,16 @@ module: ietf-network-slice
               |        |     +--rw value-description?   string
               |        |     +--rw bound?               uint64
               |        +--rw ns-slo-shared-bandwidth?
-              |                te-types:te-bandwidth
+              |        |       te-types:te-bandwidth
+              |        +--rw security-sle*              identityref
+              |        +--rw geo-sles
+              |           +--rw include-geo*           string
+              |           +--rw exclude-geo*           string
+              |           +--rw max-occupancy-level?   uint8
+              |           +--rw isolation?             identityref
+              |           +--rw diverse-connections
+              |              +--rw diverse-connection* [connection]
+              |                 +--rw connection    leafref
               +--rw monitoring-type?             ns-monitoring-type
               +--ro ns-connection-monitoring
                  +--ro latency?      yang:gauge64

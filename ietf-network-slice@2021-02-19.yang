@@ -49,6 +49,41 @@ module ietf-network-slice {
   /* Features */
   /* Identities */
 
+  identity ns-isolation-type {
+    description
+      "Base identity for IETF Network slice isolation level.";
+  }
+  identity ns-isolation-shared {
+    base ns-isolation-type;
+    description
+      "Shared resources (e.g. queues) are associated with the Network
+       Slice traffic. Hence, the IETF network slice traffic can be
+       impacted by effects of other services traffic sharing
+       the same resources.";
+  }
+  identity ns-isolation-dedicated {
+    base ns-isolation-type;
+    description
+      "Dedicated resources (e.g. queues) are associated with the Network
+       Slice traffic. Hence, the IETF network slice traffic is isolated
+       from other servceis traffic sharing the same resources.";
+  }
+
+  identity ns-security-type {
+    description
+      "Base identity for for IETF Network security level.";
+  }
+  identity ns-security-authenticate {
+    base ns-security-type;
+    description
+      "IETF Network Slice requires authentication.";
+  }
+  identity ns-security-integrity {
+    base ns-security-type;
+    description
+      "IETF Network Slice requires data integrity.";
+  }
+
   identity ns-connectivity-type {
     description
       "Base identity for IETF Network Slice topology.";
@@ -327,6 +362,72 @@ module ietf-network-slice {
       description
         "A limit on the bandwidth that is shared amongst
          multiple connections of an IETF Network Slice.";
+    }
+  }
+
+  grouping ns-sle-slos {
+    description
+      "Indirectly Measurable Objectives of a IETF Network
+       Slice.";
+    leaf-list security-sle {
+      type identityref {
+        base ns-security-type;
+      }
+      description
+        "The IETF Network Slice security SLE(s)";
+    }
+    container geo-sles {
+      description
+        "Container for lists of geo locations SLEs applicable to
+         IETF Network Slice.";
+      leaf-list include-geo {
+        type string;
+        description
+          "List of geo locations that an IETF Network Slice
+           connectio(s) is required to avoid.";
+      }
+      leaf-list exclude-geo {
+        type string;
+        description
+          "List of geo locations that an IETF Network Slice
+           connectio(s) is required to avoid.";
+      }
+      leaf max-occupancy-level {
+        type uint8 {
+          range 1..100;
+        }
+        description
+          "The maximal occupancy level specifies the number of flows to
+           be admitted.";
+      }
+      leaf isolation {
+        type identityref {
+          base ns-isolation-type;
+        }
+        default ns-isolation-shared;
+        description
+          "The IETF Network Slice isolation SLE requirement.";
+      }
+      container diverse-connections {
+        description
+          "The IETF Network Slice per connection diversity
+           requirements.";
+        list diverse-connection {
+          key "connection";
+          description
+            "A list of connections that are required to be
+             diverse from the current connection.";
+          leaf connection {
+            type leafref {
+              path "/network-slices/network-slice/ns-connections/"+
+                   "ns-connection/ns-connection-id";
+            }
+            description
+              "A connection that is required to be diverse from the
+               other connection.";
+          }
+        }
+      }
     }
   }
 
@@ -705,6 +806,7 @@ module ietf-network-slice {
           }
           uses ns-metric-bounds;
           uses ns-shared-metric-bounds;
+          uses ns-sle-slos;
         }
       }
     }
