@@ -352,7 +352,7 @@ module ietf-network-slice {
     }
   }
 
-  grouping ns-shared-metric-bounds {
+  grouping ns-connection-group-metric-bounds {
     description
       "Grouping of Network Slice metric bounds that
        are shared amongst multiple connections of a Network
@@ -805,7 +805,6 @@ module ietf-network-slice {
               "Description of the SLO policy.";
           }
           uses ns-metric-bounds;
-          uses ns-shared-metric-bounds;
           uses ns-sle-slos;
         }
       }
@@ -863,6 +862,30 @@ module ietf-network-slice {
           description
             "List of Network Slice connections.";
           uses ns-connection;
+        }
+      }
+      container ns-connection-groups {
+        description
+          "Connection groups container.";
+        list ns-connection-group {
+          key "ns-connection-group-name";
+          description
+            "List of network slice connection groups.";
+          leaf ns-connection-group-name {
+            type string;
+            description
+              "Name of the connection group.";
+          }
+          leaf-list ns-connection-group-member {
+            type leafref {
+              path "/network-slices/network-slice"+
+                   "/ns-connections/ns-connection"+
+                   "/ns-connection-id";
+            }
+            description
+              "Member of the connection group.";
+          }
+          uses ns-connection-group-metric-bounds;
         }
       }
     }
