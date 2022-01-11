@@ -1,35 +1,33 @@
 module: ietf-network-slice
   +--rw network-slices
-     +--rw ns-slo-templates
-     |  +--rw ns-slo-template* [id]
+     +--rw ns-slo-sle-templates
+     |  +--rw ns-slo-sle-template* [id]
      |     +--rw id                      string
      |     +--rw template-description?   string
      +--rw network-slice* [ns-id]
-        +--rw ns-id                   string
-        +--rw ns-description?         string
-        +--rw ns-tag*                 string
-        +--rw ns-connectivity-type?   identityref
-        +--rw (ns-slo-policy)?
+        +--rw ns-id                     string
+        +--rw ns-description?           string
+        +--rw ns-tag*                   string
+        +--rw customer-name*            string
+        +--rw (ns-slo-sle-policy)?
         |  +--:(standard)
-        |  |  +--rw slo-template?     leafref
+        |  |  +--rw slo-sle-template?   -> /network-slices/ns-slo-sle-templates/ns-slo-sle-template/id
         |  +--:(custom)
-        |     +--rw slo-policy
-        |        +--rw policy-description?   string
+        |     +--rw slo-sle-policy
+        |        +--rw policy-description?     string
         |        +--rw ns-metric-bounds
         |        |  +--rw ns-metric-bound* [metric-type]
         |        |     +--rw metric-type          identityref
         |        |     +--rw metric-unit          string
         |        |     +--rw value-description?   string
         |        |     +--rw bound?               uint64
-        |        +--rw security-sle*         identityref
-        |        +--rw geo-sles
-        |           +--rw include-geo*           string
-        |           +--rw exclude-geo*           string
-        |           +--rw max-occupancy-level?   uint8
-        |           +--rw isolation?             identityref
-        |           +--rw diverse-connections
-        |              +--rw diverse-connection* [connection]
-        |                 +--rw connection    leafref
+        |        +--rw security*               identityref
+        |        +--rw isolation?              identityref
+        |        +--rw max-occupancy-level?    uint8
+        |        +--rw mtu                     uint16
+        |        +--rw steering-constraints
+        |           +--rw path-constraints
+        |           +--rw service-function
         +--rw status
         |  +--rw admin-enabled?   boolean
         |  +--ro oper-status?     operational-type
@@ -37,82 +35,109 @@ module: ietf-network-slice
         |  +--rw ns-endpoint* [ep-id]
         |     +--rw ep-id                       string
         |     +--rw ep-description?             string
-        |     +--rw ep-role?                    identityref
         |     +--rw location
         |     |  +--rw altitude?    int64
         |     |  +--rw latitude?    decimal64
         |     |  +--rw longitude?   decimal64
         |     +--rw node-id?                    string
-        |     +--rw ep-ip?                      inet:host
+        |     +--rw ep-ip?                      inet:ip-address
         |     +--rw ns-match-criteria
         |     |  +--rw ns-match-criterion* [match-type]
-        |     |     +--rw match-type    identityref
+        |     |     +--rw match-type                       identityref
         |     |     +--rw values* [index]
-        |     |        +--rw index    uint8
-        |     |        +--rw value?   string
+        |     |     |  +--rw index    uint8
+        |     |     |  +--rw value?   string
+        |     |     +--rw target-ns-connection-group-id?   -> /network-slices/network-slice/ns-connection-groups/ns-connection-group/ns-connection-group-id
+        |     +--rw ep-peering
+        |     |  +--rw protocol* [protocol-type]
+        |     |     +--rw protocol-type    identityref
+        |     |     +--rw attribute* [index]
+        |     |        +--rw index                    uint8
+        |     |        +--rw attribute-description?   string
+        |     |        +--rw value?                   string
         |     +--rw ep-network-access-points
         |     |  +--rw ep-network-access-point* [network-access-id]
         |     |     +--rw network-access-id             string
         |     |     +--rw network-access-description?   string
         |     |     +--rw network-access-node-id?       string
         |     |     +--rw network-access-tp-id?         string
-        |     |     +--rw network-access-tp-ip?         inet:host
+        |     |     +--rw network-access-tp-ip?         inet:ip-address
+        |     |     +--rw mtu                           uint16
         |     |     +--rw ep-rate-limit
-        |     |        +--rw incoming-rate-limit?
-        |     |        |       te-types:te-bandwidth
-        |     |        +--rw outgoing-rate-limit?
-        |     |                te-types:te-bandwidth
+        |     |        +--rw incoming-rate-limit?   te-types:te-bandwidth
+        |     |        +--rw outgoing-rate-limit?   te-types:te-bandwidth
         |     +--rw ep-rate-limit
         |     |  +--rw incoming-rate-limit?   te-types:te-bandwidth
         |     |  +--rw outgoing-rate-limit?   te-types:te-bandwidth
-        |     +--rw ep-protocol
         |     +--rw status
         |     |  +--rw admin-enabled?   boolean
         |     |  +--ro oper-status?     operational-type
         |     +--ro ep-monitoring
-        |        +--ro incoming-utilized-bandwidth?
-        |        |       te-types:te-bandwidth
+        |        +--ro incoming-utilized-bandwidth?   te-types:te-bandwidth
         |        +--ro incoming-bw-utilization        decimal64
-        |        +--ro outgoing-utilized-bandwidth?
-        |        |       te-types:te-bandwidth
+        |        +--ro outgoing-utilized-bandwidth?   te-types:te-bandwidth
         |        +--ro outgoing-bw-utilization        decimal64
-        +--rw ns-connections
-        |  +--rw ns-connection* [ns-connection-id]
-        |     +--rw ns-connection-id             uint32
-        |     +--rw ns-connection-description?   string
-        |     +--rw src
-        |     |  +--rw src-ep-id?   leafref
-        |     +--rw dest
-        |     |  +--rw dest-ep-id?   leafref
-        |     +--rw (ns-slo-policy)?
-        |     |  +--:(standard)
-        |     |  |  +--rw slo-template?          leafref
-        |     |  +--:(custom)
-        |     |     +--rw slo-policy
-        |     |        +--rw policy-description?   string
-        |     |        +--rw ns-metric-bounds
-        |     |        |  +--rw ns-metric-bound* [metric-type]
-        |     |        |     +--rw metric-type          identityref
-        |     |        |     +--rw metric-unit          string
-        |     |        |     +--rw value-description?   string
-        |     |        |     +--rw bound?               uint64
-        |     |        +--rw security-sle*         identityref
-        |     |        +--rw geo-sles
-        |     |           +--rw include-geo*           string
-        |     |           +--rw exclude-geo*           string
-        |     |           +--rw max-occupancy-level?   uint8
-        |     |           +--rw isolation?             identityref
-        |     |           +--rw diverse-connections
-        |     |              +--rw diverse-connection* [connection]
-        |     |                 +--rw connection    leafref
-        |     +--rw monitoring-type?             ns-monitoring-type
-        |     +--ro ns-connection-monitoring
-        |        +--ro latency?      yang:gauge64
-        |        +--ro jitter?       yang:gauge32
-        |        +--ro loss-ratio?   decimal64
         +--rw ns-connection-groups
-           +--rw ns-connection-group* [ns-connection-group-name]
-              +--rw ns-connection-group-name      string
-              +--rw ns-connection-group-member*   leafref
-              +--rw ns-slo-shared-bandwidth?
-                      te-types:te-bandwidth
+           +--rw ns-connection-group* [ns-connection-group-id]
+              +--rw ns-connection-group-id            string
+              +--rw (ns-slo-sle-policy)?
+              |  +--:(standard)
+              |  |  +--rw slo-sle-template?           -> /network-slices/ns-slo-sle-templates/ns-slo-sle-template/id
+              |  +--:(custom)
+              |     +--rw slo-sle-policy
+              |        +--rw policy-description?     string
+              |        +--rw ns-metric-bounds
+              |        |  +--rw ns-metric-bound* [metric-type]
+              |        |     +--rw metric-type          identityref
+              |        |     +--rw metric-unit          string
+              |        |     +--rw value-description?   string
+              |        |     +--rw bound?               uint64
+              |        +--rw security*               identityref
+              |        +--rw isolation?              identityref
+              |        +--rw max-occupancy-level?    uint8
+              |        +--rw mtu                     uint16
+              |        +--rw steering-constraints
+              |           +--rw path-constraints
+              |           +--rw service-function
+              +--rw ns-connection* [ns-connection-id]
+              |  +--rw ns-connection-id            uint32
+              |  +--rw ns-connectivity-type?       identityref
+              |  +--rw src-nse*                    -> /network-slices/network-slice/ns-endpoints/ns-endpoint/ep-id
+              |  +--rw dest-nse*                   -> /network-slices/network-slice/ns-endpoints/ns-endpoint/ep-id
+              |  +--rw (ns-slo-sle-policy)?
+              |  |  +--:(standard)
+              |  |  |  +--rw slo-sle-template?     -> /network-slices/ns-slo-sle-templates/ns-slo-sle-template/id
+              |  |  +--:(custom)
+              |  |     +--rw slo-sle-policy
+              |  |        +--rw policy-description?     string
+              |  |        +--rw ns-metric-bounds
+              |  |        |  +--rw ns-metric-bound* [metric-type]
+              |  |        |     +--rw metric-type          identityref
+              |  |        |     +--rw metric-unit          string
+              |  |        |     +--rw value-description?   string
+              |  |        |     +--rw bound?               uint64
+              |  |        +--rw security*               identityref
+              |  |        +--rw isolation?              identityref
+              |  |        +--rw max-occupancy-level?    uint8
+              |  |        +--rw mtu                     uint16
+              |  |        +--rw steering-constraints
+              |  |           +--rw path-constraints
+              |  |           +--rw service-function
+              |  +--ro ns-connection-monitoring
+              |     +--ro one-way-min-delay?         uint32
+              |     +--ro one-way-max-delay?         uint32
+              |     +--ro one-way-delay-variation?   uint32
+              |     +--ro one-way-packet-loss?       decimal64
+              |     +--ro two-way-min-delay?         uint32
+              |     +--ro two-way-max-delay?         uint32
+              |     +--ro two-way-delay-variation?   uint32
+              |     +--ro two-way-packet-loss?       decimal64
+              +--ro ns-connection-group-monitoring
+                 +--ro one-way-min-delay?         uint32
+                 +--ro one-way-max-delay?         uint32
+                 +--ro one-way-delay-variation?   uint32
+                 +--ro one-way-packet-loss?       decimal64
+                 +--ro two-way-min-delay?         uint32
+                 +--ro two-way-max-delay?         uint32
+                 +--ro two-way-delay-variation?   uint32
+                 +--ro two-way-packet-loss?       decimal64
