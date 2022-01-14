@@ -3,6 +3,13 @@ module ietf-network-slice {
   namespace "urn:ietf:params:xml:ns:yang:ietf-network-slice";
   prefix ietf-ns;
 
+  import ietf-qos-policy {
+    prefix qos-pol;
+    reference
+      "ID.ietf-rtgwg-qos-model: A YANG Data Model for Quality
+       of Service";
+  }
+
   import ietf-inet-types {
     prefix inet;
     reference
@@ -622,6 +629,18 @@ module ietf-network-slice {
           description
             "The IP address of the EP network access point.";
         }
+        leaf network-access-qos-policy-name {
+          type union {
+            type leafref {
+              path
+                "/qos-pol:policies/qos-pol:policy/qos-pol:name";
+            }
+            type string;
+          }
+          description
+            "The name of the QoS policy that is applied to the
+             network access point.";
+        }
         leaf mtu {
           type uint16;
           units "bytes";
@@ -675,6 +694,8 @@ module ietf-network-slice {
           "To be used to define the bandwidth utilization
            as a percentage of the available bandwidth.";
       }
+      uses te-types:performance-metrics-one-way-delay-loss;
+      uses te-types:performance-metrics-two-way-delay-loss;
     }
   }
 
@@ -719,22 +740,70 @@ module ietf-network-slice {
 
   // geolocation-container
 
+  grouping bw-rate-limits {
+    description
+      "Bandwidth rate limits grouping.";
+    leaf cir {
+      type uint64;
+      units "bps";
+      description
+        "Committed Information Rate. The maximum number of bits
+         that a port can receive or send during one-second over an
+         interface.";
+    }
+    leaf cbs {
+      type uint64;
+      units "bytes";
+      description
+        "Committed Burst Size. CBS controls the bursty nature
+         of the traffic. Traffic that does not use the configured
+         CIR accumulates credits until the credits reach the
+         configured CBS.";
+    }
+    leaf eir {
+      type uint64;
+      units "bps";
+      description
+        "Excess Information Rate, i.e., excess frame delivery
+         allowed not subject to SLA. The traffic rate can be
+         limited by EIR.";
+    }
+    leaf ebs {
+      type uint64;
+      units "bytes";
+      description
+        "Excess Burst Size. The bandwidth available for burst
+         traffic from the EBS is subject to the amount of
+         bandwidth that is accumulated during periods when
+         traffic allocated by the EIR policy is not used.";
+    }
+    leaf pir {
+      type uint64;
+      units "bps";
+      description
+        "Peak Information Rate, i.e., maximum frame delivery
+         allowed. It is equal to or less than sum of CIR and EIR.";
+    }
+    leaf pbs {
+      type uint64;
+      units "bytes";
+      description
+        "Peak Burst Size.";
+    }
+  }
+
   grouping ns-rate-limit {
     description
-      "The Network Slice rate limit grouping.";
-    container ep-rate-limit {
+      "The rate limits grouping.";
+    container incoming-rate-limits {
       description
         "Container for the asymmetric traffic control.";
-      leaf incoming-rate-limit {
-        type te-types:te-bandwidth;
-        description
-          "The rate-limit imposed on incoming traffic.";
-      }
-      leaf outgoing-rate-limit {
-        type te-types:te-bandwidth;
-        description
-          "The rate-limit imposed on outgoing traffic.";
-      }
+      uses bw-rate-limits;
+    }
+    container outgoing-rate-limits {
+      description
+        "The rate-limit imposed on outgoing traffic.";
+      uses bw-rate-limits;
     }
   }
 
@@ -776,6 +845,8 @@ module ietf-network-slice {
   //ns-endpoint
 
   grouping ns-connection {
+    description
+      "The network slice connection grouping.";
     list ns-connection {
       key "ns-connection-id";
       description
@@ -832,6 +903,7 @@ module ietf-network-slice {
       description
         "The Network Slice connection group identifier.";
     }
+    uses ns-connection-group-metric-bounds;
     uses ns-slo-sle-policy;
     uses ns-connection;
     /* Per connection ns-slo-sle-policy overrides
