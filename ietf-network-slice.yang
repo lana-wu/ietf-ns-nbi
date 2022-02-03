@@ -192,18 +192,26 @@ module ietf-network-slice {
        two endpoints at any time.";
   }
 
-  identity ns-slo-one-way-latency {
+  identity ns-slo-shared-bandwidth {
     base ns-slo-metric-type;
     description
-      "SLO one-way latency is upper bound of network latency when
+      "The shared SLO bandwidth bound. It is the limit on the
+       bandwidth that can be shared amongst a group of connections
+       of an IETF Network Slice.";
+  }
+
+  identity ns-slo-one-way-delay {
+    base ns-slo-metric-type;
+    description
+      "SLO one-way-delay is the upper bound of network delay when
        transmitting between two endpoints. The metric is defined in
        RFC7679.";
   }
 
-  identity ns-slo-two-way-latency {
+  identity ns-slo-two-way-delay  {
     base ns-slo-metric-type;
     description
-      "SLO two-way latency is upper bound of network latency when
+      "SLO two-way delay is the upper bound of network delay when
        transmitting between two endpoints. The metric is defined in
        RFC2681.";
   }
@@ -439,19 +447,6 @@ module ietf-network-slice {
     }
   }
 
-  grouping ns-connection-group-metric-bounds {
-    description
-      "Grouping of Network Slice metric bounds that
-       are shared amongst multiple connections of a Network
-       Slice.";
-    leaf ns-slo-shared-bandwidth {
-      type te-types:te-bandwidth;
-      description
-        "A limit on the bandwidth that is shared amongst
-         multiple connections of an IETF Network Slice.";
-    }
-  }
-
   grouping ns-sles {
     description
       "Indirectly Measurable Objectives of a IETF Network
@@ -624,6 +619,11 @@ module ietf-network-slice {
             "The termination port ID of the EP network access
              point.";
         }
+        leaf-list network-access-tag {
+          type string;
+          description
+            "Network access point tags.";
+        }
         leaf network-access-tp-ip {
           type inet:ip-address;
           description
@@ -639,7 +639,9 @@ module ietf-network-slice {
           }
           description
             "The name of the QoS policy that is applied to the
-             network access point.";
+             network access point. The name can reference a QoS
+             profile that is configured using the QoS policy data
+             model, or using a vendor native device data model.";
         }
         leaf mtu {
           type uint16;
@@ -694,8 +696,6 @@ module ietf-network-slice {
           "To be used to define the bandwidth utilization
            as a percentage of the available bandwidth.";
       }
-      uses te-types:performance-metrics-one-way-delay-loss;
-      uses te-types:performance-metrics-two-way-delay-loss;
     }
   }
 
@@ -743,6 +743,9 @@ module ietf-network-slice {
   grouping bw-rate-limits {
     description
       "Bandwidth rate limits grouping.";
+    reference
+      "RFC 7640: Traffic Management Benchmarking";
+
     leaf cir {
       type uint64;
       units "bps";
@@ -903,7 +906,6 @@ module ietf-network-slice {
       description
         "The Network Slice connection group identifier.";
     }
-    uses ns-connection-group-metric-bounds;
     uses ns-slo-sle-policy;
     uses ns-connection;
     /* Per connection ns-slo-sle-policy overrides

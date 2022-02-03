@@ -62,6 +62,7 @@ module: ietf-network-slice
         |     |     +--rw network-access-description?       string
         |     |     +--rw network-access-node-id?           string
         |     |     +--rw network-access-tp-id?             string
+        |     |     +--rw network-access-tag*               string
         |     |     +--rw network-access-tp-ip?
         |     |     |       inet:ip-address
         |     |     +--rw network-access-qos-policy-name?   union
@@ -104,17 +105,9 @@ module: ietf-network-slice
         |        +--ro outgoing-utilized-bandwidth?
         |        |       te-types:te-bandwidth
         |        +--ro outgoing-bw-utilization        decimal64
-        |        +--ro one-way-delay?                 uint32
-        |        +--ro one-way-delay-normality?
-        |        |       te-types:performance-metrics-normality
-        |        +--ro two-way-delay?                 uint32
-        |        +--ro two-way-delay-normality?
-        |                te-types:performance-metrics-normality
         +--rw ns-connection-groups
            +--rw ns-connection-group* [ns-connection-group-id]
               +--rw ns-connection-group-id            string
-              +--rw ns-slo-shared-bandwidth?
-              |       te-types:te-bandwidth
               +--rw (ns-slo-sle-policy)?
               |  +--:(standard)
               |  |  +--rw slo-sle-template?           leafref
