@@ -86,7 +86,7 @@ module ietf-network-slice {
   identity network-access-tag-vlan-id {
     base network-access-tag-type;
     description
-      "The network access VLAN ID tag type.";
+      "The network access interface VLAN ID tag type.";
   }
 
   identity network-access-tag-ip-mask {
@@ -663,10 +663,15 @@ module ietf-network-slice {
             "The termination port ID of the EP network access
              point.";
         }
-        leaf network-access-tp-ip {
+        leaf network-access-tp-ip-address {
           type inet:ip-address;
           description
             "The IP address of the EP network access point.";
+        }
+        leaf network-access-tp-ip-prefix-length {
+          type uint8;
+          description
+            "The subnet prefix length expressed in bits.";
         }
         leaf network-access-qos-policy-name {
           type string;
@@ -896,6 +901,8 @@ module ietf-network-slice {
       description
         "The IP address of the endpoint.";
     }
+    uses ns-match-criteria;
+    uses ep-peering;
     uses ep-network-access-points;
     uses ns-rate-limit;
     /* Per NSE rate limits */

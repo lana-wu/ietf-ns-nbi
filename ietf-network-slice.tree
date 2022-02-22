@@ -44,16 +44,39 @@ module: ietf-network-slice
         |     |  +--rw longitude?   decimal64
         |     +--rw node-id?                    string
         |     +--rw ep-ip?                      inet:ip-address
+        |     +--rw ns-match-criteria
+        |     |  +--rw ns-match-criterion* [index]
+        |     |     +--rw index                            uint32
+        |     |     +--rw match-type?
+        |     |     |       identityref
+        |     |     +--rw values* [index]
+        |     |     |  +--rw index    uint8
+        |     |     |  +--rw value?   string
+        |     |     +--rw target-ns-connection-group-id?   leafref
+        |     +--rw ep-peering
+        |     |  +--rw protocol* [protocol-type]
+        |     |     +--rw protocol-type    identityref
+        |     |     +--rw attribute* [index]
+        |     |        +--rw index                    uint8
+        |     |        +--rw attribute-description?   string
+        |     |        +--rw value?                   string
         |     +--rw ep-network-access-points
         |     |  +--rw ep-network-access-point* [network-access-id]
-        |     |     +--rw network-access-id                 string
-        |     |     +--rw network-access-description?       string
-        |     |     +--rw network-access-node-id?           string
-        |     |     +--rw network-access-tp-id?             string
-        |     |     +--rw network-access-tp-ip?
+        |     |     +--rw network-access-id
+        |     |     |       string
+        |     |     +--rw network-access-description?
+        |     |     |       string
+        |     |     +--rw network-access-node-id?
+        |     |     |       string
+        |     |     +--rw network-access-tp-id?
+        |     |     |       string
+        |     |     +--rw network-access-tp-ip-address?
         |     |     |       inet:ip-address
-        |     |     +--rw network-access-qos-policy-name?   string
-        |     |     +--rw mtu                               uint16
+        |     |     +--rw network-access-tp-ip-prefix-length?   uint8
+        |     |     +--rw network-access-qos-policy-name?
+        |     |     |       string
+        |     |     +--rw mtu
+        |     |     |       uint16
         |     |     +--rw network-access-tags
         |     |     |  +--rw network-access-tag* [index]
         |     |     |     +--rw index                       uint32
