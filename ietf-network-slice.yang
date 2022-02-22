@@ -3,13 +3,6 @@ module ietf-network-slice {
   namespace "urn:ietf:params:xml:ns:yang:ietf-network-slice";
   prefix ietf-ns;
 
-  import ietf-qos-policy {
-    prefix qos-pol;
-    reference
-      "ID.ietf-rtgwg-qos-model: A YANG Data Model for Quality
-       of Service";
-  }
-
   import ietf-inet-types {
     prefix inet;
     reference
@@ -61,6 +54,52 @@ module ietf-network-slice {
 
   /* Features */
   /* Identities */
+
+  identity ns-tag-type {
+    description
+      "Base identity for IETF Network Slice tag type.";
+  }
+
+  identity ns-tag-customer {
+    base ns-tag-type;
+    description
+      "The IETF Network Slice customer ID tag type.";
+  }
+
+  identity ns-tag-service {
+    base ns-tag-type;
+    description
+      "The IETF Network Slice service tag type.";
+  }
+
+  identity ns-tag-opaque {
+    base ns-tag-type;
+    description
+      "The IETF Network Slice opaque tag type.";
+  }
+
+  identity network-access-tag-type {
+    description
+      "Base identity for the network access tag type.";
+  }
+
+  identity network-access-tag-vlan-id {
+    base network-access-tag-type;
+    description
+      "The network access interface VLAN ID tag type.";
+  }
+
+  identity network-access-tag-ip-mask {
+    base network-access-tag-type;
+    description
+      "The network access tag IP mask.";
+  }
+
+  identity network-access-tag-opaque {
+    base network-access-tag-type;
+    description
+      "The network access opaque tag type.";
+  }
 
   identity ns-isolation-type {
     description
@@ -407,9 +446,14 @@ module ietf-network-slice {
       description
         "Describes the IETF Network Slice match criteria.";
       list ns-match-criterion {
-        key "match-type";
+        key "index";
         description
           "List of the IETF Network Slice traffic match criteria.";
+        leaf index {
+          type uint32;
+          description
+            "The entry index.";
+        }
         leaf match-type {
           type identityref {
             base ns-match-type;
@@ -619,29 +663,22 @@ module ietf-network-slice {
             "The termination port ID of the EP network access
              point.";
         }
-        leaf-list network-access-tag {
-          type string;
-          description
-            "Network access point tags.";
-        }
-        leaf network-access-tp-ip {
+        leaf network-access-tp-ip-address {
           type inet:ip-address;
           description
             "The IP address of the EP network access point.";
         }
+        leaf network-access-tp-ip-prefix-length {
+          type uint8;
+          description
+            "The subnet prefix length expressed in bits.";
+        }
         leaf network-access-qos-policy-name {
-          type union {
-            type leafref {
-              path
-                "/qos-pol:policies/qos-pol:policy/qos-pol:name";
-            }
-            type string;
-          }
+          type string;
           description
             "The name of the QoS policy that is applied to the
              network access point. The name can reference a QoS
-             profile that is configured using the QoS policy data
-             model, or using a vendor native device data model.";
+             profile that is pre-provisioned on the device.";
         }
         leaf mtu {
           type uint16;
@@ -651,7 +688,35 @@ module ietf-network-slice {
             "Maximum size in octets of a data packet that
              can traverse a NSE network access point.";
         }
+        container network-access-tags {
+          description
+            "Container for the network access tags.";
+          list network-access-tag {
+            key "index";
+            description
+              "The network access point tags list.";
+            leaf index {
+              type uint32;
+              description
+                "The entry index.";
+            }
+            leaf network-access-tag-type {
+              type identityref {
+                base network-access-tag-type;
+              }
+              description
+                "The network access point tag type.";
+            }
+            leaf network-access-tag-value {
+              type string;
+              description
+                "The network access point tag value.";
+            }
+          }
+        }
         /* Per ep-network-access-point rate limits */
+        uses ns-match-criteria;
+        uses ep-peering;
         uses ns-rate-limit;
       }
     }
@@ -1005,18 +1070,31 @@ module ietf-network-slice {
         description
           "Give more description of the network slice.";
       }
-      leaf-list ns-tag {
-        type string;
+      container ns-tags {
         description
-          "Network Slice tag for operational management.";
-      }
-      leaf-list customer-name {
-        type string;
-        description
-          "List of the customer that actually uses the slice.
-           In the case that multiple customers sharing
-           same slice service, e.g., 5G, customer name may
-           help with operational management.";
+          "Container for the list of IETF Network Slice tags.";
+        list ns-tag {
+          key "index";
+          description
+            "IETF Network Slice tag list.";
+          leaf index {
+            type uint32;
+            description
+              "The entry index.";
+          }
+          leaf ns-tag-type {
+            type identityref {
+              base ns-tag-type;
+            }
+            description
+              "The IETF Network Slice tag type.";
+          }
+          leaf ns-tag-value {
+            type string;
+            description
+              "The IETF Network Slice tag value.";
+          }
+        }
       }
       uses ns-slo-sle-policy;
       uses status-params;
