@@ -25,27 +25,34 @@ module ietf-network-slice {
   contact
     "WG Web:  <https://tools.ietf.org/wg/teas/>
      WG List:  <mailto:teas@ietf.org>
-     Editor: Bo Wu <lana.wubo@huawei.com>
-           : Dhruv Dhody <dhruv.ietf@gmail.com>
-           : Reza Rokui <reza.rokui@nokia.com>
-           : Tarek Saad <tsaad@juniper.net>";
+
+     Editor: Bo Wu
+          <lana.wubo@huawei.com>
+     Editor: Dhruv Dhody
+          <dhruv.ietf@gmail.com>
+     Editor: Reza Rokui
+          <reza.rokui@nokia.com>
+     Editor: Tarek Saad
+          <tsaad@juniper.net>
+     Author: Liuyan Han
+          <hanliuyan@chinamobile.com>";
   description
     "This module contains a YANG module for the IETF Network Slice.
 
-     Copyright (c) 2021 IETF Trust and the persons identified as
-     authors of the code.  All rights reserved.
+        Copyright (c) 2022 IETF Trust and the persons identified as
+        authors of the code.  All rights reserved.
 
-     Redistribution and use in source and binary forms, with or
-     without modification, is permitted pursuant to, and subject to
-     the license terms contained in, the Simplified BSD License set
-     forth in Section 4.c of the IETF Trust's Legal Provisions
-     Relating to IETF Documents
-     (http://trustee.ietf.org/license-info).
+        Redistribution and use in source and binary forms, with or
+        without modification, is permitted pursuant to, and subject
+        to the license terms contained in, the Revised BSD License
+        set forth in Section 4.c of the IETF Trust's Legal Provisions
+        Relating to IETF Documents
+        (https://trustee.ietf.org/license-info).
 
      This version of this YANG module is part of RFC XXXX; see the
      RFC itself for full legal notices.";
 
-  revision 2022-01-11 {
+  revision 2022-03-04 {
     description
       "initial version.";
     reference
@@ -161,13 +168,15 @@ module ietf-network-slice {
   identity point-to-multipoint {
     base ns-connectivity-type;
     description
-      "Identity for point-to-multipoint IETF Network Slice connectivity.";
+      "Identity for point-to-multipoint IETF Network Slice
+       connectivity.";
   }
 
   identity multipoint-to-multipoint {
     base ns-connectivity-type;
     description
-      "Identity for multipoint-to-multipoint IETF Network Slice connectivity.";
+      "Identity for multipoint-to-multipoint IETF Network Slice
+       connectivity.";
   }
 
   identity any-to-any {
@@ -247,7 +256,7 @@ module ietf-network-slice {
        RFC7679.";
   }
 
-  identity ns-slo-two-way-delay  {
+  identity ns-slo-two-way-delay {
     base ns-slo-metric-type;
     description
       "SLO two-way delay is the upper bound of network delay when
@@ -810,7 +819,6 @@ module ietf-network-slice {
       "Bandwidth rate limits grouping.";
     reference
       "RFC 7640: Traffic Management Benchmarking";
-
     leaf cir {
       type uint64;
       units "bps";
@@ -965,7 +973,8 @@ module ietf-network-slice {
 
   grouping ns-connection-group {
     description
-      "The Network Slice connection group is described in this container.";
+      "The Network Slice connection group is described in this
+       container.";
     leaf ns-connection-group-id {
       type string;
       description
