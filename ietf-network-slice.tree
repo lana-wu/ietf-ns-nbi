@@ -32,18 +32,22 @@ module: ietf-network-slice
         |           +--rw path-constraints
         |           +--rw service-function
         +--rw status
-        |  +--rw admin-enabled?   boolean
-        |  +--ro oper-status?     operational-type
-        +--rw ns-endpoints
-        |  +--rw ns-endpoint* [ep-id]
-        |     +--rw ep-id                       string
-        |     +--rw ep-description?             string
+        |  +--rw admin-status
+        |  |  +--rw status?         identityref
+        |  |  +--rw last-updated?   yang:date-and-time
+        |  +--ro oper-status
+        |     +--ro status?         identityref
+        |     +--ro last-updated?   yang:date-and-time
+        +--rw ns-saps
+        |  +--rw ns-sap* [sap-id]
+        |     +--rw sap-id                     string
+        |     +--rw sap-description?           string
         |     +--rw location
         |     |  +--rw altitude?    int64
         |     |  +--rw latitude?    decimal64
         |     |  +--rw longitude?   decimal64
-        |     +--rw node-id?                    string
-        |     +--rw ep-ip?                      inet:ip-address
+        |     +--rw node-id?                   string
+        |     +--rw sap-ip?                    inet:ip-address
         |     +--rw ns-match-criteria
         |     |  +--rw ns-match-criterion* [index]
         |     |     +--rw index                            uint32
@@ -53,36 +57,31 @@ module: ietf-network-slice
         |     |     |  +--rw index    uint8
         |     |     |  +--rw value?   string
         |     |     +--rw target-ns-connection-group-id?   leafref
-        |     +--rw ep-peering
+        |     |     +--rw group-sap-role?
+        |     |     |       identityref
+        |     |     +--rw target-ns-connection-id?         leafref
+        |     +--rw sap-peering
         |     |  +--rw protocol* [protocol-type]
         |     |     +--rw protocol-type    identityref
         |     |     +--rw attribute* [index]
         |     |        +--rw index                    uint8
         |     |        +--rw attribute-description?   string
         |     |        +--rw value?                   string
-        |     +--rw ep-network-access-points
-        |     |  +--rw ep-network-access-point* [network-access-id]
-        |     |     +--rw network-access-id
-        |     |     |       string
-        |     |     +--rw network-access-description?
-        |     |     |       string
-        |     |     +--rw network-access-node-id?
-        |     |     |       string
-        |     |     +--rw network-access-tp-id?
-        |     |     |       string
-        |     |     +--rw network-access-tp-ip-address?
-        |     |     |       inet:ip-address
-        |     |     +--rw network-access-tp-ip-prefix-length?   uint8
-        |     |     +--rw network-access-qos-policy-name?
-        |     |     |       string
-        |     |     +--rw mtu
-        |     |     |       uint16
-        |     |     +--rw network-access-tags
-        |     |     |  +--rw network-access-tag* [index]
-        |     |     |     +--rw index                       uint32
-        |     |     |     +--rw network-access-tag-type?
-        |     |     |     |       identityref
-        |     |     |     +--rw network-access-tag-value?   string
+        |     +--rw sap-attachment-circuits
+        |     |  +--rw sap-ac* [ac-id]
+        |     |     +--rw ac-id                   string
+        |     |     +--rw ac-description?         string
+        |     |     +--rw ac-node-id?             string
+        |     |     +--rw ac-tp-id?               string
+        |     |     +--rw ac-tp-ip-address?       inet:ip-address
+        |     |     +--rw ac-ip-prefix-length?    uint8
+        |     |     +--rw ac-qos-policy-name?     string
+        |     |     +--rw mtu                     uint16
+        |     |     +--rw ac-tags
+        |     |     |  +--rw ac-tag* [index]
+        |     |     |     +--rw index           uint32
+        |     |     |     +--rw ac-tag-type?    identityref
+        |     |     |     +--rw ac-tag-value?   string
         |     |     +--rw ns-match-criteria
         |     |     |  +--rw ns-match-criterion* [index]
         |     |     |     +--rw index
@@ -93,7 +92,10 @@ module: ietf-network-slice
         |     |     |     |  +--rw index    uint8
         |     |     |     |  +--rw value?   string
         |     |     |     +--rw target-ns-connection-group-id?   leafref
-        |     |     +--rw ep-peering
+        |     |     |     +--rw group-sap-role?
+        |     |     |     |       identityref
+        |     |     |     +--rw target-ns-connection-id?         leafref
+        |     |     +--rw sap-peering
         |     |     |  +--rw protocol* [protocol-type]
         |     |     |     +--rw protocol-type    identityref
         |     |     |     +--rw attribute* [index]
@@ -129,9 +131,13 @@ module: ietf-network-slice
         |     |  +--rw pir?   uint64
         |     |  +--rw pbs?   uint64
         |     +--rw status
-        |     |  +--rw admin-enabled?   boolean
-        |     |  +--ro oper-status?     operational-type
-        |     +--ro ep-monitoring
+        |     |  +--rw admin-status
+        |     |  |  +--rw status?         identityref
+        |     |  |  +--rw last-updated?   yang:date-and-time
+        |     |  +--ro oper-status
+        |     |     +--ro status?         identityref
+        |     |     +--ro last-updated?   yang:date-and-time
+        |     +--ro sap-monitoring
         |        +--ro incoming-utilized-bandwidth?
         |        |       te-types:te-bandwidth
         |        +--ro incoming-bw-utilization        decimal64
@@ -141,6 +147,7 @@ module: ietf-network-slice
         +--rw ns-connection-groups
            +--rw ns-connection-group* [ns-connection-group-id]
               +--rw ns-connection-group-id            string
+              +--rw group-connectivity-type?          identityref
               +--rw (ns-slo-sle-policy)?
               |  +--:(standard)
               |  |  +--rw slo-sle-template?           leafref
@@ -163,8 +170,8 @@ module: ietf-network-slice
               +--rw ns-connection* [ns-connection-id]
               |  +--rw ns-connection-id            uint32
               |  +--rw ns-connectivity-type?       identityref
-              |  +--rw src-nse*                    leafref
-              |  +--rw dest-nse*                   leafref
+              |  +--rw src-sap*                    leafref
+              |  +--rw dest-sap*                   leafref
               |  +--rw (ns-slo-sle-policy)?
               |  |  +--:(standard)
               |  |  |  +--rw slo-sle-template?     leafref

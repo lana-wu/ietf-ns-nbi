@@ -8,6 +8,12 @@ module ietf-network-slice {
     reference
       "RFC 6991: Common YANG Types.";
   }
+  import ietf-vpn-common {
+    prefix vpn-common;
+    reference
+      "RFC 9181: A Common YANG Data Model for Layer 2 and Layer 3
+                    VPNs.";
+  }
   import ietf-te-types {
     prefix te-types;
     reference
@@ -52,7 +58,7 @@ module ietf-network-slice {
      This version of this YANG module is part of RFC XXXX; see the
      RFC itself for full legal notices.";
 
-  revision 2022-03-04 {
+  revision 2022-03-18 {
     description
       "initial version.";
     reference
@@ -156,7 +162,7 @@ module ietf-network-slice {
 
   identity ns-connectivity-type {
     description
-      "Base identity for IETF Network Slice connectivity.";
+      "Base identity for IETF Network Slice connectivity construct.";
   }
 
   identity point-to-point {
@@ -172,53 +178,46 @@ module ietf-network-slice {
        connectivity.";
   }
 
-  identity multipoint-to-multipoint {
-    base ns-connectivity-type;
-    description
-      "Identity for multipoint-to-multipoint IETF Network Slice
-       connectivity.";
-  }
-
   identity any-to-any {
     base ns-connectivity-type;
     description
       "Identity for any-to-any IETF Network Slice connectivity.";
   }
 
-  identity hub-spoke {
-    base ns-connectivity-type;
+  identity group-point-to-point {
+    base vpn-common:vpn-topology;
     description
-      "Identity for Hub-and-Spoke IETF Network Slice connectivity.";
+      "Identity for point-to-point IETF Network Slice connectivity.";
   }
 
-  identity custom {
-    base ns-connectivity-type;
+  identity group-point-to-multipoint {
+    base vpn-common:vpn-topology;
     description
-      "Identity of a custom NS topology where Hubs can act as
-       Spoke for certain parts of the network or Spokes as Hubs.";
+      "Identity for point-to-point IETF Network Slice connectivity.";
   }
 
-  identity endpoint-role {
+  identity group-multipoint-to-multipoint {
+    base vpn-common:vpn-topology;
     description
-      "Base identity of a NSE role in an IETF Network Slice topology.";
+      "Identity for point-to-point IETF Network Slice connectivity.";
   }
 
-  identity any-to-any-role {
-    base endpoint-role;
+  identity group-multipoint-to-point {
+    base vpn-common:vpn-topology;
     description
-      "Identity of any-to-any NS.";
+      "Identity for point-to-point IETF Network Slice connectivity.";
   }
 
-  identity spoke-role {
-    base endpoint-role;
+  identity sender-role {
+    base vpn-common:role;
     description
-      "A NSE is acting as a Spoke.";
+      "A SAP is acting as a sender.";
   }
 
-  identity hub-role {
-    base endpoint-role;
+  identity receive-role {
+    base vpn-common:role;
     description
-      "A NSE is acting as a Hub.";
+      "A SAP is acting as a receiver.";
   }
 
   identity ns-slo-metric-type {
@@ -330,19 +329,19 @@ module ietf-network-slice {
 
   identity peering-protocol-type {
     description
-      "Base identity for NSE peering protocol type.";
+      "Base identity for SAP peering protocol type.";
   }
 
   identity peering-protocol-bgp {
     base peering-protocol-type;
     description
-      "Use BGP as protocol for NSE peering with customer device.";
+      "Use BGP as protocol for SAP peering with customer device.";
   }
 
   identity peering-static-routing {
     base peering-protocol-type;
     description
-      "Use static routing for NSE peering with customer device.";
+      "Use static routing for SAP peering with customer device.";
   }
 
   /*
@@ -426,28 +425,6 @@ module ietf-network-slice {
        connection.";
   }
 
-  /* Groupings */
-
-  grouping status-params {
-    description
-      "A grouping used to join operational and administrative status.";
-    container status {
-      description
-        "A container for the administrative and operational state.";
-      leaf admin-enabled {
-        type boolean;
-        description
-          "The administrative status.";
-      }
-      leaf oper-status {
-        type operational-type;
-        config false;
-        description
-          "The operational status.";
-      }
-    }
-  }
-
   grouping ns-match-criteria {
     description
       "A grouping for the IETF Network Slice match definition.";
@@ -496,6 +473,23 @@ module ietf-network-slice {
           description
             "reference to a Network Slice connection group.";
         }
+        leaf group-sap-role {
+          type identityref {
+            base vpn-common:role;
+          }
+          default "vpn-common:any-to-any-role";
+          description
+            "Indicates the role in the connection group.";
+        }
+        leaf target-ns-connection-id {
+          type leafref {
+            path "/network-slices/network-slice"
+               + "/ns-connection-groups/ns-connection-group"
+               + "/ns-connection/ns-connection-id";
+          }
+          description
+            "reference to a Network Slice connection.";
+        }
       }
     }
   }
@@ -535,7 +529,7 @@ module ietf-network-slice {
         "The MTU specifies the maximum length in octets of data
          packets that can be transmitted by the NS. The value needs
          to be less than or equal to the minimum MTU value of
-         all 'ep-network-access-points' in the NSEs of the NS.";
+         all 'sap-attach-circuits' in the NSEs of the NS.";
     }
     container steering-constraints {
       description
@@ -596,22 +590,22 @@ module ietf-network-slice {
     }
   }
 
-  grouping ep-peering {
+  grouping sap-peering {
     description
-      "A grouping for the IETF Network Slice Endpoint peering.";
-    container ep-peering {
+      "A grouping for the IETF Network Slice SAP peering.";
+    container sap-peering {
       description
-        "Describes NSE peering attributes.";
+        "Describes SAP peering attributes.";
       list protocol {
         key "protocol-type";
         description
-          "List of the NSE peering protocol.";
+          "List of the SAP peering protocol.";
         leaf protocol-type {
           type identityref {
             base peering-protocol-type;
           }
           description
-            "Identifies an entry in the list of NSE peering
+            "Identifies an entry in the list of SAP peering
              protocol type.";
         }
         list attribute {
@@ -639,50 +633,50 @@ module ietf-network-slice {
     }
   }
 
-  grouping ep-network-access-points {
+  grouping sap-attachment-circuits {
     description
-      "Grouping for the endpoint network access definition.";
-    container ep-network-access-points {
+      "Grouping for the SAP AC definition.";
+    container sap-attachment-circuits {
       description
         "List of network access points.";
-      list ep-network-access-point {
-        key "network-access-id";
+      list sap-ac {
+        key "ac-id";
         description
           "The IETF Network Slice network access points
            related parameters.";
-        leaf network-access-id {
+        leaf ac-id {
           type string;
           description
-            "Uniquely identifier a network access point.";
+            "Uniquely identifier a AC.";
         }
-        leaf network-access-description {
+        leaf ac-description {
           type string;
           description
             "The network access point description.";
         }
-        leaf network-access-node-id {
+        leaf ac-node-id {
           type string;
           description
             "The network access point node ID in the case of
              multi-homing.";
         }
-        leaf network-access-tp-id {
+        leaf ac-tp-id {
           type string;
           description
             "The termination port ID of the EP network access
              point.";
         }
-        leaf network-access-tp-ip-address {
+        leaf ac-tp-ip-address {
           type inet:ip-address;
           description
             "The IP address of the EP network access point.";
         }
-        leaf network-access-tp-ip-prefix-length {
+        leaf ac-ip-prefix-length {
           type uint8;
           description
             "The subnet prefix length expressed in bits.";
         }
-        leaf network-access-qos-policy-name {
+        leaf ac-qos-policy-name {
           type string;
           description
             "The name of the QoS policy that is applied to the
@@ -695,12 +689,12 @@ module ietf-network-slice {
           mandatory true;
           description
             "Maximum size in octets of a data packet that
-             can traverse a NSE network access point.";
+             can traverse a SAP network access point.";
         }
-        container network-access-tags {
+        container ac-tags {
           description
             "Container for the network access tags.";
-          list network-access-tag {
+          list ac-tag {
             key "index";
             description
               "The network access point tags list.";
@@ -709,32 +703,32 @@ module ietf-network-slice {
               description
                 "The entry index.";
             }
-            leaf network-access-tag-type {
+            leaf ac-tag-type {
               type identityref {
                 base network-access-tag-type;
               }
               description
                 "The network access point tag type.";
             }
-            leaf network-access-tag-value {
+            leaf ac-tag-value {
               type string;
               description
                 "The network access point tag value.";
             }
           }
         }
-        /* Per ep-network-access-point rate limits */
+        /* Per ac rate limits */
         uses ns-match-criteria;
-        uses ep-peering;
+        uses sap-peering;
         uses ns-rate-limit;
       }
     }
   }
 
-  grouping ep-monitoring-metrics {
+  grouping sap-monitoring-metrics {
     description
       "Grouping for the NS endpoint monitoring metrics.";
-    container ep-monitoring {
+    container sap-monitoring {
       config false;
       description
         "Container for NS endpoint monitoring metrics.";
@@ -883,16 +877,16 @@ module ietf-network-slice {
     }
   }
 
-  grouping endpoint {
+  grouping sap {
     description
       "IETF Network Slice endpoint related information";
-    leaf ep-id {
+    leaf sap-id {
       type string;
       description
         "Unique identifier for the referred IETF Network
          Slice endpoint.";
     }
-    leaf ep-description {
+    leaf sap-description {
       type string;
       description
         "Give more description of the Network Slice endpoint.";
@@ -904,21 +898,21 @@ module ietf-network-slice {
         "Uniquely identifies an edge node within the IETF slice
          network.";
     }
-    leaf ep-ip {
+    leaf sap-ip {
       type inet:ip-address;
       description
         "The IP address of the endpoint.";
     }
     uses ns-match-criteria;
-    uses ep-peering;
-    uses ep-network-access-points;
+    uses sap-peering;
+    uses sap-attachment-circuits;
     uses ns-rate-limit;
-    /* Per NSE rate limits */
-    uses status-params;
-    uses ep-monitoring-metrics;
+    /* Per SAP rate limits */
+    uses vpn-common:service-status;
+    uses sap-monitoring-metrics;
   }
 
-  //ns-endpoint
+  //ns-sap
 
   grouping ns-connection {
     description
@@ -940,18 +934,18 @@ module ietf-network-slice {
         description
           "Network Slice connection construct type.";
       }
-      leaf-list src-nse {
+      leaf-list src-sap {
         type leafref {
           path "/network-slices/network-slice"
-             + "/ns-endpoints/ns-endpoint/ep-id";
+             + "/ns-saps/ns-sap/sap-id";
         }
         description
           "reference to source Network Slice endpoint.";
       }
-      leaf-list dest-nse {
+      leaf-list dest-sap {
         type leafref {
           path "/network-slices/network-slice"
-             + "/ns-endpoints/ns-endpoint/ep-id";
+             + "/ns-saps/ns-sap/sap-id";
         }
         description
           "reference to source Network Slice endpoint.";
@@ -979,6 +973,14 @@ module ietf-network-slice {
       type string;
       description
         "The Network Slice connection group identifier.";
+    }
+    leaf group-connectivity-type {
+      type identityref {
+        base vpn-common:vpn-topology;
+      }
+      default "vpn-common:any-to-any";
+      description
+        "Network Slice connection group connectivity type.";
     }
     uses ns-slo-sle-policy;
     uses ns-connection;
@@ -1106,15 +1108,15 @@ module ietf-network-slice {
         }
       }
       uses ns-slo-sle-policy;
-      uses status-params;
-      container ns-endpoints {
+      uses vpn-common:service-status;
+      container ns-saps {
         description
-          "NS Endpoints.";
-        list ns-endpoint {
-          key "ep-id";
-          uses endpoint;
+          "NS SAPs.";
+        list ns-sap {
+          key "sap-id";
+          uses sap;
           description
-            "List of endpoints in this slice.";
+            "List of SAPs in this slice.";
         }
       }
       container ns-connection-groups {
