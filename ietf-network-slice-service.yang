@@ -197,6 +197,13 @@ module ietf-network-slice-service {
       "A SDP is acting as a receiver.";
   }
 
+  identity sender-any {
+    base vpn-common:role;
+    description
+      "A SDP is acting as a sender/receiver in an any-to-any
+       connectivity construct..";
+  }
+
   identity service-slo-metric-type {
     description
       "Base identity for IETF Network Slice service SLO metric type.";
