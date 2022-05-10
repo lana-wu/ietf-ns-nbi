@@ -58,11 +58,12 @@ module ietf-network-slice-service {
      This version of this YANG module is part of RFC XXXX; see the
      RFC itself for full legal notices.";
 
-  revision 2022-04-15 {
+  revision 2022-04-26 {
     description
       "initial version.";
     reference
-      "RFC XXXX: A Yang Data Model for IETF Network Slice service Operation";
+      "RFC XXXX: A Yang Data Model for IETF Network Slice service 
+      operation";
   }
 
   /* Features */
@@ -160,28 +161,32 @@ module ietf-network-slice-service {
       "Indicates the slice service requires data encryption.";
   }
 
-  identity group-point-to-point {
+  identity point-to-point {
     base vpn-common:vpn-topology;
     description
-      "Identity for point-to-point IETF Network Slice service connectivity.";
+      "Identity for point-to-point IETF Network Slice 
+      service connectivity.";
   }
 
-  identity group-point-to-multipoint {
+  identity point-to-multipoint {
     base vpn-common:vpn-topology;
     description
-      "Identity for point-to-point IETF Network Slice service connectivity.";
+      "Identity for point-to-point IETF Network Slice 
+      service connectivity.";
   }
 
-  identity group-multipoint-to-multipoint {
+  identity multipoint-to-multipoint {
     base vpn-common:vpn-topology;
     description
-      "Identity for point-to-point IETF Network Slice service connectivity.";
+      "Identity for point-to-point IETF Network Slice 
+      service connectivity.";
   }
 
-  identity group-multipoint-to-point {
+  identity multipoint-to-point {
     base vpn-common:vpn-topology;
     description
-      "Identity for point-to-point IETF Network Slice service connectivity.";
+      "Identity for point-to-point IETF Network Slice 
+      service connectivity.";
   }
 
   identity sender-role {
@@ -360,65 +365,7 @@ module ietf-network-slice-service {
       "level 5: 99%";
   }
 
-  /* typedef */
-
-  typedef connectivity-construct-type {
-    type enumeration {
-      enum point-to-point {
-        description
-          "Connectivity construct point-to-point.";
-      }
-      enum point-to-multipoint {
-        description
-          "Connectivity construct point-to-multipoint.";
-      }
-      enum any-to-any {
-        description
-          "Connectivity construct any-to-any.";
-      }
-    }
-    description
-      "Defines a type for the connectivity construct.";
-  }
-
-  typedef operational-type {
-    type enumeration {
-      enum up {
-        value 0;
-        description
-          "Operational status UP.";
-      }
-      enum down {
-        value 1;
-        description
-          "Operational status DOWN.";
-      }
-      enum unknown {
-        value 2;
-        description
-          "Operational status UNKNOWN.";
-      }
-    }
-    description
-      "This is a read-only attribute used to determine the
-       status of a particular element.";
-  }
-
-  typedef service-monitoring-type {
-    type enumeration {
-      enum one-way {
-        description
-          "Represents one-way measurments monitoring type.";
-      }
-      enum two-way {
-        description
-          "represents two-way measurements monitoring type.";
-      }
-    }
-    description
-      "An enumerated type for monitoring on a slice service
-       connectivity construct.";
-  }
+  /* grouping */
 
   grouping service-match-criteria {
     description
@@ -919,27 +866,68 @@ module ietf-network-slice-service {
         description
           "The connectivity construct identifier.";
       }
-      leaf connectivity-type {
-        type connectivity-construct-type;
-        default "point-to-point";
+      choice connectivity-construct-type {
+        default "p2p";
         description
-          "Connectivity construct type.";
-      }
-      leaf-list sdp-sender {
-        type leafref {
-          path "/network-slice-services/slice-service"
-             + "/sdps/sdp/sdp-id";
+          "Choice for connectivity construct type.";
+        case p2p {
+          description
+            "P2P connectivity construct.";
+          leaf p2p-sender-sdp {
+            type leafref {
+              path "/network-slice-services/slice-service"
+                 + "/sdps/sdp/sdp-id";
+            }
+            description
+              "Reference to a sender SDP.";
+          }
+          leaf p2p-receiver-sdp {
+            type leafref {
+              path "/network-slice-services/slice-service"
+                 + "/sdps/sdp/sdp-id";
+            }
+            description
+              "Reference to a receiver SDP.";
+          }
         }
-        description
-          "Reference to a SDP sender.";
-      }
-      leaf-list sdp-receiver {
-        type leafref {
-          path "/network-slice-services/slice-service"
-             + "/sdps/sdp/sdp-id";
+        case p2mp {
+          description
+            "P2MP connectivity construct.";
+          leaf p2mp-sender-sdp {
+            type leafref {
+              path "/network-slice-services/slice-service"
+                 + "/sdps/sdp/sdp-id";
+            }
+            description
+              "Reference to a sender SDP.";
+          }
+          leaf-list p2mp-receiver-sdp {
+            type leafref {
+              path "/network-slice-services/slice-service"
+                 + "/sdps/sdp/sdp-id";
+            }
+            description
+              "Reference to a receiver SDP.";
+          }
         }
-        description
-          "Reference to a SDP receiver.";
+        case a2a {
+          description
+            "A2A connectivity construct.";
+          list a2a-sdp {
+            key "sdp-id";
+            description
+              "List of included A2A SDPs.";
+            leaf sdp-id {
+              type leafref {
+                path "/network-slice-services/slice-service"
+                   + "/sdps/sdp/sdp-id";
+              }
+              description
+                "Reference to a SDP.";
+            }
+            uses service-slo-sle-policy;
+          }
+        }
       }
       uses service-slo-sle-policy;
       /* Per connectivity construct service-slo-sle-policy 
@@ -964,7 +952,7 @@ module ietf-network-slice-service {
       description
         "The connection group identifier.";
     }
-    leaf group-connectivity-type {
+    leaf connectivity-type {
       type identityref {
         base vpn-common:vpn-topology;
       }

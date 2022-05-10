@@ -147,7 +147,7 @@ module: ietf-network-slice-service
         +--rw connection-groups
            +--rw connection-group* [connection-group-id]
               +--rw connection-group-id             string
-              +--rw group-connectivity-type?        identityref
+              +--rw connectivity-type?              identityref
               +--rw (slo-sle-policy)?
               |  +--:(standard)
               |  |  +--rw slo-sle-template?         leafref
@@ -169,10 +169,45 @@ module: ietf-network-slice-service
               |           +--rw service-function
               +--rw connectivity-construct* [cc-id]
               |  +--rw cc-id                                uint32
-              |  +--rw connectivity-type?
-              |  |       connectivity-construct-type
-              |  +--rw sdp-sender*                          leafref
-              |  +--rw sdp-receiver*                        leafref
+              |  +--rw (connectivity-construct-type)?
+              |  |  +--:(p2p)
+              |  |  |  +--rw p2p-sender-sdp?                leafref
+              |  |  |  +--rw p2p-receiver-sdp?              leafref
+              |  |  +--:(p2mp)
+              |  |  |  +--rw p2mp-sender-sdp?               leafref
+              |  |  |  +--rw p2mp-receiver-sdp*             leafref
+              |  |  +--:(a2a)
+              |  |     +--rw a2a-sdp* [sdp-id]
+              |  |        +--rw sdp-id                          leafref
+              |  |        +--rw (slo-sle-policy)?
+              |  |           +--:(standard)
+              |  |           |  +--rw slo-sle-template?         leafref
+              |  |           +--:(custom)
+              |  |              +--rw service-slo-sle-policy
+              |  |                 +--rw policy-description?
+              |  |                 |       string
+              |  |                 +--rw metric-bounds
+              |  |                 |  +--rw metric-bound*
+              |  |                 |          [metric-type]
+              |  |                 |     +--rw metric-type
+              |  |                 |     |       identityref
+              |  |                 |     +--rw metric-unit
+              |  |                 |     |       string
+              |  |                 |     +--rw value-description?
+              |  |                 |     |       string
+              |  |                 |     +--rw bound?
+              |  |                 |             uint64
+              |  |                 +--rw security*
+              |  |                 |       identityref
+              |  |                 +--rw isolation?
+              |  |                 |       identityref
+              |  |                 +--rw max-occupancy-level?
+              |  |                 |       uint8
+              |  |                 +--rw mtu
+              |  |                 |       uint16
+              |  |                 +--rw steering-constraints
+              |  |                    +--rw path-constraints
+              |  |                    +--rw service-function
               |  +--rw (slo-sle-policy)?
               |  |  +--:(standard)
               |  |  |  +--rw slo-sle-template?              leafref
