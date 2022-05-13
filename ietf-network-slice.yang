@@ -1,7 +1,7 @@
-module ietf-network-slice {
+module ietf-network-slice-service {
   yang-version 1.1;
-  namespace "urn:ietf:params:xml:ns:yang:ietf-network-slice";
-  prefix ietf-ns;
+  namespace "urn:ietf:params:xml:ns:yang:ietf-network-slice-service";
+  prefix ietf-nss;
 
   import ietf-inet-types {
     prefix inet;
@@ -43,7 +43,7 @@ module ietf-network-slice {
      Author: Liuyan Han
           <hanliuyan@chinamobile.com>";
   description
-    "This module contains a YANG module for the IETF Network Slice.
+    "This module defines a model for the IETF Network Slice service.
 
         Copyright (c) 2022 IETF Trust and the persons identified as
         authors of the code.  All rights reserved.
@@ -58,290 +58,292 @@ module ietf-network-slice {
      This version of this YANG module is part of RFC XXXX; see the
      RFC itself for full legal notices.";
 
-  revision 2022-03-18 {
+  revision 2022-05-11 {
     description
       "initial version.";
     reference
-      "RFC XXXX: A Yang Data Model for IETF Network Slice Operation";
+      "RFC XXXX: A Yang Data Model for IETF Network Slice service
+       operation";
   }
 
   /* Features */
   /* Identities */
 
-  identity ns-tag-type {
+  identity service-tag-type {
     description
-      "Base identity for IETF Network Slice tag type.";
+      "Base identity for IETF Network Slice service tag type.";
   }
 
-  identity ns-tag-customer {
-    base ns-tag-type;
+  identity service-tag-customer {
+    base service-tag-type;
     description
-      "The IETF Network Slice customer ID tag type.";
+      "The IETF Network Slice service customer ID tag type.";
   }
 
-  identity ns-tag-service {
-    base ns-tag-type;
+  identity service-tag-service {
+    base service-tag-type;
     description
       "The IETF Network Slice service tag type.";
   }
 
-  identity ns-tag-opaque {
-    base ns-tag-type;
+  identity service-tag-opaque {
+    base service-tag-type;
     description
-      "The IETF Network Slice opaque tag type.";
+      "The IETF Network Slice service opaque tag type.";
   }
 
-  identity network-access-tag-type {
+  identity attachment-circuit-tag-type {
     description
-      "Base identity for the network access tag type.";
+      "Base identity for the attachment circuit tag type.";
   }
 
-  identity network-access-tag-vlan-id {
-    base network-access-tag-type;
+  identity attachment-circuit-tag-vlan-id {
+    base attachment-circuit-tag-type;
     description
-      "The network access interface VLAN ID tag type.";
+      "The attachment circuit VLAN ID tag type.";
   }
 
-  identity network-access-tag-ip-mask {
-    base network-access-tag-type;
+  identity attachment-circuit-tag-ip-mask {
+    base attachment-circuit-tag-type;
     description
-      "The network access tag IP mask.";
+      "The attachment circuit tag IP mask.";
   }
 
-  identity network-access-tag-opaque {
-    base network-access-tag-type;
+  identity attachment-circuit-tag-opaque {
+    base attachment-circuit-tag-type;
     description
-      "The network access opaque tag type.";
+      "The attachment circuit opaque tag type.";
   }
 
-  identity ns-isolation-type {
+  identity service-isolation-type {
     description
-      "Base identity for IETF Network slice isolation level.";
+      "Base identity for IETF Network slice service isolation level.";
   }
 
-  identity ns-isolation-shared {
-    base ns-isolation-type;
+  identity service-isolation-shared {
+    base service-isolation-type;
     description
-      "Shared resources (e.g. queues) are associated with the Network
-       Slice traffic. Hence, the IETF network slice traffic can be
-       impacted by effects of other services traffic sharing
-       the same resources.";
+      "Shared resources (e.g. queues) are associated with the
+       slice service traffic. Hence, the traffic can be impacted
+       by effects of other services traffic
+       sharing the same resources.";
   }
 
-  identity ns-isolation-dedicated {
-    base ns-isolation-type;
+  identity service-isolation-dedicated {
+    base service-isolation-type;
     description
       "Dedicated resources (e.g. queues) are associated with the
-       Network Slice traffic. Hence, the IETF network slice traffic
-       is isolated from other servceis traffic sharing the same
-       resources.";
+       Network Slice service traffic. Hence, the service traffic
+       is isolated from other servceis traffic
+       sharing the same resources.";
   }
 
-  identity ns-security-type {
+  identity service-security-type {
     description
-      "Base identity for for IETF Network security level.";
+      "Base identity for for slice service security level.";
   }
 
-  identity ns-security-authenticate {
-    base ns-security-type;
+  identity service-security-authenticate {
+    base service-security-type;
     description
-      "IETF Network Slice requires authentication.";
+      "Indicates the slice service requires authentication.";
   }
 
-  identity ns-security-integrity {
-    base ns-security-type;
+  identity service-security-integrity {
+    base service-security-type;
     description
-      "IETF Network Slice requires data integrity.";
+      "Indicates the slice service requires data integrity.";
   }
 
-  identity ns-security-encryption {
-    base ns-security-type;
+  identity service-security-encryption {
+    base service-security-type;
     description
-      "IETF Network Slice requires data encryption.";
-  }
-
-  identity ns-connectivity-type {
-    description
-      "Base identity for IETF Network Slice connectivity construct.";
+      "Indicates the slice service requires data encryption.";
   }
 
   identity point-to-point {
-    base ns-connectivity-type;
+    base vpn-common:vpn-topology;
     description
-      "Identity for point-to-point IETF Network Slice connectivity.";
+      "Identity for point-to-point IETF Network Slice
+       service connectivity.";
   }
 
   identity point-to-multipoint {
-    base ns-connectivity-type;
-    description
-      "Identity for point-to-multipoint IETF Network Slice
-       connectivity.";
-  }
-
-  identity any-to-any {
-    base ns-connectivity-type;
-    description
-      "Identity for any-to-any IETF Network Slice connectivity.";
-  }
-
-  identity group-point-to-point {
     base vpn-common:vpn-topology;
     description
-      "Identity for point-to-point IETF Network Slice connectivity.";
+      "Identity for point-to-point IETF Network Slice
+       service connectivity.";
   }
 
-  identity group-point-to-multipoint {
+  identity multipoint-to-multipoint {
     base vpn-common:vpn-topology;
     description
-      "Identity for point-to-point IETF Network Slice connectivity.";
+      "Identity for point-to-point IETF Network Slice
+       service connectivity.";
   }
 
-  identity group-multipoint-to-multipoint {
+  identity multipoint-to-point {
     base vpn-common:vpn-topology;
     description
-      "Identity for point-to-point IETF Network Slice connectivity.";
-  }
-
-  identity group-multipoint-to-point {
-    base vpn-common:vpn-topology;
-    description
-      "Identity for point-to-point IETF Network Slice connectivity.";
+      "Identity for point-to-point IETF Network Slice
+       service connectivity.";
   }
 
   identity sender-role {
     base vpn-common:role;
     description
-      "A SAP is acting as a sender.";
+      "A SDP is acting as a sender.";
   }
 
-  identity receive-role {
+  identity receiver-role {
     base vpn-common:role;
     description
-      "A SAP is acting as a receiver.";
+      "A SDP is acting as a receiver.";
   }
 
-  identity ns-slo-metric-type {
+  identity service-slo-metric-type {
     description
-      "Base identity for IETF Network Slice SLO metric type.";
+      "Base identity for IETF Network Slice service SLO metric type.";
   }
 
-  identity ns-slo-one-way-bandwidth {
-    base ns-slo-metric-type;
-    description
-      "SLO bandwidth metric. Minimum guaranteed bandwidth between
-       two endpoints at any time and is measured unidirectionally.";
-  }
-
-  identity ns-slo-two-way-bandwidth {
-    base ns-slo-metric-type;
+  identity service-slo-one-way-bandwidth {
+    base service-slo-metric-type;
     description
       "SLO bandwidth metric. Minimum guaranteed bandwidth between
-       two endpoints at any time.";
+       two SDPs at any time and is measured unidirectionally.";
   }
 
-  identity ns-slo-shared-bandwidth {
-    base ns-slo-metric-type;
+  identity service-slo-two-way-bandwidth {
+    base service-slo-metric-type;
+    description
+      "SLO bandwidth metric. Minimum guaranteed bandwidth between
+       two SDPs at any time.";
+  }
+
+  identity service-slo-shared-bandwidth {
+    base service-slo-metric-type;
     description
       "The shared SLO bandwidth bound. It is the limit on the
-       bandwidth that can be shared amongst a group of connections
-       of an IETF Network Slice.";
+       bandwidth that can be shared amongst a group of
+       connectivity constructs of a slice service.";
   }
 
-  identity ns-slo-one-way-delay {
-    base ns-slo-metric-type;
+  identity service-slo-one-way-delay {
+    base service-slo-metric-type;
     description
       "SLO one-way-delay is the upper bound of network delay when
-       transmitting between two endpoints. The metric is defined in
+       transmitting between two SDPs. The metric is defined in
        RFC7679.";
   }
 
-  identity ns-slo-two-way-delay {
-    base ns-slo-metric-type;
+  identity service-slo-two-way-delay {
+    base service-slo-metric-type;
     description
       "SLO two-way delay is the upper bound of network delay when
-       transmitting between two endpoints. The metric is defined in
+       transmitting between two SDPs. The metric is defined in
        RFC2681.";
   }
 
-  identity ns-slo-one-way-delay-variation {
-    base ns-slo-metric-type;
+  identity service-slo-one-way-delay-variation {
+    base service-slo-metric-type;
     description
       "SLO one-way delay variation is defined by RFC3393, is the
        difference in the one-way delay between sequential packets
-       between two endpoints.";
+       between two SDPs.";
   }
 
-  identity ns-slo-two-way-delay-variation {
-    base ns-slo-metric-type;
+  identity service-slo-two-way-delay-variation {
+    base service-slo-metric-type;
     description
       "SLO two-way delay variation is defined by RFC5481, is the
        difference in the round-trip delay between sequential packets
-       between two endpoints.";
+       between two SDPs.";
   }
 
-  identity ns-slo-one-way-packet-loss {
-    base ns-slo-metric-type;
+  identity service-slo-one-way-packet-loss {
+    base service-slo-metric-type;
     description
       "SLO loss metric. The ratio of packets dropped to packets
-       transmitted between two endpoints in one-way
+       transmitted between two SDPs in one-way
        over a period of time as specified in RFC7680.";
   }
 
-  identity ns-slo-two-way-packet-loss {
-    base ns-slo-metric-type;
+  identity service-slo-two-way-packet-loss {
+    base service-slo-metric-type;
     description
       "SLO loss metric. The ratio of packets dropped to packets
-       transmitted between two endpoints in two-way
+       transmitted between two SDPs in two-way
        over a period of time as specified in RFC7680.";
   }
 
-  identity ns-slo-availability {
-    base ns-slo-metric-type;
+  identity service-slo-availability {
+    base service-slo-metric-type;
     description
       "SLO availability level.";
   }
 
-  identity ns-match-type {
+  identity service-match-type {
     description
-      "Base identity for IETF Network Slice traffic match type.";
+      "Base identity for IETF Network Slice service traffic match type.";
   }
 
-  identity ns-phy-interface-match {
-    base ns-match-type;
+  identity service-phy-interface-match {
+    base service-match-type;
     description
-      "Use the physical interface as match criteria for the IETF
-       Network Slice traffic.";
+      "Use the physical interface as match criteria for
+       slice service traffic.";
   }
 
-  identity ns-vlan-match {
-    base ns-match-type;
+  identity service-vlan-match {
+    base service-match-type;
     description
-      "Use the VLAN ID as match criteria for the IETF Network Slice
+      "Use the VLAN ID as match criteria for the slice service
        traffic.";
   }
 
-  identity ns-label-match {
-    base ns-match-type;
+  identity service-label-match {
+    base service-match-type;
     description
-      "Use the MPLS label as match criteria for the IETF Network
-       Slice traffic.";
+      "Use the MPLS label as match criteria for the slice service
+       traffic.";
+  }
+
+  identity service-source-ip-match {
+    base service-match-type;
+    description
+      "Use source ip-address in the packet header as match criteria
+       for the slice service traffic.";
+  }
+
+  identity service-destination-ip-match {
+    base service-match-type;
+    description
+      "Use destination ip-address in the packet header as match criteria
+       for the slice service traffic.";
+  }
+
+  identity service-dscp-match {
+    base service-match-type;
+    description
+      "Use DSCP in the IP packet header as match criteria
+       for the slice service traffic.";
   }
 
   identity peering-protocol-type {
     description
-      "Base identity for SAP peering protocol type.";
+      "Base identity for SDP peering protocol type.";
   }
 
   identity peering-protocol-bgp {
     base peering-protocol-type;
     description
-      "Use BGP as protocol for SAP peering with customer device.";
+      "Use BGP as protocol for SDP peering with customer device.";
   }
 
   identity peering-static-routing {
     base peering-protocol-type;
     description
-      "Use static routing for SAP peering with customer device.";
+      "Use static routing for SDP peering with customer device.";
   }
 
   /*
@@ -384,134 +386,81 @@ module ietf-network-slice {
       "level 5: 99%";
   }
 
-  /* typedef */
+  /* grouping */
 
-  typedef operational-type {
-    type enumeration {
-      enum up {
-        value 0;
-        description
-          "Operational status UP.";
-      }
-      enum down {
-        value 1;
-        description
-          "Operational status DOWN.";
-      }
-      enum unknown {
-        value 2;
-        description
-          "Operational status UNKNOWN.";
-      }
-    }
+  grouping service-match-criteria {
     description
-      "This is a read-only attribute used to determine the
-       status of a particular element.";
-  }
-
-  typedef ns-monitoring-type {
-    type enumeration {
-      enum one-way {
-        description
-          "Represents one-way measurments monitoring type.";
-      }
-      enum two-way {
-        description
-          "represents two-way measurements monitoring type.";
-      }
-    }
-    description
-      "An enumerated type for monitoring on a IETF Network Slice
-       connection.";
-  }
-
-  grouping ns-match-criteria {
-    description
-      "A grouping for the IETF Network Slice match definition.";
-    container ns-match-criteria {
+      "A grouping for the slice service match definition.";
+    container service-match-criteria {
       description
-        "Describes the IETF Network Slice match criteria.";
-      list ns-match-criterion {
-        key "index";
+        "Describes the slice service match criteria.";
+      list match-criterion {
+        key "match-type";
         description
-          "List of the IETF Network Slice traffic match criteria.";
-        leaf index {
-          type uint32;
-          description
-            "The entry index.";
-        }
+          "List of the slice service traffic match criteria.";
         leaf match-type {
           type identityref {
-            base ns-match-type;
+            base service-match-type;
           }
           description
-            "Identifies an entry in the list of the IETF Network Slice
+            "Identifies an entry in the list of the slice service
              match criteria.";
         }
-        list values {
-          key "index";
+        leaf-list value {
+          type string;
           description
-            "List of match criteria values.";
-          leaf index {
-            type uint8;
-            description
-              "Index of an entry in the list.";
-          }
-          leaf value {
-            type string;
-            description
-              "Describes the IETF Network Slice match criteria, e.g.
-               IP address, VLAN, etc.";
-          }
+            "Describes the slice service match criteria, e.g.
+             IP address, VLAN, etc.";
         }
-        leaf target-ns-connection-group-id {
+        leaf target-connection-group-id {
           type leafref {
-            path "/network-slices/network-slice"
-               + "/ns-connection-groups/ns-connection-group"
-               + "/ns-connection-group-id";
+            path "/network-slice-services/slice-service"
+               + "/connection-groups/connection-group"
+               + "/connection-group-id";
           }
           description
-            "reference to a Network Slice connection group.";
+            "Reference to a slice service connection group.";
         }
-        leaf group-sap-role {
+        leaf connection-group-sdp-role {
           type identityref {
             base vpn-common:role;
           }
           default "vpn-common:any-to-any-role";
           description
-            "Indicates the role in the connection group.";
+            "Indicates the role in the connection group when
+             a slice service has multiple multipoint-to-multipoint
+             connection groups, e.g., hub-spoke.";
         }
-        leaf target-ns-connection-id {
+        leaf target-connectivity-construct-id {
           type leafref {
-            path "/network-slices/network-slice"
-               + "/ns-connection-groups/ns-connection-group"
-               + "/ns-connection/ns-connection-id";
+            path "/network-slice-services/slice-service"
+               + "/connection-groups/connection-group"
+               + "/connectivity-construct/cc-id";
           }
           description
-            "reference to a Network Slice connection.";
+            "Reference to a Network Slice connection construct.";
         }
       }
     }
   }
 
-  grouping ns-sles {
+  grouping service-sles {
     description
-      "Indirectly Measurable Objectives of a IETF Network
-       Slice.";
+      "Indirectly Measurable Objectives of a slice service.";
     leaf-list security {
       type identityref {
-        base ns-security-type;
+        base service-security-type;
       }
       description
-        "The IETF Network Slice security SLE(s)";
+        "The slice service security SLE(s)";
     }
     leaf isolation {
       type identityref {
-        base ns-isolation-type;
+        base service-isolation-type;
       }
-      default "ns-isolation-shared";
+      default "service-isolation-shared";
       description
-        "The IETF Network Slice isolation SLE requirement.";
+        "The slice service isolation SLE requirement.";
     }
     leaf max-occupancy-level {
       type uint8 {
@@ -524,47 +473,46 @@ module ietf-network-slice {
     leaf mtu {
       type uint16;
       units "bytes";
-      mandatory true;
       description
         "The MTU specifies the maximum length in octets of data
-         packets that can be transmitted by the NS. The value needs
-         to be less than or equal to the minimum MTU value of
-         all 'sap-attach-circuits' in the NSEs of the NS.";
+         packets that can be transmitted by the slice service.
+         The value needs to be less than or equal to the
+         minimum MTU value of all ‘attachment-circuits' in the SDPs.";
     }
     container steering-constraints {
       description
         "Container for the policy of steering constraints
-         applicable to IETF Network Slice.";
+         applicable to the slice service.";
       container path-constraints {
         description
           "Container for the policy of path constraints
-           applicable to IETF Network Slice.";
+           applicable to the slice service.";
       }
       container service-function {
         description
           "Container for the policy of service function
-           applicable to IETF Network Slice.";
+           applicable to the slice service.";
       }
     }
   }
 
-  grouping ns-metric-bounds {
+  grouping service-metric-bounds {
     description
-      "IETF Network Slice metric bounds grouping.";
-    container ns-metric-bounds {
+      "Slice service metric bounds grouping.";
+    container metric-bounds {
       description
-        "IETF Network Slice metric bounds container.";
-      list ns-metric-bound {
+        "Slice service metric bounds container.";
+      list metric-bound {
         key "metric-type";
         description
-          "List of IETF Network Slice metric bounds.";
+          "List of slice service metric bounds.";
         leaf metric-type {
           type identityref {
-            base ns-slo-metric-type;
+            base service-slo-metric-type;
           }
           description
             "Identifies an entry in the list of metric type
-             bounds for the IETF Network Slice.";
+             bounds for the slice service.";
         }
         leaf metric-unit {
           type string;
@@ -582,30 +530,30 @@ module ietf-network-slice {
           type uint64;
           default "0";
           description
-            "The Bound on the Network Slice connection metric. A
-             zero indicate an unbounded upper limit for the
+            "The Bound on the slice service connection metric.
+             A zero indicate an unbounded upper limit for the
              specific metric-type.";
         }
       }
     }
   }
 
-  grouping sap-peering {
+  grouping sdp-peering {
     description
-      "A grouping for the IETF Network Slice SAP peering.";
-    container sap-peering {
+      "A grouping for the slice service SDP peering.";
+    container sdp-peering {
       description
-        "Describes SAP peering attributes.";
+        "Describes SDP peering attributes.";
       list protocol {
         key "protocol-type";
         description
-          "List of the SAP peering protocol.";
+          "List of the SDP peering protocol.";
         leaf protocol-type {
           type identityref {
             base peering-protocol-type;
           }
           description
-            "Identifies an entry in the list of SAP peering
+            "Identifies an entry in the list of SDP peering
              protocol type.";
         }
         list attribute {
@@ -633,71 +581,69 @@ module ietf-network-slice {
     }
   }
 
-  grouping sap-attachment-circuits {
+  grouping sdp-attachment-circuits {
     description
-      "Grouping for the SAP AC definition.";
-    container sap-attachment-circuits {
+      "Grouping for the SDP attachment circuit definition.";
+    container attachment-circuits {
       description
-        "List of network access points.";
-      list sap-ac {
+        "List of attachment circuit.";
+      list attachment-circuit {
         key "ac-id";
         description
-          "The IETF Network Slice network access points
+          "The IETF Network Slice service SDP attachment circuit
            related parameters.";
         leaf ac-id {
           type string;
           description
-            "Uniquely identifier a AC.";
+            "Uniquely identifier a attachment circuit.";
         }
         leaf ac-description {
           type string;
           description
-            "The network access point description.";
+            "The attachment circuit description.";
         }
         leaf ac-node-id {
           type string;
           description
-            "The network access point node ID in the case of
+            "The attachment circuit node ID in the case of
              multi-homing.";
         }
         leaf ac-tp-id {
           type string;
           description
-            "The termination port ID of the EP network access
-             point.";
+            "The termination port ID of the attachment circuit.";
         }
         leaf ac-tp-ip-address {
           type inet:ip-address;
           description
-            "The IP address of the EP network access point.";
+            "The IP address of the attachment circuit.";
         }
         leaf ac-ip-prefix-length {
           type uint8;
           description
             "The subnet prefix length expressed in bits.";
         }
-        leaf ac-qos-policy-name {
+        leaf qos-policy-name {
           type string;
           description
             "The name of the QoS policy that is applied to the
-             network access point. The name can reference a QoS
+             attachment circuit. The name can reference a QoS
              profile that is pre-provisioned on the device.";
         }
         leaf mtu {
           type uint16;
           units "bytes";
-          mandatory true;
           description
-            "Maximum size in octets of a data packet that
-             can traverse a SAP network access point.";
+            "Maximum size in octets of the slice service data packet
+             that can traverse a SDP.";
         }
         container ac-tags {
           description
-            "Container for the network access tags.";
+            "Container for the attachment circuit tags.";
           list ac-tag {
             key "index";
             description
-              "The network access point tags list.";
+              "The attachment circuit tags list.";
             leaf index {
               type uint32;
               description
@@ -705,37 +651,37 @@ module ietf-network-slice {
             }
             leaf ac-tag-type {
               type identityref {
-                base network-access-tag-type;
+                base attachment-circuit-tag-type;
               }
               description
-                "The network access point tag type.";
+                "The attachment circuit tag type.";
             }
             leaf ac-tag-value {
               type string;
               description
-                "The network access point tag value.";
+                "The attachment circuit tag value.";
             }
           }
         }
         /* Per ac rate limits */
-        uses ns-match-criteria;
-        uses sap-peering;
-        uses ns-rate-limit;
+        uses service-match-criteria;
+        uses sdp-peering;
+        uses service-rate-limit;
       }
     }
   }
 
-  grouping sap-monitoring-metrics {
+  grouping sdp-monitoring-metrics {
     description
-      "Grouping for the NS endpoint monitoring metrics.";
-    container sap-monitoring {
+      "Grouping for the SDP monitoring metrics.";
+    container sdp-monitoring {
       config false;
       description
-        "Container for NS endpoint monitoring metrics.";
+        "Container for SDP monitoring metrics.";
       leaf incoming-utilized-bandwidth {
         type te-types:te-bandwidth;
         description
-          "Incoming bandwidth utilization at an endpoint.";
+          "Incoming bandwidth utilization at a SDP.";
       }
       leaf incoming-bw-utilization {
         type decimal64 {
@@ -751,7 +697,7 @@ module ietf-network-slice {
       leaf outgoing-utilized-bandwidth {
         type te-types:te-bandwidth;
         description
-          "Outoing bandwidth utilization at an endpoint.";
+          "Outoing service bandwidth utilization at a SDP.";
       }
       leaf outgoing-bw-utilization {
         type decimal64 {
@@ -761,15 +707,15 @@ module ietf-network-slice {
         units "percent";
         mandatory true;
         description
-          "To be used to define the bandwidth utilization
+          "To be used to define the service bandwidth utilization
            as a percentage of the available bandwidth.";
       }
     }
   }
 
-  grouping ns-connection-monitoring-metrics {
+  grouping connectivity-construct-monitoring-metrics {
     description
-      "Grouping for NS connection monitoring metrics.";
+      "Grouping for connectivity construct monitoring metrics.";
     uses te-packet-types:one-way-performance-metrics-packet;
     uses te-packet-types:two-way-performance-metrics-packet;
   }
@@ -862,7 +808,7 @@ module ietf-network-slice {
     }
   }
 
-  grouping ns-rate-limit {
+  grouping service-rate-limit {
     description
       "The rate limits grouping.";
     container incoming-rate-limits {
@@ -877,134 +823,164 @@ module ietf-network-slice {
     }
   }
 
-  grouping sap {
+  grouping sdp {
     description
-      "IETF Network Slice endpoint related information";
-    leaf sap-id {
+      "Slice service SDP related information";
+    leaf sdp-id {
       type string;
       description
-        "Unique identifier for the referred IETF Network
-         Slice endpoint.";
+        "Unique identifier for the referred slice service SDP.";
     }
-    leaf sap-description {
+    leaf sdp-description {
       type string;
       description
-        "Give more description of the Network Slice endpoint.";
+        "Give more description of the SDP.";
     }
     uses geolocation-container;
     leaf node-id {
       type string;
       description
-        "Uniquely identifies an edge node within the IETF slice
-         network.";
+        "Uniquely identifies an edge node of the SDP.";
     }
-    leaf sap-ip {
+    leaf sdp-ip {
       type inet:ip-address;
       description
-        "The IP address of the endpoint.";
+        "The IP address of the SDP.";
     }
-    uses ns-match-criteria;
-    uses sap-peering;
-    uses sap-attachment-circuits;
-    uses ns-rate-limit;
-    /* Per SAP rate limits */
+    uses service-match-criteria;
+    uses sdp-peering;
+    uses sdp-attachment-circuits;
+    uses service-rate-limit;
+    /* Per SDP rate limits */
     uses vpn-common:service-status;
-    uses sap-monitoring-metrics;
+    uses sdp-monitoring-metrics;
   }
 
-  //ns-sap
+  //service-sdp
 
-  grouping ns-connection {
+  grouping connectivity-construct {
     description
-      "The network slice connection grouping.";
-    list ns-connection {
-      key "ns-connection-id";
+      "Grouping for slice service connectivity construct.";
+    list connectivity-construct {
+      key "cc-id";
       description
-        "List of Network Slice connections.";
-      leaf ns-connection-id {
+        "List of connectivity constructs.";
+      leaf cc-id {
         type uint32;
         description
-          "The Network Slice connection identifier.";
+          "The connectivity construct identifier.";
       }
-      leaf ns-connectivity-type {
-        type identityref {
-          base ns-connectivity-type;
-        }
-        default "point-to-point";
+      choice connectivity-construct-type {
+        default "p2p";
         description
-          "Network Slice connection construct type.";
-      }
-      leaf-list src-sap {
-        type leafref {
-          path "/network-slices/network-slice"
-             + "/ns-saps/ns-sap/sap-id";
+          "Choice for connectivity construct type.";
+        case p2p {
+          description
+            "P2P connectivity construct.";
+          leaf p2p-sender-sdp {
+            type leafref {
+              path "../../../../sdps/sdp/sdp-id";
+            }
+            description
+              "Reference to a sender SDP.";
+          }
+          leaf p2p-receiver-sdp {
+            type leafref {
+              path "../../../../sdps/sdp/sdp-id";
+            }
+            description
+              "Reference to a receiver SDP.";
+          }
         }
-        description
-          "reference to source Network Slice endpoint.";
-      }
-      leaf-list dest-sap {
-        type leafref {
-          path "/network-slices/network-slice"
-             + "/ns-saps/ns-sap/sap-id";
+        case p2mp {
+          description
+            "P2MP connectivity construct.";
+          leaf p2mp-sender-sdp {
+            type leafref {
+              path "../../../../sdps/sdp/sdp-id";
+            }
+            description
+              "Reference to a sender SDP.";
+          }
+          leaf-list p2mp-receiver-sdp {
+            type leafref {
+              path "../../../../sdps/sdp/sdp-id";
+            }
+            description
+              "Reference to a receiver SDP.";
+          }
         }
-        description
-          "reference to source Network Slice endpoint.";
+        case a2a {
+          description
+            "A2A connectivity construct.";
+          list a2a-sdp {
+            key "sdp-id";
+            description
+              "List of included A2A SDPs.";
+            leaf sdp-id {
+              type leafref {
+                path "../../../../../sdps/sdp/sdp-id";
+              }
+              description
+                "Reference to a SDP.";
+            }
+            uses service-slo-sle-policy;
+          }
+        }
       }
-      uses ns-slo-sle-policy;
-      /* Per connection ns-slo-sle-policy overrides
-       * the per network slice ns-slo-sle-policy.
+      uses service-slo-sle-policy;
+      /* Per connectivity construct service-slo-sle-policy 
+       * overrides the per slice service-slo-sle-policy.
        */
-      container ns-connection-monitoring {
+      container connectivity-construct-monitoring {
         config false;
         description
-          "SLO status Per NS connection.";
-        uses ns-connection-monitoring-metrics;
+          "SLO status per connectivity construct.";
+        uses connectivity-construct-monitoring-metrics;
       }
     }
   }
 
-  //ns-connection
+  //connectivity-construct
 
-  grouping ns-connection-group {
+  grouping connection-group {
     description
-      "The Network Slice connection group is described in this
-       container.";
-    leaf ns-connection-group-id {
+      "Grouping for slice service connection group.";
+    leaf connection-group-id {
       type string;
       description
-        "The Network Slice connection group identifier.";
+        "The connection group identifier.";
     }
-    leaf group-connectivity-type {
+    leaf connectivity-type {
       type identityref {
         base vpn-common:vpn-topology;
       }
       default "vpn-common:any-to-any";
       description
-        "Network Slice connection group connectivity type.";
+        "Connection group connectivity type.";
     }
-    uses ns-slo-sle-policy;
-    uses ns-connection;
-    /* Per connection ns-slo-sle-policy overrides
-     * the per network slice ns-slo-sle-policy.
+    uses service-slo-sle-policy;
+    uses connectivity-construct;
+    /* Per connection group service-slo-sle-policy overrides
+     * the per slice service-slo-sle-policy.
      */
-    container ns-connection-group-monitoring {
+    container connection-group-monitoring {
       config false;
       description
-        "SLO status Per NS connection.";
-      uses ns-connection-monitoring-metrics;
+        "SLO status per connection group.";
+      uses connectivity-construct-monitoring-metrics;
     }
   }
 
-  //ns-connection-group
+  //connection-group
 
-  grouping slice-template {
+  grouping slice-service-template {
     description
-      "Grouping for slice-templates.";
-    container ns-slo-sle-templates {
+      "Grouping for slice service templates.";
+    container slo-sle-templates {
       description
-        "Contains a set of network slice templates to
-         reference in the IETF network slice.";
-      list ns-slo-sle-template {
+        "Contains a set of slice service templates.";
+      list slo-sle-template {
         key "id";
         leaf id {
           type string;
@@ -1016,7 +992,7 @@ module ietf-network-slice {
         leaf template-description {
           type string;
           description
-            "Description of the SLO &amp; SLE policy template.";
+            "Description of the SLO and SLE policy template.";
         }
         description
           "List for SLO and SLE template identifiers.";
@@ -1026,10 +1002,10 @@ module ietf-network-slice {
 
   /* Configuration data nodes */
 
-  grouping ns-slo-sle-policy {
+  grouping service-slo-sle-policy {
     description
-      "Network Slice policy grouping.";
-    choice ns-slo-sle-policy {
+      "Slice service policy grouping.";
+    choice slo-sle-policy {
       description
         "Choice for SLO and SLE policy template.
          Can be standard template or customized template.";
@@ -1038,8 +1014,8 @@ module ietf-network-slice {
           "Standard SLO template.";
         leaf slo-sle-template {
           type leafref {
-            path "/network-slices"
-               + "/ns-slo-sle-templates/ns-slo-sle-template/id";
+            path "/network-slice-services/slo-sle-templates"
+               + "/slo-sle-template/id";
           }
           description
             "Standard SLO and SLE template to be used.";
@@ -1047,89 +1023,89 @@ module ietf-network-slice {
       }
       case custom {
         description
-          "Customized SLO template.";
-        container slo-sle-policy {
+          "Customized SLO and SLE template.";
+        container service-slo-sle-policy {
           description
-            "Contains the SLO policy.";
+            "Contains the SLO and SLE policy.";
           leaf policy-description {
             type string;
             description
-              "Description of the SLO policy.";
+              "Description of the SLO and SLE policy.";
           }
-          uses ns-metric-bounds;
-          uses ns-sles;
+          uses service-metric-bounds;
+          uses service-sles;
         }
       }
     }
   }
 
-  container network-slices {
+  container network-slice-services {
     description
-      "Containes a list of IETF network slice";
-    uses slice-template;
-    list network-slice {
-      key "ns-id";
+      "Containes a list of IETF network slice services";
+    uses slice-service-template;
+    list slice-service {
+      key "service-id";
       description
-        "A network-slice is identified by a ns-id.";
-      leaf ns-id {
+        "A slice service is identified by a service-id.";
+      leaf service-id {
         type string;
         description
-          "A unique network-slice identifier across an IETF NSC.";
+          "A unique slice service identifier.";
       }
-      leaf ns-description {
+      leaf service-description {
         type string;
         description
-          "Give more description of the network slice.";
+          "Textual description of the slice service.";
       }
-      container ns-tags {
+      container service-tags {
         description
-          "Container for the list of IETF Network Slice tags.";
-        list ns-tag {
+          "Container for the list of service tags.";
+        list service-id-tag {
           key "index";
           description
-            "IETF Network Slice tag list.";
+            "Slice service tag list.";
           leaf index {
             type uint32;
             description
               "The entry index.";
           }
-          leaf ns-tag-type {
+          leaf tag-type {
             type identityref {
-              base ns-tag-type;
+              base service-tag-type;
             }
             description
-              "The IETF Network Slice tag type.";
+              "Slice service tag type.";
           }
-          leaf ns-tag-value {
+          leaf tag-value {
             type string;
             description
-              "The IETF Network Slice tag value.";
+              "Slice service tag value.";
           }
         }
       }
-      uses ns-slo-sle-policy;
+      uses service-slo-sle-policy;
       uses vpn-common:service-status;
-      container ns-saps {
+      container sdps {
         description
-          "NS SAPs.";
-        list ns-sap {
-          key "sap-id";
-          uses sap;
+          "Slice service SDPs.";
+        list sdp {
+          key "sdp-id";
+          uses sdp;
           description
-            "List of SAPs in this slice.";
+            "List of SDPs in this slice service.";
         }
       }
-      container ns-connection-groups {
+      container connection-groups {
         description
-          "Contains NS connections group.";
-        list ns-connection-group {
-          key "ns-connection-group-id";
+          "Contains connections group.";
+        list connection-group {
+          key "connection-group-id";
           description
-            "List of Network Slice connections.";
-          uses ns-connection-group;
+            "List of connection groups.";
+          uses connection-group;
         }
       }
     }
-    //ietf-network-slice list
+    //ietf-network-slice-service list
   }
 }
