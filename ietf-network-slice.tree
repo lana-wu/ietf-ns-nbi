@@ -8,10 +8,12 @@ module: ietf-network-slice-service
         +--rw service-id                      string
         +--rw service-description?            string
         +--rw service-tags
-        |  +--rw service-id-tag* [index]
-        |     +--rw index        uint32
-        |     +--rw tag-type?    identityref
-        |     +--rw tag-value?   string
+        |  +--rw tag-type* [tag-type]
+        |  |  +--rw tag-type    identityref
+        |  |  +--rw value*      string
+        |  +--rw tag-opaque* [tag-name]
+        |     +--rw tag-name    string
+        |     +--rw value*      string
         +--rw (slo-sle-policy)?
         |  +--:(standard)
         |  |  +--rw slo-sle-template?         -> /network-slice-services/slo-sle-templates/slo-sle-template/id
@@ -49,48 +51,56 @@ module: ietf-network-slice-service
         |     +--rw node-id?                  string
         |     +--rw sdp-ip?                   inet:ip-address
         |     +--rw service-match-criteria
-        |     |  +--rw match-criterion* [match-type]
-        |     |     +--rw match-type                          identityref
+        |     |  +--rw match-criterion* [index]
+        |     |     +--rw index                               uint32
+        |     |     +--rw match-type?                         identityref
         |     |     +--rw value*                              string
         |     |     +--rw target-connection-group-id?         -> /network-slice-services/slice-service/connection-groups/connection-group/connection-group-id
         |     |     +--rw connection-group-sdp-role?          identityref
-        |     |     +--rw target-connectivity-construct-id?   -> /network-slice-services/slice-service/connection-groups/connection-group/connectivity-construct/cc-id
+        |     |     +--rw target-connectivity-construct-id?   -> /network-slice-services/slice-service/connection-groups/connection-group[connection-group-id=current()/../target-connection-group-id]/connectivity-construct/cc-id
         |     +--rw sdp-peering
         |     |  +--rw protocol* [protocol-type]
-        |     |     +--rw protocol-type    identityref
-        |     |     +--rw attribute* [index]
-        |     |        +--rw index                    uint8
-        |     |        +--rw attribute-description?   string
-        |     |        +--rw value?                   string
+        |     |  |  +--rw protocol-type    identityref
+        |     |  |  +--rw attribute* [attribute-type]
+        |     |  |     +--rw attribute-type    identityref
+        |     |  |     +--rw value*            string
+        |     |  +--rw opaque* [attribute-name]
+        |     |     +--rw attribute-name    string
+        |     |     +--rw value*            string
         |     +--rw attachment-circuits
         |     |  +--rw attachment-circuit* [ac-id]
         |     |     +--rw ac-id                     string
         |     |     +--rw ac-description?           string
         |     |     +--rw ac-node-id?               string
         |     |     +--rw ac-tp-id?                 string
-        |     |     +--rw ac-tp-ip-address?         inet:ip-address
+        |     |     +--rw ac-ip-address?            inet:ip-address
         |     |     +--rw ac-ip-prefix-length?      uint8
-        |     |     +--rw qos-policy-name?          string
+        |     |     +--rw ac-qos-policy-name?       string
         |     |     +--rw mtu?                      uint16
         |     |     +--rw ac-tags
-        |     |     |  +--rw ac-tag* [index]
-        |     |     |     +--rw index           uint32
-        |     |     |     +--rw ac-tag-type?    identityref
-        |     |     |     +--rw ac-tag-value?   string
+        |     |     |  +--rw ac-tags* [ac-tag-type]
+        |     |     |  |  +--rw ac-tag-type    identityref
+        |     |     |  |  +--rw value*         string
+        |     |     |  +--rw ac-tag-opaque* [tag-name]
+        |     |     |     +--rw tag-name    string
+        |     |     |     +--rw value*      string
         |     |     +--rw service-match-criteria
-        |     |     |  +--rw match-criterion* [match-type]
-        |     |     |     +--rw match-type                          identityref
+        |     |     |  +--rw match-criterion* [index]
+        |     |     |     +--rw index                               uint32
+        |     |     |     +--rw match-type?                         identityref
         |     |     |     +--rw value*                              string
         |     |     |     +--rw target-connection-group-id?         -> /network-slice-services/slice-service/connection-groups/connection-group/connection-group-id
         |     |     |     +--rw connection-group-sdp-role?          identityref
-        |     |     |     +--rw target-connectivity-construct-id?   -> /network-slice-services/slice-service/connection-groups/connection-group/connectivity-construct/cc-id
+        |     |     |     +--rw target-connectivity-construct-id?   -> /network-slice-services/slice-service/connection-groups/connection-group[connection-group-id=current()/../target-connection-group-id]/connectivity-construct/cc-id
         |     |     +--rw sdp-peering
         |     |     |  +--rw protocol* [protocol-type]
-        |     |     |     +--rw protocol-type    identityref
-        |     |     |     +--rw attribute* [index]
-        |     |     |        +--rw index                    uint8
-        |     |     |        +--rw attribute-description?   string
-        |     |     |        +--rw value?                   string
+        |     |     |  |  +--rw protocol-type    identityref
+        |     |     |  |  +--rw attribute* [attribute-type]
+        |     |     |  |     +--rw attribute-type    identityref
+        |     |     |  |     +--rw value*            string
+        |     |     |  +--rw opaque* [attribute-name]
+        |     |     |     +--rw attribute-name    string
+        |     |     |     +--rw value*            string
         |     |     +--rw incoming-rate-limits
         |     |     |  +--rw cir?   uint64
         |     |     |  +--rw cbs?   uint64
