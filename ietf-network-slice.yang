@@ -58,7 +58,7 @@ module ietf-network-slice-service {
      This version of this YANG module is part of RFC XXXX; see the
      RFC itself for full legal notices.";
 
-  revision 2022-05-11 {
+  revision 2022-06-10 {
     description
       "initial version.";
     reference
@@ -107,12 +107,6 @@ module ietf-network-slice-service {
     base attachment-circuit-tag-type;
     description
       "The attachment circuit tag IP mask.";
-  }
-
-  identity attachment-circuit-tag-opaque {
-    base attachment-circuit-tag-type;
-    description
-      "The attachment circuit opaque tag type.";
   }
 
   identity service-isolation-type {
@@ -329,6 +323,12 @@ module ietf-network-slice-service {
        for the slice service traffic.";
   }
 
+  identity service-any-match {
+    base service-match-type;
+    description
+      "Match all slice service traffic.";
+  }
+
   identity peering-protocol-type {
     description
       "Base identity for SDP peering protocol type.";
@@ -344,6 +344,23 @@ module ietf-network-slice-service {
     base peering-protocol-type;
     description
       "Use static routing for SDP peering with customer device.";
+  }
+
+  identity peering-attribute-type {
+    description
+      "Base identity for BGP peering";
+  }
+
+  identity remote-as {
+    base peering-attribute-type;
+  }
+
+  identity neighbor {
+    base peering-attribute-type;
+  }
+
+  identity local-as {
+    base peering-attribute-type;
   }
 
   /*
@@ -395,9 +412,14 @@ module ietf-network-slice-service {
       description
         "Describes the slice service match criteria.";
       list match-criterion {
-        key "match-type";
+        key "index";
         description
           "List of the slice service traffic match criteria.";
+        leaf index {
+          type uint32;
+          description
+            "The entry index.";
+        }
         leaf match-type {
           type identityref {
             base service-match-type;
@@ -419,7 +441,7 @@ module ietf-network-slice-service {
                + "/connection-group-id";
           }
           description
-            "Reference to a slice service connection group.";
+            "Reference to the slice service connection group.";
         }
         leaf connection-group-sdp-role {
           type identityref {
@@ -434,7 +456,9 @@ module ietf-network-slice-service {
         leaf target-connectivity-construct-id {
           type leafref {
             path "/network-slice-services/slice-service"
-               + "/connection-groups/connection-group"
+               + "/connection-groups"
+               + "/connection-group[connection-group-id=current()/../"
+               + "target-connection-group-id]"
                + "/connectivity-construct/cc-id";
           }
           description
@@ -557,25 +581,37 @@ module ietf-network-slice-service {
              protocol type.";
         }
         list attribute {
-          key "index";
+          key "attribute-type";
           description
-            "List of protocol attribute.";
-          leaf index {
-            type uint8;
+            "list of protocol attributes";
+          leaf attribute-type {
+            type identityref {
+              base peering-attribute-type;
+            }
             description
-              "Index of an entry in the list.";
+              "identifies the attribute type";
           }
-          leaf attribute-description {
-            type string;
-            description
-              "The description of the attribute.";
-          }
-          leaf value {
+          leaf-list value {
             type string;
             description
               "Describes the value of protocol attribute, e.g.
                nexthop address, peer address, etc.";
           }
+        }
+      }
+      list opaque {
+        key "attribute-name";
+        description
+          "List of protocol attributes.";
+        leaf attribute-name {
+          type string;
+          description
+            "The name of the attribute.";
+        }
+        leaf-list value {
+          type string;
+          description
+            "The value(s) of the attribute";
         }
       }
     }
@@ -613,7 +649,7 @@ module ietf-network-slice-service {
           description
             "The termination port ID of the attachment circuit.";
         }
-        leaf ac-tp-ip-address {
+        leaf ac-ip-address {
           type inet:ip-address;
           description
             "The IP address of the attachment circuit.";
@@ -623,7 +659,7 @@ module ietf-network-slice-service {
           description
             "The subnet prefix length expressed in bits.";
         }
-        leaf qos-policy-name {
+        leaf ac-qos-policy-name {
           type string;
           description
             "The name of the QoS policy that is applied to the
@@ -640,15 +676,10 @@ module ietf-network-slice-service {
         container ac-tags {
           description
             "Container for the attachment circuit tags.";
-          list ac-tag {
-            key "index";
+          list ac-tags {
+            key "ac-tag-type";
             description
               "The attachment circuit tags list.";
-            leaf index {
-              type uint32;
-              description
-                "The entry index.";
-            }
             leaf ac-tag-type {
               type identityref {
                 base attachment-circuit-tag-type;
@@ -656,10 +687,23 @@ module ietf-network-slice-service {
               description
                 "The attachment circuit tag type.";
             }
-            leaf ac-tag-value {
+            leaf-list value {
               type string;
               description
                 "The attachment circuit tag value.";
+            }
+          }
+          list ac-tag-opaque {
+            key "tag-name";
+            leaf tag-name {
+              type string;
+              description
+                "The opaque tags name";
+            }
+            leaf-list value {
+              type string;
+              description
+                "The opaque tags value";
             }
           }
         }
@@ -1060,15 +1104,8 @@ module ietf-network-slice-service {
       container service-tags {
         description
           "Container for the list of service tags.";
-        list service-id-tag {
-          key "index";
-          description
-            "Slice service tag list.";
-          leaf index {
-            type uint32;
-            description
-              "The entry index.";
-          }
+        list tag-type {
+          key "tag-type";
           leaf tag-type {
             type identityref {
               base service-tag-type;
@@ -1076,10 +1113,23 @@ module ietf-network-slice-service {
             description
               "Slice service tag type.";
           }
-          leaf tag-value {
+          leaf-list value {
             type string;
             description
-              "Slice service tag value.";
+              "The tag value";
+          }
+        }
+        list tag-opaque {
+          key "tag-name";
+          leaf tag-name {
+            type string;
+            description
+              "The opaque tag name";
+          }
+          leaf-list value {
+            type string;
+            description
+              "The opaque tag value";
           }
         }
       }
