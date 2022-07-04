@@ -16,7 +16,7 @@ module: ietf-network-slice-service
         |     +--rw value*      string
         +--rw (slo-sle-policy)?
         |  +--:(standard)
-        |  |  +--rw slo-sle-template?         -> /network-slice-services/slo-sle-templates/slo-sle-template/id
+        |  |  +--rw slo-sle-template?         leafref
         |  +--:(custom)
         |     +--rw service-slo-sle-policy
         |        +--rw policy-description?     string
@@ -33,13 +33,14 @@ module: ietf-network-slice-service
         |        +--rw steering-constraints
         |           +--rw path-constraints
         |           +--rw service-function
+        +--rw slo-sle-policy-override?        identityref
         +--rw status
         |  +--rw admin-status
-        |  |  +--rw status?         identityref
-        |  |  +--rw last-updated?   yang:date-and-time
-        |  +--ro oper-status
-        |     +--ro status?         identityref
-        |     +--ro last-updated?   yang:date-and-time
+        |  |  +--rw status?        identityref
+        |  |  +--rw last-change?   yang:date-and-time
+        |  +--rw oper-status
+        |     +--ro status?        identityref
+        |     +--ro last-change?   yang:date-and-time
         +--rw sdps
         |  +--rw sdp* [sdp-id]
         |     +--rw sdp-id                    string
@@ -53,11 +54,13 @@ module: ietf-network-slice-service
         |     +--rw service-match-criteria
         |     |  +--rw match-criterion* [index]
         |     |     +--rw index                               uint32
-        |     |     +--rw match-type?                         identityref
+        |     |     +--rw match-type?
+        |     |     |       identityref
         |     |     +--rw value*                              string
-        |     |     +--rw target-connection-group-id?         -> /network-slice-services/slice-service/connection-groups/connection-group/connection-group-id
-        |     |     +--rw connection-group-sdp-role?          identityref
-        |     |     +--rw target-connectivity-construct-id?   -> /network-slice-services/slice-service/connection-groups/connection-group[connection-group-id=current()/../target-connection-group-id]/connectivity-construct/cc-id
+        |     |     +--rw target-connection-group-id?         leafref
+        |     |     +--rw connection-group-sdp-role?
+        |     |     |       identityref
+        |     |     +--rw target-connectivity-construct-id?   leafref
         |     +--rw sdp-peering
         |     |  +--rw protocol* [protocol-type]
         |     |  |  +--rw protocol-type    identityref
@@ -86,12 +89,16 @@ module: ietf-network-slice-service
         |     |     |     +--rw value*      string
         |     |     +--rw service-match-criteria
         |     |     |  +--rw match-criterion* [index]
-        |     |     |     +--rw index                               uint32
-        |     |     |     +--rw match-type?                         identityref
-        |     |     |     +--rw value*                              string
-        |     |     |     +--rw target-connection-group-id?         -> /network-slice-services/slice-service/connection-groups/connection-group/connection-group-id
-        |     |     |     +--rw connection-group-sdp-role?          identityref
-        |     |     |     +--rw target-connectivity-construct-id?   -> /network-slice-services/slice-service/connection-groups/connection-group[connection-group-id=current()/../target-connection-group-id]/connectivity-construct/cc-id
+        |     |     |     +--rw index
+        |     |     |     |       uint32
+        |     |     |     +--rw match-type?
+        |     |     |     |       identityref
+        |     |     |     +--rw value*
+        |     |     |     |       string
+        |     |     |     +--rw target-connection-group-id?         leafref
+        |     |     |     +--rw connection-group-sdp-role?
+        |     |     |     |       identityref
+        |     |     |     +--rw target-connectivity-construct-id?   leafref
         |     |     +--rw sdp-peering
         |     |     |  +--rw protocol* [protocol-type]
         |     |     |  |  +--rw protocol-type    identityref
@@ -131,15 +138,17 @@ module: ietf-network-slice-service
         |     |  +--rw pbs?   uint64
         |     +--rw status
         |     |  +--rw admin-status
-        |     |  |  +--rw status?         identityref
-        |     |  |  +--rw last-updated?   yang:date-and-time
-        |     |  +--ro oper-status
-        |     |     +--ro status?         identityref
-        |     |     +--ro last-updated?   yang:date-and-time
+        |     |  |  +--rw status?        identityref
+        |     |  |  +--rw last-change?   yang:date-and-time
+        |     |  +--rw oper-status
+        |     |     +--ro status?        identityref
+        |     |     +--ro last-change?   yang:date-and-time
         |     +--ro sdp-monitoring
-        |        +--ro incoming-utilized-bandwidth?   te-types:te-bandwidth
+        |        +--ro incoming-utilized-bandwidth?
+        |        |       te-types:te-bandwidth
         |        +--ro incoming-bw-utilization        decimal64
-        |        +--ro outgoing-utilized-bandwidth?   te-types:te-bandwidth
+        |        +--ro outgoing-utilized-bandwidth?
+        |        |       te-types:te-bandwidth
         |        +--ro outgoing-bw-utilization        decimal64
         +--rw connection-groups
            +--rw connection-group* [connection-group-id]
@@ -147,7 +156,7 @@ module: ietf-network-slice-service
               +--rw connectivity-type?              identityref
               +--rw (slo-sle-policy)?
               |  +--:(standard)
-              |  |  +--rw slo-sle-template?         -> /network-slice-services/slo-sle-templates/slo-sle-template/id
+              |  |  +--rw slo-sle-template?         leafref
               |  +--:(custom)
               |     +--rw service-slo-sle-policy
               |        +--rw policy-description?     string
@@ -164,46 +173,65 @@ module: ietf-network-slice-service
               |        +--rw steering-constraints
               |           +--rw path-constraints
               |           +--rw service-function
+              +--rw slo-sle-policy-override?        identityref
               +--rw connectivity-construct* [cc-id]
               |  +--rw cc-id                                uint32
               |  +--rw (connectivity-construct-type)?
               |  |  +--:(p2p)
-              |  |  |  +--rw p2p-sender-sdp?                -> ../../../../sdps/sdp/sdp-id
-              |  |  |  +--rw p2p-receiver-sdp?              -> ../../../../sdps/sdp/sdp-id
+              |  |  |  +--rw p2p-sender-sdp?
+              |  |  |  |       -> ../../../../sdps/sdp/sdp-id
+              |  |  |  +--rw p2p-receiver-sdp?
+              |  |  |          -> ../../../../sdps/sdp/sdp-id
               |  |  +--:(p2mp)
-              |  |  |  +--rw p2mp-sender-sdp?               -> ../../../../sdps/sdp/sdp-id
-              |  |  |  +--rw p2mp-receiver-sdp*             -> ../../../../sdps/sdp/sdp-id
+              |  |  |  +--rw p2mp-sender-sdp?
+              |  |  |  |       -> ../../../../sdps/sdp/sdp-id
+              |  |  |  +--rw p2mp-receiver-sdp*
+              |  |  |          -> ../../../../sdps/sdp/sdp-id
               |  |  +--:(a2a)
               |  |     +--rw a2a-sdp* [sdp-id]
-              |  |        +--rw sdp-id                          -> ../../../../../sdps/sdp/sdp-id
+              |  |        +--rw sdp-id
+              |  |        |       -> ../../../../../sdps/sdp/sdp-id
               |  |        +--rw (slo-sle-policy)?
-              |  |           +--:(standard)
-              |  |           |  +--rw slo-sle-template?         -> /network-slice-services/slo-sle-templates/slo-sle-template/id
-              |  |           +--:(custom)
-              |  |              +--rw service-slo-sle-policy
-              |  |                 +--rw policy-description?     string
-              |  |                 +--rw metric-bounds
-              |  |                 |  +--rw metric-bound* [metric-type]
-              |  |                 |     +--rw metric-type          identityref
-              |  |                 |     +--rw metric-unit          string
-              |  |                 |     +--rw value-description?   string
-              |  |                 |     +--rw bound?               uint64
-              |  |                 +--rw security*               identityref
-              |  |                 +--rw isolation?              identityref
-              |  |                 +--rw max-occupancy-level?    uint8
-              |  |                 +--rw mtu?                    uint16
-              |  |                 +--rw steering-constraints
-              |  |                    +--rw path-constraints
-              |  |                    +--rw service-function
+              |  |        |  +--:(standard)
+              |  |        |  |  +--rw slo-sle-template?         leafref
+              |  |        |  +--:(custom)
+              |  |        |     +--rw service-slo-sle-policy
+              |  |        |        +--rw policy-description?
+              |  |        |        |       string
+              |  |        |        +--rw metric-bounds
+              |  |        |        |  +--rw metric-bound*
+              |  |        |        |          [metric-type]
+              |  |        |        |     +--rw metric-type
+              |  |        |        |     |       identityref
+              |  |        |        |     +--rw metric-unit
+              |  |        |        |     |       string
+              |  |        |        |     +--rw value-description?
+              |  |        |        |     |       string
+              |  |        |        |     +--rw bound?
+              |  |        |        |             uint64
+              |  |        |        +--rw security*
+              |  |        |        |       identityref
+              |  |        |        +--rw isolation?
+              |  |        |        |       identityref
+              |  |        |        +--rw max-occupancy-level?
+              |  |        |        |       uint8
+              |  |        |        +--rw mtu?
+              |  |        |        |       uint16
+              |  |        |        +--rw steering-constraints
+              |  |        |           +--rw path-constraints
+              |  |        |           +--rw service-function
+              |  |        +--rw slo-sle-policy-override?
+              |  |                identityref
               |  +--rw (slo-sle-policy)?
               |  |  +--:(standard)
-              |  |  |  +--rw slo-sle-template?              -> /network-slice-services/slo-sle-templates/slo-sle-template/id
+              |  |  |  +--rw slo-sle-template?              leafref
               |  |  +--:(custom)
               |  |     +--rw service-slo-sle-policy
               |  |        +--rw policy-description?     string
               |  |        +--rw metric-bounds
               |  |        |  +--rw metric-bound* [metric-type]
-              |  |        |     +--rw metric-type          identityref
+              |  |        |     +--rw metric-type
+              |  |        |     |       identityref
               |  |        |     +--rw metric-unit          string
               |  |        |     +--rw value-description?   string
               |  |        |     +--rw bound?               uint64
@@ -214,6 +242,8 @@ module: ietf-network-slice-service
               |  |        +--rw steering-constraints
               |  |           +--rw path-constraints
               |  |           +--rw service-function
+              |  +--rw slo-sle-policy-override?
+              |  |       identityref
               |  +--ro connectivity-construct-monitoring
               |     +--ro one-way-min-delay?         uint32
               |     +--ro one-way-max-delay?         uint32

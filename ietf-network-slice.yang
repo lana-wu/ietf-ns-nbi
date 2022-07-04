@@ -353,14 +353,20 @@ module ietf-network-slice-service {
 
   identity remote-as {
     base peering-attribute-type;
+    description
+      "Identity for the remote AS attribute.";
   }
 
   identity neighbor {
     base peering-attribute-type;
+    description
+      "Identity for the neighbor attribute.";
   }
 
   identity local-as {
     base peering-attribute-type;
+    description
+      "Identity for the local AS attribute.";
   }
 
   /*
@@ -401,6 +407,30 @@ module ietf-network-slice-service {
     base availability-type;
     description
       "level 5: 99%";
+  }
+
+  identity slo-sle-policy-inherit {
+    description
+      "Base identity for SLO/SLE policy inherit options.";
+  }
+
+  identity slo-sle-policy-inherit-override {
+    base slo-sle-policy-inherit;
+    description
+      "The policy of SLO/SLE(s) that is defined at a
+       child level override a parent SLO/SLE policy (if it
+       exists). No SLO/SLE(s) are inheritied from parent,
+       in this case, if a child SLO/SLE policy exists.";
+  }
+
+  identity slo-sle-policy-inherit-update {
+    base slo-sle-policy-inherit;
+    description
+      "The policy of SLO/SLE(s) that is defined at a
+       child level updates the parent SLO/SLE policy (if it
+       exists). For example, if a specific SLO is defined
+       at the child level, that specific SLO overrides the
+       one inherited from a parent SLO/SLE policy.";
   }
 
   /* grouping */
@@ -695,6 +725,8 @@ module ietf-network-slice-service {
           }
           list ac-tag-opaque {
             key "tag-name";
+            description
+              "List of attachment circuit opaque tags.";
             leaf tag-name {
               type string;
               description
@@ -1081,6 +1113,14 @@ module ietf-network-slice-service {
         }
       }
     }
+    leaf slo-sle-policy-override {
+      type identityref {
+        base slo-sle-policy-inherit;
+      }
+      default "ietf-nss:slo-sle-policy-inherit-override";
+      description
+        "SLO/SLE policy override option.";
+    }
   }
 
   container network-slice-services {
@@ -1106,6 +1146,8 @@ module ietf-network-slice-service {
           "Container for the list of service tags.";
         list tag-type {
           key "tag-type";
+          description
+            "List of service tags keyed by type.";
           leaf tag-type {
             type identityref {
               base service-tag-type;
@@ -1121,6 +1163,8 @@ module ietf-network-slice-service {
         }
         list tag-opaque {
           key "tag-name";
+          description
+            "List of service opaque types.";
           leaf tag-name {
             type string;
             description
