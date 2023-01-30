@@ -2,7 +2,7 @@ module ietf-network-slice-service {
   yang-version 1.1;
   namespace
     "urn:ietf:params:xml:ns:yang:ietf-network-slice-service";
-  prefix ietf-nss;
+  prefix ietf-nssm;
 
   import ietf-inet-types {
     prefix inet;
@@ -27,14 +27,8 @@ module ietf-network-slice-service {
        Topologies, Section 6.2";
   }
 
-  /* Import TE Topology */
+  /* Import TE Types */
 
-  import ietf-te-topology {
-    prefix tet;
-    reference
-      "RFC 8795: YANG Data Model for Traffic Engineering (TE)
-       Topologies";
-  }
   import ietf-te-types {
     prefix te-types;
     reference
@@ -60,15 +54,15 @@ module ietf-network-slice-service {
      Editor: Reza Rokui
           <reza.rokui@nokia.com>
      Editor: Tarek Saad
-          <tsaad@juniper.net>
-     Editor: John Mullooly
-          <jmullool@cisco.com>
+          <tsaad@cisco.com>
      Author: Liuyan Han
-          <hanliuyan@chinamobile.com>";
+          <hanliuyan@chinamobile.com>
+     Editor: John Mullooly
+          <jmullool@cisco.com>";
   description
-    "This module defines a model for the IETF Network Slice service.
+    "This module defines a model for the IETF Network Slice Service.
 
-        Copyright (c) 2022 IETF Trust and the persons identified as
+        Copyright (c) 2023 IETF Trust and the persons identified as
         authors of the code.  All rights reserved.
 
         Redistribution and use in source and binary forms, with or
@@ -81,12 +75,12 @@ module ietf-network-slice-service {
      This version of this YANG module is part of RFC XXXX; see the
      RFC itself for full legal notices.";
 
-  revision 2022-07-11 {
+  revision 2023-01-19 {
     description
       "initial version.";
     reference
-      "RFC XXXX: A Yang Data Model for IETF Network Slice service
-       operation";
+      "RFC XXXX: A YANG Data Model for the IETF Network Slice
+       Service";
   }
 
   /* Features */
@@ -157,7 +151,7 @@ module ietf-network-slice-service {
 
   identity service-security-type {
     description
-      "Base identity for for slice service security level.";
+      "Base identity for slice service security level.";
   }
 
   identity service-security-authenticate {
@@ -209,13 +203,13 @@ module ietf-network-slice-service {
   identity sender-role {
     base vpn-common:role;
     description
-      "A SDP is acting as a sender.";
+      "An SDP is acting as a sender.";
   }
 
   identity receiver-role {
     base vpn-common:role;
     description
-      "A SDP is acting as a receiver.";
+      "An SDP is acting as a receiver.";
   }
 
   identity service-slo-metric-type {
@@ -329,15 +323,17 @@ module ietf-network-slice-service {
   identity service-source-ip-prefix-match {
     base service-match-type;
     description
-      "Use source ip prefix as match criteria for
-       the slice service traffic, e.g..";
+      "Use source ip prefix as match criteria for the slice service
+       traffic. Examples of 'value' of this match type is
+       '192.0.2.0/24' and '2001:db8::1/64'.";
   }
 
   identity service-destination-ip-prefix-match {
     base service-match-type;
     description
-      "Use destination ip prefix as match criteria
-       for the slice service traffic.";
+      "Use destination ip prefix as match criteria for the slice
+       service traffic. Examples of 'value' of this match type is
+       '203.0.113.1/32', '2001:db8::2/128'.";
   }
 
   identity service-dscp-match {
@@ -351,7 +347,7 @@ module ietf-network-slice-service {
     base service-match-type;
     description
       "Use Access Control List (ACL) as match criteria
-       for the slice service traffic,.";
+       for the slice service traffic.";
     reference
       "RFC 8519: YANG Data Model for
        Network Access Control Lists (ACLs)";
@@ -453,7 +449,7 @@ module ietf-network-slice-service {
     description
       "The policy of SLO/SLE(s) that is defined at a
        child level override a parent SLO/SLE policy,
-       which means that no SLO/SLE(s) are inheritied from parent
+       which means that no SLO/SLE(s) are inherited from parent
        if a child SLO/SLE policy exists.";
   }
 
@@ -469,74 +465,6 @@ module ietf-network-slice-service {
   }
 
   /* grouping */
-
-  grouping service-match-criteria {
-    description
-      "A grouping for the slice service match definition.";
-    container service-match-criteria {
-      description
-        "Describes the slice service match criteria.";
-      list match-criterion {
-        key "index";
-        description
-          "List of the slice service traffic match criteria.";
-        leaf index {
-          type uint32;
-          description
-            "The entry index.";
-        }
-        leaf match-type {
-          type identityref {
-            base service-match-type;
-          }
-          mandatory true;
-          description
-            "Identifies an entry in the list of the slice service
-             match criteria.";
-        }
-        leaf-list value {
-          type string;
-          description
-            "Describes the slice service match criteria, e.g.
-             IP prefix, VLAN, etc.";
-        }
-        leaf target-connection-group-id {
-          type leafref {
-            path
-              "/ietf-nss:network-slice-services"
-            + "/ietf-nss:slice-service"
-            + "/ietf-nss:connection-groups/ietf-nss:connection-group"
-            + "/ietf-nss:connection-group-id";
-          }
-          mandatory true;
-          description
-            "Reference to the slice service connection group.";
-        }
-        leaf connection-group-sdp-role {
-          type identityref {
-            base vpn-common:role;
-          }
-          default "vpn-common:any-to-any-role";
-          description
-            "Indicates the role in the connection group when
-             a slice service has multiple multipoint-to-multipoint
-             connection groups, e.g., hub-spoke.";
-        }
-        leaf target-connectivity-construct-id {
-          type leafref {
-            path
-              "/ietf-nss:network-slice-services/slice-service"
-            + "/ietf-nss:connection-groups"
-            + "/ietf-nss:connection-group[connection-group-id"
-            + "=current()/../target-connection-group-id]"
-            + "/ietf-nss:connectivity-construct/ietf-nss:cc-id";
-          }
-          description
-            "Reference to a Network Slice connection construct.";
-        }
-      }
-    }
-  }
 
   grouping service-sles {
     description
@@ -738,12 +666,15 @@ module ietf-network-slice-service {
              such as identifying the SAP that is attached to
              an endpoint that is provided in a service request.";
         }
+        reference
+          " draft-ietf-opsawg-sap: A YANG Network Model for Service
+           Attachment Points (SAPs)";
         leaf mtu {
           type uint16;
           units "bytes";
           description
             "Maximum size in octets of the slice service data packet
-             that can traverse a SDP.";
+             that can traverse an SDP.";
         }
         container ac-tags {
           description
@@ -782,8 +713,9 @@ module ietf-network-slice-service {
           }
         }
         /* Per ac rate limits */
-        uses service-match-criteria;
+        uses service-qos;
         uses sdp-peering;
+        uses vpn-common:service-status;
       }
     }
   }
@@ -795,12 +727,13 @@ module ietf-network-slice-service {
       config false;
       description
         "Container for SDP monitoring metrics.";
-      leaf incoming-utilized-bandwidth {
+      leaf incoming-bw-value {
         type te-types:te-bandwidth;
         description
-          "Incoming bandwidth utilization at a SDP.";
+          "Indicates, in octets per second, incoming bandwidth at
+           an SDP.";
       }
-      leaf incoming-bw-utilization {
+      leaf incoming-bw-percent {
         type decimal64 {
           fraction-digits 5;
           range "0..100";
@@ -808,15 +741,16 @@ module ietf-network-slice-service {
         units "percent";
         mandatory true;
         description
-          "To be used to define the bandwidth utilization
-           as a percentage of the available bandwidth.";
+          "Indicates a percentage of the incoming bandwidth at
+           an SDP.";
       }
-      leaf outgoing-utilized-bandwidth {
+      leaf outgoing-bw-value {
         type te-types:te-bandwidth;
         description
-          "Outoing service bandwidth utilization at a SDP.";
+          "Indicates, in octets per second, outgoing bandwidth at
+           an SDP.";
       }
-      leaf outgoing-bw-utilization {
+      leaf outgoing-bw-percent {
         type decimal64 {
           fraction-digits 5;
           range "0..100";
@@ -824,8 +758,8 @@ module ietf-network-slice-service {
         units "percent";
         mandatory true;
         description
-          "To be used to define the service bandwidth utilization
-           as a percentage of the available bandwidth.";
+          "Indicates a percentage of the outgoing bandwidth at
+           an SDP.";
       }
     }
   }
@@ -994,24 +928,90 @@ module ietf-network-slice-service {
          information can be used for correlation purposes,
          such as identifying the SAP that is attached to
          an endpoint that is provided in a service request.";
+      reference
+        " draft-ietf-opsawg-sap: A YANG Network Model for Service
+         Attachment Points (SAPs)";
     }
-    leaf ltp {
+    leaf tp-ref {
       type leafref {
-        path "/nw:networks/nw:network/nw:node/"
-           + "nt:termination-point/tet:te-tp-id";
+        path
+          "/nw:networks/nw:network[nw:network-id =current()/../../"
+        + "../custom-topology-ref/network-ref]/"
+        + "nw:node/nt:termination-point/nt:tp-id";
       }
       description
-        "A reference to Link Termination Point (LTP) in the
-         TE-topology";
+        "A reference to Termination Point (TP) in the custom
+         topology";
       reference
-        "RFC 8795: YANG Data Model for Traffic Engineering (TE)
-         Topologies";
+        "RFC 8345: A YANG Data Model for Network Topologies";
     }
-    uses service-match-criteria;
+    container service-match-criteria {
+      description
+        "Describes the slice service match criteria.";
+      list match-criterion {
+        key "index";
+        description
+          "List of the slice service traffic match criteria.";
+        leaf index {
+          type uint32;
+          description
+            "The entry index.";
+        }
+        leaf match-type {
+          type identityref {
+            base service-match-type;
+          }
+          mandatory true;
+          description
+            "Identifies an entry in the list of the slice service
+             match criteria.";
+        }
+        leaf-list value {
+          type string;
+          description
+            "Describes the slice service match criteria, e.g.
+             IP prefix, VLAN, etc.";
+        }
+        leaf target-connection-group-id {
+          type leafref {
+            path "../../../../../ietf-nssm:connection-groups"
+               + "/ietf-nssm:connection-group"
+               + "/ietf-nssm:connection-group-id";
+          }
+          mandatory true;
+          description
+            "Reference to the slice service connection group.";
+        }
+        leaf connection-group-sdp-role {
+          type identityref {
+            base vpn-common:role;
+          }
+          default "vpn-common:any-to-any-role";
+          description
+            "Specifies the role of SDP in the connection group
+             When the service connection type is multi-point,
+             such as hub-spoke service connection type. In addition,
+             this helps to create connectivity construct automatically
+             , rather than explicitly specifying each one.";
+        }
+        leaf target-connectivity-construct-id {
+          type leafref {
+            path
+              "/ietf-nssm:network-slice-services"
+            + "/ietf-nssm:slice-service"
+            + "/ietf-nssm:connection-groups"
+            + "/ietf-nssm:connection-group[connection-group-id"
+            + "=current()/../target-connection-group-id]"
+            + "/ietf-nssm:connectivity-construct/ietf-nssm:cc-id";
+          }
+          description
+            "Reference to a Network Slice connection construct.";
+        }
+      }
+    }
+    uses service-qos;
     uses sdp-peering;
     uses sdp-attachment-circuits;
-    /* Per SDP QoS */
-    uses service-qos;
     uses vpn-common:service-status;
     uses sdp-monitoring-metrics;
   }
@@ -1082,7 +1082,7 @@ module ietf-network-slice-service {
                 path "../../../../../sdps/sdp/sdp-id";
               }
               description
-                "Reference to a SDP.";
+                "Reference to an SDP.";
             }
             uses service-slo-sle-policy;
           }
@@ -1093,6 +1093,7 @@ module ietf-network-slice-service {
        * overrides the per slice service-slo-sle-policy.
        */
       uses service-slo-sle-policy-override;
+      uses vpn-common:service-status;
       container connectivity-construct-monitoring {
         config false;
         description
@@ -1160,10 +1161,10 @@ module ietf-network-slice-service {
         }
         leaf template-ref {
           type leafref {
-            path "/ietf-nss:network-slice-services"
-               + "/ietf-nss:slo-sle-templates"
-               + "/ietf-nss:slo-sle-template"
-               + "/ietf-nss:id";			   
+            path "/ietf-nssm:network-slice-services"
+               + "/ietf-nssm:slo-sle-templates"
+               + "/ietf-nssm:slo-sle-template"
+               + "/ietf-nssm:id";
           }
           description
             "The reference to a standard template. When set it
@@ -1199,10 +1200,10 @@ module ietf-network-slice-service {
           "Standard SLO template.";
         leaf slo-sle-template {
           type leafref {
-            path "/ietf-nss:network-slice-services"
-               + "/ietf-nss:slo-sle-templates"
-               + "/ietf-nss:slo-sle-template"
-               + "/ietf-nss:id";			   
+            path "/ietf-nssm:network-slice-services"
+               + "/ietf-nssm:slo-sle-templates"
+               + "/ietf-nssm:slo-sle-template"
+               + "/ietf-nssm:id";
           }
           description
             "Standard SLO and SLE template to be used.";
@@ -1233,7 +1234,7 @@ module ietf-network-slice-service {
       type identityref {
         base slo-sle-policy-override;
       }
-      default "ietf-nss:slo-sle-policy-full-override";
+      default "ietf-nssm:slo-sle-policy-full-override";
       description
         "SLO/SLE policy override option.";
     }
@@ -1294,6 +1295,12 @@ module ietf-network-slice-service {
         }
       }
       uses service-slo-sle-policy;
+      leaf compute-only {
+        type empty;
+        description
+          "When present, the slice is computed. No resources are
+           committed or reserved in the network.";
+      }
       uses vpn-common:service-status;
       container sdps {
         description
@@ -1315,8 +1322,13 @@ module ietf-network-slice-service {
           uses connection-group;
         }
       }
-      uses te-types:te-topology-identifier;
+      container custom-topology-ref {
+        description
+          "Container for the custom topology reference.";
+        uses nw:network-ref;
+      }
     }
     //ietf-network-slice-service list
   }
 }
+
