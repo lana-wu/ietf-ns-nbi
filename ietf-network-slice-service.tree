@@ -49,6 +49,7 @@ module: ietf-network-slice-service
         |        +--rw steering-constraints
         |           +--rw path-constraints
         |           +--rw service-function
+        +--rw compute-only?                   empty
         +--rw status
         |  +--rw admin-status
         |  |  +--rw status?         identityref
@@ -67,7 +68,7 @@ module: ietf-network-slice-service
         |     +--rw node-id?                  string
         |     +--rw sdp-ip?                   inet:ip-address
         |     +--rw peer-sap-id?              string
-        |     +--rw ltp?                      leafref
+        |     +--rw tp-ref?                   leafref
         |     +--rw service-match-criteria
         |     |  +--rw match-criterion* [index]
         |     |     +--rw index
@@ -80,54 +81,6 @@ module: ietf-network-slice-service
         |     |     +--rw connection-group-sdp-role?
         |     |     |       identityref
         |     |     +--rw target-connectivity-construct-id?   leafref
-        |     +--rw sdp-peering
-        |     |  +--rw protocol* [protocol-type]
-        |     |  |  +--rw protocol-type    identityref
-        |     |  |  +--rw attribute* [attribute-type]
-        |     |  |     +--rw attribute-type    identityref
-        |     |  |     +--rw value*            string
-        |     |  +--rw opaque* [attribute-name]
-        |     |     +--rw attribute-name    string
-        |     |     +--rw value*            string
-        |     +--rw attachment-circuits
-        |     |  +--rw attachment-circuit* [ac-id]
-        |     |     +--rw ac-id                     string
-        |     |     +--rw ac-description?           string
-        |     |     +--rw ac-node-id?               string
-        |     |     +--rw ac-tp-id?                 string
-        |     |     +--rw ac-ip-address?
-        |     |     |       inet:ip-address
-        |     |     +--rw ac-ip-prefix-length?      uint8
-        |     |     +--rw peer-sap-id?              string
-        |     |     +--rw mtu?                      uint16
-        |     |     +--rw ac-tags
-        |     |     |  +--rw ac-tags* [ac-tag-type]
-        |     |     |  |  +--rw ac-tag-type    identityref
-        |     |     |  |  +--rw value*         string
-        |     |     |  +--rw ac-tag-opaque* [tag-name]
-        |     |     |     +--rw tag-name    string
-        |     |     |     +--rw value*      string
-        |     |     +--rw service-match-criteria
-        |     |     |  +--rw match-criterion* [index]
-        |     |     |     +--rw index
-        |     |     |     |       uint32
-        |     |     |     +--rw match-type
-        |     |     |     |       identityref
-        |     |     |     +--rw value*
-        |     |     |     |       string
-        |     |     |     +--rw target-connection-group-id          leafref
-        |     |     |     +--rw connection-group-sdp-role?
-        |     |     |     |       identityref
-        |     |     |     +--rw target-connectivity-construct-id?   leafref
-        |     |     +--rw sdp-peering
-        |     |        +--rw protocol* [protocol-type]
-        |     |        |  +--rw protocol-type    identityref
-        |     |        |  +--rw attribute* [attribute-type]
-        |     |        |     +--rw attribute-type    identityref
-        |     |        |     +--rw value*            string
-        |     |        +--rw opaque* [attribute-name]
-        |     |           +--rw attribute-name    string
-        |     |           +--rw value*            string
         |     +--rw incoming-qos-policy
         |     |  +--rw qos-policy-name?   string
         |     |  +--rw rate-limits
@@ -146,6 +99,68 @@ module: ietf-network-slice-service
         |     |     +--rw ebs?   uint64
         |     |     +--rw pir?   uint64
         |     |     +--rw pbs?   uint64
+        |     +--rw sdp-peering
+        |     |  +--rw protocol* [protocol-type]
+        |     |  |  +--rw protocol-type    identityref
+        |     |  |  +--rw attribute* [attribute-type]
+        |     |  |     +--rw attribute-type    identityref
+        |     |  |     +--rw value*            string
+        |     |  +--rw opaque* [attribute-name]
+        |     |     +--rw attribute-name    string
+        |     |     +--rw value*            string
+        |     +--rw attachment-circuits
+        |     |  +--rw attachment-circuit* [ac-id]
+        |     |     +--rw ac-id                  string
+        |     |     +--rw ac-description?        string
+        |     |     +--rw ac-node-id?            string
+        |     |     +--rw ac-tp-id?              string
+        |     |     +--rw ac-ip-address?         inet:ip-address
+        |     |     +--rw ac-ip-prefix-length?   uint8
+        |     |     +--rw peer-sap-id?           string
+        |     |     +--rw mtu?                   uint16
+        |     |     +--rw ac-tags
+        |     |     |  +--rw ac-tags* [ac-tag-type]
+        |     |     |  |  +--rw ac-tag-type    identityref
+        |     |     |  |  +--rw value*         string
+        |     |     |  +--rw ac-tag-opaque* [tag-name]
+        |     |     |     +--rw tag-name    string
+        |     |     |     +--rw value*      string
+        |     |     +--rw incoming-qos-policy
+        |     |     |  +--rw qos-policy-name?   string
+        |     |     |  +--rw rate-limits
+        |     |     |     +--rw cir?   uint64
+        |     |     |     +--rw cbs?   uint64
+        |     |     |     +--rw eir?   uint64
+        |     |     |     +--rw ebs?   uint64
+        |     |     |     +--rw pir?   uint64
+        |     |     |     +--rw pbs?   uint64
+        |     |     +--rw outgoing-qos-policy
+        |     |     |  +--rw qos-policy-name?   string
+        |     |     |  +--rw rate-limits
+        |     |     |     +--rw cir?   uint64
+        |     |     |     +--rw cbs?   uint64
+        |     |     |     +--rw eir?   uint64
+        |     |     |     +--rw ebs?   uint64
+        |     |     |     +--rw pir?   uint64
+        |     |     |     +--rw pbs?   uint64
+        |     |     +--rw sdp-peering
+        |     |     |  +--rw protocol* [protocol-type]
+        |     |     |  |  +--rw protocol-type    identityref
+        |     |     |  |  +--rw attribute* [attribute-type]
+        |     |     |  |     +--rw attribute-type    identityref
+        |     |     |  |     +--rw value*            string
+        |     |     |  +--rw opaque* [attribute-name]
+        |     |     |     +--rw attribute-name    string
+        |     |     |     +--rw value*            string
+        |     |     +--rw status
+        |     |        +--rw admin-status
+        |     |        |  +--rw status?         identityref
+        |     |        |  +--rw last-updated?
+        |     |        |          yang:date-and-time
+        |     |        +--ro oper-status
+        |     |           +--ro status?         identityref
+        |     |           +--ro last-updated?
+        |     |                   yang:date-and-time
         |     +--rw status
         |     |  +--rw admin-status
         |     |  |  +--rw status?         identityref
@@ -154,12 +169,12 @@ module: ietf-network-slice-service
         |     |     +--ro status?         identityref
         |     |     +--ro last-updated?   yang:date-and-time
         |     +--ro sdp-monitoring
-        |        +--ro incoming-utilized-bandwidth?
+        |        +--ro incoming-bw-value?
         |        |       te-types:te-bandwidth
-        |        +--ro incoming-bw-utilization        decimal64
-        |        +--ro outgoing-utilized-bandwidth?
+        |        +--ro incoming-bw-percent    decimal64
+        |        +--ro outgoing-bw-value?
         |        |       te-types:te-bandwidth
-        |        +--ro outgoing-bw-utilization        decimal64
+        |        +--ro outgoing-bw-percent    decimal64
         +--rw connection-groups
         |  +--rw connection-group* [connection-group-id]
         |     +--rw connection-group-id                string
@@ -257,6 +272,13 @@ module: ietf-network-slice-service
         |     |  |           +--rw service-function
         |     |  +--rw service-slo-sle-policy-override?
         |     |  |       identityref
+        |     |  +--rw status
+        |     |  |  +--rw admin-status
+        |     |  |  |  +--rw status?         identityref
+        |     |  |  |  +--rw last-updated?   yang:date-and-time
+        |     |  |  +--ro oper-status
+        |     |  |     +--ro status?         identityref
+        |     |  |     +--ro last-updated?   yang:date-and-time
         |     |  +--ro connectivity-construct-monitoring
         |     |     +--ro one-way-min-delay?         uint32
         |     |     +--ro one-way-max-delay?         uint32
@@ -275,7 +297,7 @@ module: ietf-network-slice-service
         |        +--ro two-way-max-delay?         uint32
         |        +--ro two-way-delay-variation?   uint32
         |        +--ro two-way-packet-loss?       decimal64
-        +--rw te-topology-identifier
-           +--rw provider-id?   te-global-id
-           +--rw client-id?     te-global-id
-           +--rw topology-id?   te-topology-id
+        +--rw custom-topology-ref
+           +--rw network-ref?
+                   -> /nw:networks/network/network-id
+
