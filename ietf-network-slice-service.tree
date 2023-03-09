@@ -3,15 +3,16 @@ module: ietf-network-slice-service
      +--rw slo-sle-templates
      |  +--rw slo-sle-template* [id]
      |     +--rw id                        string
-     |     +--rw template-description?     string
+     |     +--rw description?              string
      |     +--rw template-ref?             leafref
      |     +--rw service-slo-sle-policy
-     |        +--rw policy-description?     string
+     |        +--rw description?            string
      |        +--rw metric-bounds
      |        |  +--rw metric-bound* [metric-type]
      |        |     +--rw metric-type          identityref
      |        |     +--rw metric-unit          string
      |        |     +--rw value-description?   string
+     |        |     +--rw percentile-value?    percentile
      |        |     +--rw bound?               uint64
      |        +--rw security*               identityref
      |        +--rw isolation?              identityref
@@ -20,27 +21,25 @@ module: ietf-network-slice-service
      |        +--rw steering-constraints
      |           +--rw path-constraints
      |           +--rw service-function
-     +--rw slice-service* [service-id]
-        +--rw service-id                      string
-        +--rw service-description?            string
+     +--rw slice-service* [id]
+        +--rw id                              string
+        +--rw description?                    string
         +--rw service-tags
         |  +--rw tag-type* [tag-type]
-        |  |  +--rw tag-type    identityref
-        |  |  +--rw value*      string
-        |  +--rw tag-opaque* [tag-name]
-        |     +--rw tag-name    string
+        |     +--rw tag-type    identityref
         |     +--rw value*      string
         +--rw (slo-sle-policy)?
         |  +--:(standard)
         |  |  +--rw slo-sle-template?         leafref
         |  +--:(custom)
         |     +--rw service-slo-sle-policy
-        |        +--rw policy-description?     string
+        |        +--rw description?            string
         |        +--rw metric-bounds
         |        |  +--rw metric-bound* [metric-type]
         |        |     +--rw metric-type          identityref
         |        |     +--rw metric-unit          string
         |        |     +--rw value-description?   string
+        |        |     +--rw percentile-value?    percentile
         |        |     +--rw bound?               uint64
         |        +--rw security*               identityref
         |        +--rw isolation?              identityref
@@ -58,16 +57,15 @@ module: ietf-network-slice-service
         |     +--ro status?         identityref
         |     +--ro last-updated?   yang:date-and-time
         +--rw sdps
-        |  +--rw sdp* [sdp-id]
-        |     +--rw sdp-id                    string
-        |     +--rw sdp-description?          string
+        |  +--rw sdp* [id]
+        |     +--rw id                        string
+        |     +--rw description?              string
         |     +--rw location
         |     |  +--rw altitude?    int64
         |     |  +--rw latitude?    decimal64
         |     |  +--rw longitude?   decimal64
         |     +--rw node-id?                  string
-        |     +--rw sdp-ip?                   inet:ip-address
-        |     +--rw peer-sap-id?              string
+        |     +--rw sdp-ip-address*           inet:ip-address
         |     +--rw tp-ref?                   leafref
         |     +--rw service-match-criteria
         |     |  +--rw match-criterion* [index]
@@ -100,30 +98,26 @@ module: ietf-network-slice-service
         |     |     +--rw pir?   uint64
         |     |     +--rw pbs?   uint64
         |     +--rw sdp-peering
-        |     |  +--rw protocol* [protocol-type]
-        |     |  |  +--rw protocol-type    identityref
-        |     |  |  +--rw attribute* [attribute-type]
-        |     |  |     +--rw attribute-type    identityref
-        |     |  |     +--rw value*            string
-        |     |  +--rw opaque* [attribute-name]
-        |     |     +--rw attribute-name    string
-        |     |     +--rw value*            string
+        |     |  +--rw peer-sap-id?   string
+        |     |  +--rw protocols
+        |     +--rw ac-svc-name?              string
         |     +--rw attachment-circuits
-        |     |  +--rw attachment-circuit* [ac-id]
-        |     |     +--rw ac-id                  string
-        |     |     +--rw ac-description?        string
-        |     |     +--rw ac-node-id?            string
-        |     |     +--rw ac-tp-id?              string
-        |     |     +--rw ac-ip-address?         inet:ip-address
-        |     |     +--rw ac-ip-prefix-length?   uint8
-        |     |     +--rw peer-sap-id?           string
-        |     |     +--rw mtu?                   uint16
+        |     |  +--rw attachment-circuit* [id]
+        |     |     +--rw id                       string
+        |     |     +--rw ac-svc-name?             string
+        |     |     +--rw description?             string
+        |     |     +--rw ac-node-id?              string
+        |     |     +--rw ac-tp-id?                string
+        |     |     +--rw ac-ipv4-address?
+        |     |     |       inet:ipv4-address
+        |     |     +--rw ac-ipv4-prefix-length?   uint8
+        |     |     +--rw ac-ipv6-address?
+        |     |     |       inet:ipv6-address
+        |     |     +--rw ac-ipv6-prefix-length?   uint8
+        |     |     +--rw mtu?                     uint16
         |     |     +--rw ac-tags
-        |     |     |  +--rw ac-tags* [ac-tag-type]
-        |     |     |  |  +--rw ac-tag-type    identityref
-        |     |     |  |  +--rw value*         string
-        |     |     |  +--rw ac-tag-opaque* [tag-name]
-        |     |     |     +--rw tag-name    string
+        |     |     |  +--rw ac-tags* [tag-type]
+        |     |     |     +--rw tag-type    identityref
         |     |     |     +--rw value*      string
         |     |     +--rw incoming-qos-policy
         |     |     |  +--rw qos-policy-name?   string
@@ -144,14 +138,8 @@ module: ietf-network-slice-service
         |     |     |     +--rw pir?   uint64
         |     |     |     +--rw pbs?   uint64
         |     |     +--rw sdp-peering
-        |     |     |  +--rw protocol* [protocol-type]
-        |     |     |  |  +--rw protocol-type    identityref
-        |     |     |  |  +--rw attribute* [attribute-type]
-        |     |     |  |     +--rw attribute-type    identityref
-        |     |     |  |     +--rw value*            string
-        |     |     |  +--rw opaque* [attribute-name]
-        |     |     |     +--rw attribute-name    string
-        |     |     |     +--rw value*            string
+        |     |     |  +--rw peer-sap-id?   string
+        |     |     |  +--rw protocols
         |     |     +--rw status
         |     |        +--rw admin-status
         |     |        |  +--rw status?         identityref
@@ -176,8 +164,8 @@ module: ietf-network-slice-service
         |        |       te-types:te-bandwidth
         |        +--ro outgoing-bw-percent    decimal64
         +--rw connection-groups
-        |  +--rw connection-group* [connection-group-id]
-        |     +--rw connection-group-id                string
+        |  +--rw connection-group* [id]
+        |     +--rw id                                 string
         |     +--rw connectivity-type?
         |     |       identityref
         |     +--rw (slo-sle-policy)?
@@ -185,13 +173,15 @@ module: ietf-network-slice-service
         |     |  |  +--rw slo-sle-template?            leafref
         |     |  +--:(custom)
         |     |     +--rw service-slo-sle-policy
-        |     |        +--rw policy-description?     string
+        |     |        +--rw description?            string
         |     |        +--rw metric-bounds
         |     |        |  +--rw metric-bound* [metric-type]
         |     |        |     +--rw metric-type
         |     |        |     |       identityref
         |     |        |     +--rw metric-unit          string
         |     |        |     +--rw value-description?   string
+        |     |        |     +--rw percentile-value?
+        |     |        |     |       percentile
         |     |        |     +--rw bound?               uint64
         |     |        +--rw security*               identityref
         |     |        +--rw isolation?              identityref
@@ -202,29 +192,30 @@ module: ietf-network-slice-service
         |     |           +--rw service-function
         |     +--rw service-slo-sle-policy-override?
         |     |       identityref
-        |     +--rw connectivity-construct* [cc-id]
-        |     |  +--rw cc-id
+        |     +--rw connectivity-construct* [id]
+        |     |  +--rw id
         |     |  |       uint32
-        |     |  +--rw (connectivity-construct-type)?
+        |     |  +--rw (type)?
         |     |  |  +--:(p2p)
         |     |  |  |  +--rw p2p-sender-sdp?
-        |     |  |  |  |       -> ../../../../sdps/sdp/sdp-id
+        |     |  |  |  |       -> ../../../../sdps/sdp/id
         |     |  |  |  +--rw p2p-receiver-sdp?
-        |     |  |  |          -> ../../../../sdps/sdp/sdp-id
+        |     |  |  |          -> ../../../../sdps/sdp/id
         |     |  |  +--:(p2mp)
         |     |  |  |  +--rw p2mp-sender-sdp?
-        |     |  |  |  |       -> ../../../../sdps/sdp/sdp-id
+        |     |  |  |  |       -> ../../../../sdps/sdp/id
         |     |  |  |  +--rw p2mp-receiver-sdp*
-        |     |  |  |          -> ../../../../sdps/sdp/sdp-id
+        |     |  |  |          -> ../../../../sdps/sdp/id
         |     |  |  +--:(a2a)
         |     |  |     +--rw a2a-sdp* [sdp-id]
-        |     |  |        +--rw sdp-id                          leafref
+        |     |  |        +--rw sdp-id
+        |     |  |        |       -> ../../../../../sdps/sdp/id
         |     |  |        +--rw (slo-sle-policy)?
         |     |  |           +--:(standard)
         |     |  |           |  +--rw slo-sle-template?         leafref
         |     |  |           +--:(custom)
         |     |  |              +--rw service-slo-sle-policy
-        |     |  |                 +--rw policy-description?
+        |     |  |                 +--rw description?
         |     |  |                 |       string
         |     |  |                 +--rw metric-bounds
         |     |  |                 |  +--rw metric-bound*
@@ -235,6 +226,8 @@ module: ietf-network-slice-service
         |     |  |                 |     |       string
         |     |  |                 |     +--rw value-description?
         |     |  |                 |     |       string
+        |     |  |                 |     +--rw percentile-value?
+        |     |  |                 |     |       percentile
         |     |  |                 |     +--rw bound?
         |     |  |                 |             uint64
         |     |  |                 +--rw security*
@@ -253,13 +246,15 @@ module: ietf-network-slice-service
         |     |  |  |  +--rw slo-sle-template?              leafref
         |     |  |  +--:(custom)
         |     |  |     +--rw service-slo-sle-policy
-        |     |  |        +--rw policy-description?     string
+        |     |  |        +--rw description?            string
         |     |  |        +--rw metric-bounds
         |     |  |        |  +--rw metric-bound* [metric-type]
         |     |  |        |     +--rw metric-type
         |     |  |        |     |       identityref
         |     |  |        |     +--rw metric-unit          string
         |     |  |        |     +--rw value-description?   string
+        |     |  |        |     +--rw percentile-value?
+        |     |  |        |     |       percentile
         |     |  |        |     +--rw bound?               uint64
         |     |  |        +--rw security*
         |     |  |        |       identityref
@@ -300,4 +295,3 @@ module: ietf-network-slice-service
         +--rw custom-topology-ref
            +--rw network-ref?
                    -> /nw:networks/network/network-id
-
