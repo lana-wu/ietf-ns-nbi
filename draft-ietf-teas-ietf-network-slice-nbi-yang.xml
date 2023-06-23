@@ -11,7 +11,7 @@
 <!ENTITY I-D.ietf-netlmm-pmip6-ipv4-support PUBLIC "" "http://xml.resource.org/public/rfc/bibxml3/reference.I-D.ietf-netlmm-pmip6-ipv4-support.xml">
 <!ENTITY I-D.ietf-netlmm-grekey-option PUBLIC "" "http://xml.resource.org/public/rfc/bibxml3/reference.I-D.ietf-netlmm-grekey-option.xml">
 ]>
-<rfc category="std" docName="draft-ietf-teas-ietf-network-slice-nbi-yang-04"
+<rfc category="std" docName="draft-ietf-teas-ietf-network-slice-nbi-yang-05"
      ipr="trust200902">
   <?xml-stylesheet type='text/xsl' href='rfc2629.xslt' ?>
 
@@ -124,7 +124,7 @@
       <t>This YANG module can be used in the IETF Network Slice Service
       Interface exposed by a provider to its customers in order to manage
       (e.g., subscribe, delete, or change) IETF Network Slice Services. The
-      agreed service will then trigger appropriate IETF Network Slice
+      agreed service will then trigger the appropriate IETF Network Slice
       operation, such as instantiating, modifying, or deleting an IETF Network
       Slice.</t>
 
@@ -145,7 +145,7 @@
       <t>This draft contains several placeholder values that need to be
       replaced with finalized values at the time of publication. Please apply
       the following replacements: <list style="symbols">
-          <t>"XXXX" --&gt; the assigned RFC value for this draft both in this
+          <t>"XXXX" -- the assigned RFC value for this draft both in this
           draft and in the YANG models under the revision statement.</t>
 
           <t>The "revision" date in model, in the format XXXX-XX-XX, needs to
@@ -229,7 +229,7 @@
 
             <t hangText="PE">Provider Edge</t>
 
-            <t hangText="P2P">Point- to-point</t>
+            <t hangText="P2P">Point-to-point</t>
 
             <t hangText="P2MP">Point-to-multipoint</t>
 
@@ -259,7 +259,7 @@
       SDP is identified by a unique identifier in the context of an IETF
       Network Slice Service.</t>
 
-      <t>Examples of IETF Network Slice Services that contain each only one
+      <t>Examples of IETF Network Slice Services that contain only one
       connectivity construct are shown in <xref target="nss-ex1"/>.</t>
 
       <t><figure anchor="nss-ex1"
@@ -347,7 +347,7 @@
       Slice Services. Typically, the NSC receives requests from its
       customer-facing interface (e.g., from a management system). During
       service creation, this interface can carry data objects the IETF Network
-      Slice service customer provides, describing the needed IETF network
+      Slice Service customer provides, describing the needed IETF network
       slices service in terms of a set of SDPs, the associated connectivity
       constructs and the service objectives that the customer wishes to be
       fulfilled. These service requirements are then translated into
@@ -382,25 +382,25 @@
       </figure>
 
       <t>Note: The model can be recursive (hierarchical mode), i.e. an NSSM
-      can map a child NSSM. As described in Section 5.3 of <xref
+      can map a child NSSM. As described in Section A.5 of <xref
       target="I-D.ietf-teas-ietf-network-slices"/>, the IETF Network Slice can
       support a recursive composite architecture that allows one layer of IETF
       network slices to be used by other layers.</t>
     </section>
 
     <section title="IETF Network Slice Service Modeling Description">
-      <t>The 'ietf-network-slice-service' module includes two main data nodes:
-      'slice-service' and 'slo-sle-templates' (see <xref
+      <t>The "ietf-network-slice-service" module includes two main data nodes:
+      "slice-service" and "slo-sle-templates" (see <xref
       target="ns-yang"/>).</t>
 
-      <t>The 'slice-service' list includes the set of IETF Network Slice
-      Services that are maintained by a provider. 'slice-service' is the data
+      <t>The "slice-service" list includes the set of IETF Network Slice
+      Services that are maintained by a provider. "slice-service" is the data
       structure that abstracts the IETF Network Slice Service. Under the
-      'slice-service', the 'sdp' list is used to abstract the SDPs. The
-      'connection-group' is used to abstract connectivity constructs between
+      "slice-service", the "sdp" list is used to abstract the SDPs. The
+      "connection-group" is used to abstract connectivity constructs between
       SDPs.</t>
 
-      <t>The 'slo-sle-templates' container is used by an NSC to maintain a set
+      <t>The "slo-sle-templates" container is used by an NSC to maintain a set
       of common network slice SLO and SLE templates that apply to one or
       several IETF Network Slice Services.</t>
 
@@ -437,34 +437,35 @@
       </figure>
 
       <section title="IETF Network Slice Service SLO and SLE Templates">
-        <t>The 'slo-sle-templates' container (<xref target="ns-yang"/>) is
+        <t>The "slo-sle-templates" container (<xref target="ns-yang"/>) is
         used by the service provider of the NSC to define and maintain a set
         of common IETF Network Slice templates that apply to one or several
-        IETF Network Slice services. The exact definition of the templates is
+        IETF Network Slice Services. The exact definition of the templates is
         deployment specific to each network provider.</t>
 
         <figure>
-          <artwork><![CDATA[     +--rw slo-sle-templates
-        +--rw slo-sle-template* [id]
-           +--rw id                        string
-           +--rw description?              string
-           +--rw template-ref?             -> /network-slice-services/slo-sle-templates/slo-sle-template/id
-           +--rw service-slo-sle-policy
-              +--rw policy-description?     string
-              +--rw metric-bounds
-              |  +--rw metric-bound* [metric-type]
-              |     +--rw metric-type          identityref
-              |     +--rw metric-unit          string
-              |     +--rw value-description?   string
-              |     +--rw percentile-value?    percentile
-              |     +--rw bound?               uint64
-              +--rw security*               identityref
-              +--rw isolation?              identityref
-              +--rw max-occupancy-level?    uint8
-              +--rw mtu?                    uint16
-              +--rw steering-constraints
-                 +--rw path-constraints
-                 +--rw service-function]]></artwork>
+          <artwork><![CDATA[+--rw slo-sle-templates
+   +--rw slo-sle-template* [id]
+      +--rw id              string
+      +--rw description?    string
+      +--rw template-ref?   leafref
+      +--rw slo-policy
+      |  +--rw metric-bound* [metric-type]
+      |  |  +--rw metric-type          identityref
+      |  |  +--rw metric-unit          string
+      |  |  +--rw value-description?   string
+      |  |  +--rw percentile-value?    percentile
+      |  |  +--rw bound?               uint64
+      |  +--rw availability?   decimal64
+      |  +--rw mtu?            uint16
+      +--rw sle-policy
+         +--rw security*               identityref
+         +--rw isolation*              identityref
+         +--rw max-occupancy-level?    uint8
+         +--rw steering-constraints
+            +--rw path-constraints
+            +--rw service-function
+]]></artwork>
         </figure>
 
         <t>The model includes the identifiers of SLO and SLE templates and the
@@ -496,36 +497,36 @@
         {
           "id": "PLATINUM-template",
           "description": "Two-way bandwidth: 1 Gbps,\
-       95th percentile latency 50ms",
-          "service-slo-sle-policy": {
-            "metric-bounds": {
-              "metric-bound": [
-                {
-                  "metric-type": "service-slo-two-way-delay-percentile",
-                  "metric-unit": "milliseconds",
-                  "percentile-value": "95",
-                  "bound": 50
-                }
-              ]
-            },
-            "isolation": "service-isolation-dedicated"
+                          95th percentile latency 50ms",
+          "slo-policy": {
+            "metric-bound": [
+              {
+                "metric-type": "service-slo-two-way-delay-percentile",
+                "metric-unit": "milliseconds",
+                "percentile-value": "95",
+                "bound": "50"
+              }
+            ]
+          },
+          "sle-policy": {
+            "isolation": ["service-traffic-isolation"]
           }
         },
         {
           "id": "GOLD-template",
           "description": "Two-way bandwidth: 1 Gbps,\
-         maximum latency 100ms",
-          "service-slo-sle-policy": {
-            "metric-bounds": {
-              "metric-bound": [
-                {
-                  "metric-type": "service-slo-two-way-delay-maximum",
-                  "metric-unit": "milliseconds",
-                  "bound": 100
-                }
-              ],
-              "isolation": "service-isolation-shared"
-            }
+                          maximum latency 100ms",
+          "slo-policy": {
+            "metric-bound": [
+              {
+                "metric-type": "service-slo-two-way-delay-maximum",
+                "metric-unit": "milliseconds",
+                "bound": "100"
+              }
+            ]
+          },
+          "sle-policy": {
+            "isolation": ["service-traffic-isolation"]
           }
         }
       ]
@@ -541,87 +542,88 @@
       </section>
 
       <section title="IETF Network Slice Services">
-        <t>The 'slice-service' is the data structure that abstracts an IETF
-        Network Slice Service. Each 'slice-service' is uniquely identified by
-        an identifier: 'service-id' in the context of an NSC.</t>
+        <t>The "slice-service" is the data structure that abstracts an IETF
+        Network Slice Service. Each "slice-service" is uniquely identified by
+        an identifier: "service-id" in the context of an NSC.</t>
 
-        <t>An IETF Network Slice service has the following main
+        <t>An IETF Network Slice Service has the following main
         parameters:</t>
 
         <t><list style="symbols">
             <t>"id": Is an identifier that is used to uniquely identify the
-            IETF Network Slice service within an NSC.</t>
+            IETF Network Slice Service within an NSC.</t>
 
             <t>"description": Gives some description of an IETF Network Slice
-            service.</t>
+            Service.</t>
 
             <t>"status": Is used to show the operative and administrative
-            status of the IETF Network Slice service, and can be used as
+            status of the IETF Network Slice Service, and can be used as
             indicator to detect network slice anomalies.</t>
 
             <t>"service-tags": Indicates a management tag (e.g.
-            &ldquo;customer-name&rdquo; ) that is used to correlate the
-            operational information of &ldquo;Customer higher level operation
-            system&rdquo; and IETF network slices. It might be used by IETF
-            Network Slice Service operator to provide additional information
-            to the NSC during the automation of the IETF network slices. E.g.
-            adding tags with &ldquo;customer-name&rdquo; when multiple actual
-            customers use a same network slice service. Another use-case for
-            &ldquo;service-tag&rdquo; might be for an operator to provide
-            additional attributes to NSC which might be used during the
-            realization of IETF Network Slice services such as type of
-            services (e.g., L2 or L3). These additional attributes can also be
-            used by the NSC for various use-cases such as monitoring and
-            assurance of the IETF Network Slice services where NSC can notify
-            the customer system by issuing the notifications. Note that all
-            these attributes are OPTIONAL but might be useful for some
+            "customer-name" ) that is used to correlate the operational
+            information of "Customer higher level operation system" and IETF
+            network slices. It might be used by IETF Network Slice Service
+            operator to provide additional information to the NSC during the
+            automation of the IETF network slices. E.g. adding tags with
+            "customer-name" when multiple actual customers use a same network
+            slice service. Another use-case for "service-tag" might be for an
+            operator to provide additional attributes to NSC which might be
+            used during the realization of IETF Network Slice Services such as
+            type of services (e.g., L2 or L3). These additional attributes can
+            also be used by the NSC for various use-cases such as monitoring
+            and assurance of the IETF Network Slice Services where NSC can
+            notify the customer system by issuing the notifications. Note that
+            all these attributes are OPTIONAL but might be useful for some
             use-cases.</t>
 
             <t>"slo-sle-policy": Defines SLO and SLE policies for the
             "slice-service". More details are provided in <xref
             target="ns-slo"/>.</t>
 
-            <t>"sdp&ldquo;: Represents a set of SDPs that are involved in the
-            IETF Network Slice Service with each 'sdp' belonging to a single
-            'slice-service'. More details are provided in<xref target="nse">
+            <t>"sdp": Represents a set of SDPs that are involved in the IETF
+            Network Slice Service with each "sdp" belonging to a single
+            "slice-service". More details are provided in <xref target="nse">
             </xref>.</t>
 
-            <t>"connection-groups&ldquo;: Abstracts the connections to the set
-            of SDPs of the IETF Network Slice service.</t>
+            <t>"connection-groups": Abstracts the connections to the set of
+            SDPs of the IETF Network Slice Service.</t>
           </list></t>
 
         <section anchor="nse"
                  title="IETF Network Slice Service Demarcation Points">
-          <t>An SDP belong to a single IETF Network Slice service. An IETF
-          Network Slice service involves two or more SDPs. An IETF Network
-          Slice service can be modified by adding new "sdp" or removing
+          <t>An SDP belong to a single IETF Network Slice Service. An IETF
+          Network Slice Service involves two or more SDPs. An IETF Network
+          Slice Service can be modified by adding new "sdp" or removing
           existing "sdp".</t>
 
           <figure>
             <artwork><![CDATA[+--rw sdps
-  +--rw sdp* [id]
-     +--rw id                        string
-     +--rw description?              string
-     +--rw location
-     |     ...
-     +--rw node-id?                  string
-     +--rw sdp-ip-address*           inet:ip-address
-     +--rw tp-ref?                   -> /nw:networks/network[nw:network-id =current()/../../../custom-topology-ref/network-ref]/node/nt:termination-point/tp-id
-     +--rw service-match-criteria
-     |     ...
-     +--rw incoming-qos-policy
-     |     ...
-     +--rw outgoing-qos-policy
-     |     ...
-     +--rw sdp-peering
-     |     ...
-     +--rw ac-svc-name?              string
-     +--rw attachment-circuits
-     |     ...
-     +--rw status
-     |     ...
-     +--ro sdp-monitoring
-           ...]]></artwork>
+   +--rw sdp* [id]
+      +--rw id                        string
+      +--rw description?              string
+      +--rw location
+      |     ...
+      +--rw node-id?                  string
+      +--rw sdp-ip-address*           inet:ip-address
+      +--rw tp-ref?                   leafref
+      +--rw service-match-criteria
+      |     ...
+      +--rw incoming-qos-policy
+      |     ...
+      +--rw outgoing-qos-policy
+      |     ...
+      +--rw sdp-peering
+      |     ...
+      +--rw ac-svc-name*              string
+      +--rw attachment-circuits
+      |     ...
+      +--rw status
+      |     ...
+      +--ro sdp-monitoring
+            ...
+
+]]></artwork>
           </figure>
 
           <t>Section 5.2 of <xref target="I-D.ietf-teas-ietf-network-slices"/>
@@ -642,15 +644,15 @@
           marking the type on each SDP.</t>
 
           <t>In the four options, the Attachment Circuit (AC) may be part of
-          the IETF Network Slice service or may be external to it. Based on
+          the IETF Network Slice Service or may be external to it. Based on
           the definition of AC in Section 3.2 of <xref
           target="I-D.ietf-teas-ietf-network-slices"/>, the customer and
-          provider may agree on a per {IETF Network Slice service,
+          provider may agree on a per {IETF Network Slice Service,
           connectivity construct, and SLOs/SLEs} basis to police or shape
           traffic on the AC in both the ingress (CE to PE) direction and
           egress (PE to CE) direction, which ensures that the traffic is
           within the capacity profile that is agreed in an IETF Network Slice
-          service. Excess traffic is dropped by default, unless specific
+          Service. Excess traffic is dropped by default, unless specific
           out-of-profile policies are agreed between the customer and the
           provider.</t>
 
@@ -661,7 +663,7 @@
               <t>"id": Uniquely identifies the SDP within the Network Slice
               Controller (NSC). The identifier is a string that allows any
               encoding for the local administration of the IETF Network Slice
-              service.</t>
+              Service.</t>
 
               <t>"location": Indicates SDP location information, which helps
               the NSC to identify an SDP.</t>
@@ -680,35 +682,34 @@
               SDP to the IETF scope Network that passes through the AC. When
               Bandwidth is applied to the outgoing direction, it is applied to
               the traffic from the IETF Network to the SDP of that particular
-              slice service. If an SDP has multiple ACs, the
-              &ldquo;rate-limits" of &ldquo;attachment-circuit&rdquo; can be
-              set to an AC specific value, but the rate cannot exceed the
-              &ldquo;rate-limits&rdquo; of the SDP. If an SDP only contains a
-              single AC, then the &ldquo;rate-limits&rdquo; of
+              slice service. If an SDP has multiple ACs, the "rate-limits" of
+              "attachment-circuit" can be set to an AC specific value, but the
+              rate cannot exceed the "rate-limits" of the SDP. If an SDP only
+              contains a single AC, then the "rate-limits" of
               "attachment-circuit" is the same with the SDP. The definition of
               AC refers to Section 3.1 <xref
               target="I-D.ietf-teas-ietf-network-slices"/>.</t>
 
-              <t>"ac-svc-name": Indicates an attachment circuit service name,
-              for association purposes, to refer to an AC that has been
-              created when an AC is used by multiple slices. </t>
+              <t>"ac-svc-name": Indicates the names of AC services, for
+              association purposes, to refer to the ACs that have been
+              created.</t>
 
               <t>"attachment-circuit": Specifies the list of ACs by which the
               service traffic is received. This is an optional SDP attribute.
               When an SDP has multiple ACs and the AC specific attributes is
-              needed, each "attachment-circuit&ldquo; can specify attributes
-              such as interface specific IP addresses, service MTU, etc.</t>
+              needed, each "attachment-circuit" can specify attributes such as
+              interface specific IP addresses, service MTU, etc.</t>
 
               <t>"sdp-peering": Specifies the protocol for an SDP for
               exchanging control-plane information, e.g. L1 signaling protocol
               or L3 routing protocols, etc.<list>
-                  <t>&ldquo;peer-sap-id&rdquo;: Indicates a reference to the
-                  remote endpoints of an attachment circuit.A unique
-                  identifier that identifies a given Service Attachment Point
-                  (SAP) defined in <xref target="I-D.ietf-opsawg-sap"/>, which
-                  defines a model of an abstract view of the provider network
-                  topology that contains the points from which its services
-                  can be attached.</t>
+                  <t>"peer-sap-id": Indicates the references to the remote
+                  endpoints of attachment circuits. This information can be
+                  used for correlation purposes, such as identifying Service
+                  Attachment Points (SAPs) defined in <xref
+                  target="I-D.ietf-opsawg-sap"/>, which defines a model of an
+                  abstract view of the provider network topology that contains
+                  the points from which the services can be attached.</t>
 
                   <t>"protocols": Serves as an augmentation target. <xref
                   target="ac-proto"/> The example protocols of an SDP can be
@@ -724,7 +725,7 @@
             </list></t>
 
           <t>Depending on the requirements of different cases,
-          &ldquo;service-match-criteria&rdquo; can be used for the following
+          "service-match-criteria" can be used for the following
           purposes:<list style="symbols">
               <t>Specify the AC type: physical or logical connection</t>
 
@@ -732,28 +733,27 @@
               or PE</t>
 
               <t>Distinguish the traffic of different CGs or CCs when multiple
-              CGs/CCs of different SLO/SLE may be set up between a same pair
+              CGs/CCs of different SLO/SLE may be set up between the same pair
               of SDPs, as illustrated in <xref target="criteria"/>. Traffic
               needs to be explicitly mapped into the IETF Network Slice's
               specific connectivity construct. The policies,
               "service-match-criteria", are based on the values in which
               combination of layer 2 and layer 3 header and payload fields
               within a packet to identify to which {IETF Network Slice
-              service, connectivity construct, and SLOs/SLEs} that packet is
+              Service, connectivity construct, and SLOs/SLEs} that packet is
               assigned.</t>
 
               <t>Define specific out-of-profile policies: The customer may
               choose to use an explicit "service-match-criteria" to map all
               the SDP's traffic or a subset of the SDP's traffic to a specific
-              connection-group or connectivity-construct. if a subset of
-              traffic is matched (ie. dscp-match) and mapped to a
+              connection-group or connectivity-construct. If a subset of
+              traffic is matched (e.g. dscp-match) and mapped to a
               connectivity-construct, the customer may choose to add a
-              subsequent &ldquo;match-any&rdquo; to explicitly map the
-              remaining SDP traffic to a separate connectivity-construct. If
-              the customer chooses to implicitly map remaining traffic and if
-              there is no additional connectivity constructs where the
-              &ldquo;sdp-id&rdquo; source is specified, then that traffic will
-              be dropped.</t>
+              subsequent "match-any" to explicitly map the remaining SDP
+              traffic to a separate connectivity-construct. If the customer
+              chooses to implicitly map remaining traffic and if there is no
+              additional connectivity constructs where the "sdp-id" source is
+              specified, then that traffic will be dropped.</t>
             </list></t>
 
           <figure anchor="criteria" title="Application of Match Criteria">
@@ -790,7 +790,7 @@
               would like to connect two SDPs to satisfy specific service,
               e.g., Network wholesale services. In this case, the IETF network
               slice SDPs are mapped to customer-facing ports of PE nodes. The
-              NSC uses 'node-id' (PE device ID), 'attachment-circuit' (ACs) to
+              NSC uses "node-id" (PE device ID), "attachment-circuit" (ACs) to
               map SDPs to the customer-facing ports on the PEs.<figure
                   anchor="nse-ex1">
                   <artwork><![CDATA[
@@ -826,11 +826,13 @@
               customer of the IETF network slice service would like to connect
               two SDPs to provide connectivity between transport portion of 5G
               RAN to 5G Core network functions. In this scenario, the NSC uses
-              'node-id' (CE device ID) , 'sdp-ip' (CE tunnel endpoint IP),
-              'service-match-criteria' (VLAN tag), 'attachment-circuit' (ACs)
-              to map SDPs to the CE tunnel endpoints. And the NSC can also
-              retrieve the corresponding ACs, or PEs, and further map the
-              slice service to services/tunnels/paths. <figure
+              "node-id" (CE device ID), "sdp-ip" (IP of SDP for management),
+              "service-match-criteria" (VLAN tag), "attachment-circuit" (CE
+              ACs) to map SDPs to the CE. The NSC can use these CE parameters
+              (and optionally the "peer-sap-id") to retrieve the corresponding
+              PE device, interface and AC mapping details to complete the
+              end-to-end network slice service provisioning (the
+              implementation details are left to the NSC provider).<figure
                   anchor="nse-ex2">
                   <artwork><![CDATA[           SDP3                                     SDP4
     (With CE1 parameters)                       (with CE2 parameters)
@@ -865,7 +867,7 @@ T2: Tunnels used for realization of IETF network slice
         <section anchor="ns-topo"
                  title="IETF Network Slice Service Connectivity Constructs">
           <t>Based on the customer's service traffic requirements, an IETF
-          Network Slice service connectivity type could be point-to-point
+          Network Slice Service connectivity type could be point-to-point
           (P2P), point-to-multipoint (P2MP), any-to-any (A2A) or a combination
           of these types.</t>
 
@@ -914,8 +916,8 @@ T2: Tunnels used for realization of IETF network slice
           <t>"connection-group" is thus defined to treat each type as a class
           with per-connection-group SLO and SLE such that the connectivity
           construct can inherit the SLO/SLE from the group if not explicitly
-          defined. Additionally, in the case of Hub&amp;Spoke connectivity, it
-          may be inefficient when the are large number of SDP with the
+          defined. Additionally, in the case of hub and spoke connectivity, it
+          may be inefficient when there are a large number of SDP with the
           multiple CCs. As illustrated in <xref target="ex3"/>,
           "connectivity-type" of "vpn-common:hub-spoke" and
           "connection-group-sdp-role" of "vpn-common:hub-role" or
@@ -926,17 +928,17 @@ T2: Tunnels used for realization of IETF network slice
                  title="IETF Network Slice Service SLO and SLE Policy">
           <t>As defined in section 4 <xref
           target="I-D.ietf-teas-ietf-network-slices"/>, the SLO and SLE policy
-          of an IETF Network Slice service defines some common attributes.</t>
+          of an IETF Network Slice Service defines some common attributes.</t>
 
           <t>"slo-sle-policy" is used to represent specific SLO and SLE
-          policies. During the creation of an IETF Network Slice service, the
+          policies. During the creation of an IETF Network Slice Service, the
           policy can be specified either by a standard SLO and SLO template or
           a customized SLO and SLE policy.</t>
 
           <t>The policy can apply to per-network slice service, per-connection
           group "connection group", or per-connectivity construct
           "connectivity-construct". Since there are multiple mechanisms for
-          assigning a policy to a single connectivity construct, an overridden
+          assigning a policy to a single connectivity construct, an override
           precedence order among them is as follows:<list style="symbols">
               <t>Connectivity-construct at an individual sending SDP</t>
 
@@ -951,14 +953,16 @@ T2: Tunnels used for realization of IETF network slice
           sending SDP takes precedence over the policy assigned through the
           connection-construct entry. <xref target="preceding"/> gives an
           example of the preceding policy, which shows a slice service having
-          an any-to-any connectivity as default and several specific SLO
+          an A2A connectivity as default and several specific SLO
           connections.</t>
 
-          <t>The container "metric-bounds" supports all the variations and
-          combinations of SLOs, which includes a list of "metric-bound" and
-          each "metric-bound" could specify a particular "metric-type".
-          "metric-type" is defined with YANG identity and supports the
-          following options:</t>
+          <t>The SLO attributes are as follows, including performance metric
+          attributes, availability, and MTU.</t>
+
+          <t>The list "metric-bound" supports the generic performance metric
+          variations and the combinations and each "metric-bound" could
+          specify a particular "metric-type". "metric-type" is defined with
+          YANG identity and supports the following options:</t>
 
           <t><list style="hanging">
               <t>"service-slo-one-way-bandwidth": Indicates the guaranteed
@@ -1010,31 +1014,31 @@ T2: Tunnels used for realization of IETF network slice
               <t>"service-slo-two-way-packet-loss": Indicates maximum
               permissible packet loss rate, which is defined by the ratio of
               packets dropped to packets transmitted between two SDPs.</t>
-
-              <t>"service-slo-availability": Is defined as the ratio of
-              up-time to total_time(up-time+down-time), where up-time is the
-              time the IETF Network Slice is available in accordance with the
-              SLOs associated with it.</t>
             </list></t>
 
+          <t>"availability": Specifies service availability defined as the
+          ratio of uptime to the sum of uptime and downtime, where uptime is
+          the time the IETF Network Slice is available in accordance with the
+          SLOs associated with it.</t>
+
+          <t>"mtu": Refers to the service MTU. The service provider MUST
+          support customer traffic using any PDU up to this size.</t>
+
           <t>The following common SLEs are defined:<list style="hanging">
-              <t>"mtu": Refers to the service MTU, which is the maximum PDU
-              size that the customer may use.</t>
-
               <t>"security": The security leaf-list defines the list of
-              security techniques to traffic flowing between the two SDPs,
-              including authentication, encryption, etc.</t>
+              security functions the customer requests the operator to apply
+              to traffic between the two SDPs, including authentication,
+              encryption, etc.</t>
 
-              <t>"isolation": Specifies the isolation level that a customer
-              expects, including dedicated, shared, or other level.</t>
+              <t>"isolation": Specifies the isolation types that a customer
+              expects.</t>
 
-              <t>"max-occupancy-level": Specifies the number of flows to be
-              admitted and optionally a maximum number of countable resource
-              units (e.g., IP or MAC addresses) an IETF Network Slice Service
-              can consume.</t>
+              <t>"max-occupancy-level": Specifies the number of flows that the
+              operator admits.</t>
 
-              <t>"steering-constraints": Specifies the constraints how the
-              provider routes traffic for the IETF Network Slice Service.</t>
+              <t>"steering-constraints": Specifies the constraints the
+              customer requests the operator to route traffic for the IETF
+              Network Slice Service.</t>
             </list></t>
 
           <t>The following shows an example where a network slice policy can
@@ -1045,7 +1049,7 @@ T2: Tunnels used for realization of IETF network slice
       "id": "exp-slice",
       "service-slo-sle-policy": {
         "description": "video-service-policy",
-        "metric-bounds": {
+        "slo-policy": {
           "metric-bound": [
             {
               "metric-type": "service-slo-one-way-bandwidth",
@@ -1053,10 +1057,13 @@ T2: Tunnels used for realization of IETF network slice
               "bound": "1000"
             },
             {
-              "metric-type": "service-slo-availability",
-              "bound": "99.9%"
+              "metric-type": "service-slo-two-way-delay-maximum",
+              "metric-unit": "milliseconds",
+              "bound": "10"
             }
-          ]
+          ],
+          "availability": "ietf-network-slice-service:level-4",
+          "mtu": "1500"
         }
       }
     }
@@ -1064,32 +1071,38 @@ T2: Tunnels used for realization of IETF network slice
 } ]]></artwork>
             </figure></t>
 
-          <t>For a multiple connectivity-construct slice service, when a
-          connection-group or a connectivity-construct has some specific
-          requirements, such as bandwidth or latency, that are different from
-          those defined of the slice-service, the new set of SLO&amp;SLE with
-          full or partial override can be applied.
-          "service-slo-sle-policy-override" is used to specify the
-          requirements.</t>
+          <t>For more complex slicing scenarios, for example a multiple
+          connectivity-construct slice service, an "override" option is
+          provided to completely override all or part of the slo-sle template
+          with new values. For example, if a particular connection-group or a
+          connectivity-construct has a unique bandwidth or latency setting,
+          that are different from those defined in the slice-service, a new
+          set of SLOs/SLEs with full or partial override can be applied. In
+          the case of partial override, only the newly specified parameters
+          are replaced from the original template, while maintaining on
+          pre-existing parameters not specified. While a full override removes
+          all pre-existing parameters, and in essence starts a new set of
+          SLOs/SLEs which are specified. The "service-slo-sle-policy-override"
+          is used to specify the requirements.</t>
         </section>
 
         <section title="IETF Network Slice Service Monitoring ">
-          <t>An IETF Network Slice service defines connectivity with specific
+          <t>An IETF Network Slice Service defines connectivity with specific
           SLO characteristics, including bandwidth, latency, etc. The
           connectivity is a combination of logical unidirectional connections,
-          represented by 'connectivity-construct'.</t>
+          represented by "connectivity-construct".</t>
 
           <t>This model also describes operational and performance status of
           an IETF Network Slice. The statistics are described in the following
           granularity:<list style="symbols">
-              <t>Per SDP: specified in 'sdp-monitoring' under the "sdp".</t>
+              <t>Per SDP: specified in "sdp-monitoring" under the "sdp".</t>
 
               <t>Per connectivity construct: specified in
-              'connectivity-construct-monitoring' under the
+              "connectivity-construct-monitoring" under the
               "connectivity-construct".</t>
 
               <t>Per connection group: specified in
-              'connection-group-monitoring' under the "connection-group".</t>
+              "connection-group-monitoring" under the "connection-group".</t>
             </list></t>
 
           <t>This model does not define monitoring enabling methods. The
@@ -1116,17 +1129,15 @@ T2: Tunnels used for realization of IETF network slice
           a topology that contains abstract topological elements (nodes,
           links, termination points). The following nodes are the extensions
           for this use case<list style="hanging">
-              <t>&ldquo;custom-topology-ref&rdquo;: The container under the
-              list &ldquo;slice-service&rdquo; is defined to reference the
-              prebuilt topology as a customized topology constraint for a
-              slice service.</t>
+              <t>"custom-topology-ref": The container under the list
+              "slice-service" is defined to reference the prebuilt topology as
+              a customized topology constraint for a slice service.</t>
 
               <t>"tp-ref": A reference to Termination Point (TP) in the custom
-              topology, under the list &ldquo;sdp&rdquo;, is used to associate
-              an SDP with the customized topology to create point-to-point
-              abstract links. These abstract links can be used as the
-              underlying links of the connectivity-construct when a NS service
-              is created.</t>
+              topology, under the list "sdp", is used to associate an SDP with
+              the customized topology to create point-to-point abstract links.
+              These abstract links can be used as the underlying links of the
+              connectivity-construct when a NS service is created.</t>
             </list></t>
 
           <t>The model can be extended if some implementations require path
@@ -1137,17 +1148,17 @@ T2: Tunnels used for realization of IETF network slice
           <t>An NS is, by default, provisioned so that it can instantiated and
           deliver the service. The IETF Network Slice customer may check the
           feasibility before instantiating a Network Slice Service. In such a
-          case, the NS is configured in 'compute-only' mode to distinguish it
+          case, the NS is configured in "compute-only" mode to distinguish it
           from the default behavior.</t>
 
-          <t>A 'compute-only' NS is configured as usual with the associated
+          <t>A "compute-only" NS is configured as usual with the associated
           per slice SLOs/SLEs. The NSC computes the feasible CC to the
           configured SLOs/SLEs. This computation does not create a NS or
           reserve any resources in the system, it simply computes the
           resulting NS based on information. The Network Slice
-          &ldquo;administrative-status&rdquo; and the CG or CC list are used
-          to convey the result. For example, "admin-pre-deployment" can be
-          used to show the status.</t>
+          "administrative-status" and the CG or CC list are used to convey the
+          result. For example, "admin-pre-deployment" can be used to show the
+          status.</t>
 
           <figure>
             <artwork><![CDATA[            +--------+                                +--------+
@@ -1174,7 +1185,7 @@ SLOs/SLEs        |                                         |
       <xref target="RFC8776"/>, and <xref target="RFC7640"/>.</t>
 
       <figure>
-        <artwork><![CDATA[<CODE BEGINS> file "ietf-network-slice-service@2023-03-07.yang"
+        <artwork><![CDATA[<CODE BEGINS> file "ietf-network-slice-service@2023-05-09.yang"
 module ietf-network-slice-service {
   yang-version 1.1;
   namespace
@@ -1184,13 +1195,13 @@ module ietf-network-slice-service {
   import ietf-inet-types {
     prefix inet;
     reference
-      "RFC 6991: Common YANG Types.";
+      "RFC 6991: Common YANG Types";
   }
   import ietf-vpn-common {
     prefix vpn-common;
     reference
       "RFC 9181: A Common YANG Data Model for Layer 2 and Layer 3
-                    VPNs.";
+                 VPNs";
   }
   import ietf-network {
     prefix nw;
@@ -1201,7 +1212,7 @@ module ietf-network-slice-service {
     prefix nt;
     reference
       "RFC 8345: A YANG Data Model for Network
-       Topologies, Section 6.2";
+                 Topologies, Section 6.2";
   }
 
   /* Import TE Types */
@@ -1209,12 +1220,12 @@ module ietf-network-slice-service {
   import ietf-te-types {
     prefix te-types;
     reference
-      "RFC 8776: Common YANG Data Types for Traffic Engineering.";
+      "RFC 8776: Common YANG Data Types for Traffic Engineering";
   }
   import ietf-te-packet-types {
     prefix te-packet-types;
     reference
-      "RFC 8776: Common YANG Data Types for Traffic Engineering.";
+      "RFC 8776: Common YANG Data Types for Traffic Engineering";
   }
 
   organization
@@ -1252,12 +1263,11 @@ module ietf-network-slice-service {
      This version of this YANG module is part of RFC XXXX; see the
      RFC itself for full legal notices.";
 
-  revision 2023-03-07 {
+  revision 2023-04-24 {
     description
-      "initial version.";
+      "Initial revision.";
     reference
-      "RFC XXXX: A YANG Data Model for the IETF Network Slice
-       Service";
+      "RFC XXXX: A YANG Data Model for the IETF Network Slice Service";
   }
 
   /* Features */
@@ -1265,26 +1275,26 @@ module ietf-network-slice-service {
 
   identity service-tag-type {
     description
-      "Base identity for IETF Network Slice service tag type.";
+      "Base identity for IETF Network Slice Service tag type.";
   }
 
   identity service-tag-customer {
     base service-tag-type;
     description
-      "The IETF Network Slice service customer ID tag type.";
+      "The IETF Network Slice Service customer ID tag type.";
   }
 
   identity service-tag-service {
     base service-tag-type;
     description
-      "The IETF Network Slice service tag type,e.g. L2 or L3
+      "The IETF Network Slice Service tag type,e.g. L2 or L3
        service.";
   }
 
   identity service-tag-opaque {
     base service-tag-type;
     description
-      "The IETF Network Slice service opaque tag type.";
+      "The IETF Network Slice Service opaque tag type.";
   }
 
   identity attachment-circuit-tag-type {
@@ -1307,31 +1317,21 @@ module ietf-network-slice-service {
 
   identity service-isolation-type {
     description
-      "Base identity for IETF Network slice service isolation level.";
+      "Base identity for IETF Network Slice Service isolation type.";
   }
 
-  identity service-isolation-shared {
+  identity service-traffic-isolation {
     base service-isolation-type;
     description
-      "Shared resources (e.g. queues) are associated with the
-       slice service traffic. Hence, the traffic can be impacted
-       by effects of other services traffic
-       sharing the same physical and logical resources.";
-  }
-
-  identity service-isolation-dedicated {
-    base service-isolation-type;
-    description
-      "Dedicated resources (e.g. physical interfaces, queues)
-       are associated with the Network Slice service traffic.
-       Hence, the service traffic is isolated from other servceis
-       traffic, though sharing the same physical resources
-       in some cases.";
+      "Specify the requirement for separating the traffic of the
+       customer's IETF Network Slice Service from other services,
+       which may be provided by the service provider using VPN
+       technologies, such as L3VPN, L2VPN, EVPN, etc.";
   }
 
   identity service-security-type {
     description
-      "Base identity for slice service security level.";
+      "Base identity for IETF Network Slice Service security type.";
   }
 
   identity service-security-authenticate {
@@ -1356,28 +1356,28 @@ module ietf-network-slice-service {
     base vpn-common:vpn-topology;
     description
       "Identity for point-to-point IETF Network Slice
-       service connectivity.";
+       Service connectivity.";
   }
 
   identity point-to-multipoint {
     base vpn-common:vpn-topology;
     description
-      "Identity for point-to-point IETF Network Slice
-       service connectivity.";
+      "Identity for point-to-multipoint IETF Network Slice
+       Service connectivity.";
   }
 
   identity multipoint-to-multipoint {
     base vpn-common:vpn-topology;
     description
-      "Identity for point-to-point IETF Network Slice
-       service connectivity.";
+      "Identity for multipoint-to-multipoint IETF Network Slice
+       Service connectivity.";
   }
 
   identity multipoint-to-point {
     base vpn-common:vpn-topology;
     description
-      "Identity for point-to-point IETF Network Slice
-       service connectivity.";
+      "Identity for multipoint-to-point IETF Network Slice
+       Service connectivity.";
   }
 
   identity sender-role {
@@ -1394,7 +1394,7 @@ module ietf-network-slice-service {
 
   identity service-slo-metric-type {
     description
-      "Base identity for IETF Network Slice service SLO metric type.";
+      "Base identity for IETF Network Slice Service SLO metric type.";
   }
 
   identity service-slo-one-way-bandwidth {
@@ -1423,8 +1423,8 @@ module ietf-network-slice-service {
     base service-slo-metric-type;
     description
       "The SLO objective of this metric is the upper bound of network
-       delay when transmitting between two SDPs. The metric is defined
-       in RFC7679.";
+       delay when transmitting between two SDPs.
+       The metric is defined in RFC7679.";
   }
 
   identity service-slo-one-way-delay-percentile {
@@ -1439,8 +1439,8 @@ module ietf-network-slice-service {
     base service-slo-metric-type;
     description
       "SLO two-way delay is the upper bound of network delay when
-       transmitting between two SDPs. The metric is defined in
-       RFC2681.";
+       transmitting between two SDPs.
+       The metric is defined in RFC2681.";
   }
 
   identity service-slo-two-way-delay-percentile {
@@ -1448,7 +1448,8 @@ module ietf-network-slice-service {
     description
       "The SLO objective of this metric is the percentile
        objective of network delay when the traffic transmitting
-       between two SDPs. The metric is defined in RFC2681.";
+       between two SDPs.
+       The metric is defined in RFC2681.";
   }
 
   identity service-slo-one-way-delay-variation-maximum {
@@ -1456,8 +1457,8 @@ module ietf-network-slice-service {
     description
       "The SLO objective of this metric is maximum bound of the
        difference in the one-way delay between sequential packets
-       between two SDPs. The metric of one-way delay variation
-       is defined in RFC3393.";
+       between two SDPs.
+       The metric of one-way delay variation is defined in RFC3393.";
   }
 
   identity service-slo-one-way-delay-variation-percentile {
@@ -1472,7 +1473,7 @@ module ietf-network-slice-service {
   identity service-slo-two-way-delay-variation-maximum {
     base service-slo-metric-type;
     description
-      "SLO two-way delay variation is defined by RFC5481, is the
+      "SLO two-way delay variation defined by RFC5481, is the
        difference in the round-trip delay between sequential packets
        between two SDPs.";
   }
@@ -1502,16 +1503,50 @@ module ietf-network-slice-service {
        over a period of time as specified in RFC7680.";
   }
 
-  identity service-slo-availability {
-    base service-slo-metric-type;
-    description
-      "SLO availability level.";
-  }
-
   identity service-match-type {
     description
-      "Base identity for IETF Network Slice service traffic
+      "Base identity for IETF Network Slice Service traffic
        match type.";
+  }
+
+  /*
+   * Identity for availability-type
+   */
+
+  identity availability-type {
+    description
+      "Base identity from which specific availability types are
+       derived.";
+  }
+
+  identity level-1 {
+    base availability-type;
+    description
+      "level 1: 99.9999%";
+  }
+
+  identity level-2 {
+    base availability-type;
+    description
+      "level 2: 99.999%";
+  }
+
+  identity level-3 {
+    base availability-type;
+    description
+      "level 3: 99.99%";
+  }
+
+  identity level-4 {
+    base availability-type;
+    description
+      "level 4: 99.9%";
+  }
+
+  identity level-5 {
+    base availability-type;
+    description
+      "level 5: 99%";
   }
 
   identity service-phy-interface-match {
@@ -1574,46 +1609,6 @@ module ietf-network-slice-service {
       "Match all slice service traffic.";
   }
 
-  /*
-   * Identity for availability-type
-   */
-
-  identity availability-type {
-    description
-      "Base identity from which specific availability types are
-       derived.";
-  }
-
-  identity level-1 {
-    base availability-type;
-    description
-      "level 1: 99.9999%";
-  }
-
-  identity level-2 {
-    base availability-type;
-    description
-      "level 2: 99.999%";
-  }
-
-  identity level-3 {
-    base availability-type;
-    description
-      "level 3: 99.99%";
-  }
-
-  identity level-4 {
-    base availability-type;
-    description
-      "level 4: 99.9%";
-  }
-
-  identity level-5 {
-    base availability-type;
-    description
-      "level 5: 99%";
-  }
-
   identity slo-sle-policy-override {
     description
       "Base identity for SLO/SLE policy override options.";
@@ -1657,65 +1652,12 @@ module ietf-network-slice-service {
 
   /* grouping */
 
-  grouping service-sles {
+  grouping service-slos {
     description
-      "Indirectly Measurable Objectives of a slice service.";
-    leaf-list security {
-      type identityref {
-        base service-security-type;
-      }
+      "Directly Measurable Objectives of a slice service.";
+    container slo-policy {
       description
-        "The slice service security SLE(s)";
-    }
-    leaf isolation {
-      type identityref {
-        base service-isolation-type;
-      }
-      default "service-isolation-shared";
-      description
-        "The slice service isolation SLE requirement.";
-    }
-    leaf max-occupancy-level {
-      type uint8 {
-        range "1..100";
-      }
-      description
-        "The maximal occupancy level specifies the number of flows
-         to be admitted.";
-    }
-    leaf mtu {
-      type uint16;
-      units "bytes";
-      description
-        "The MTU specifies the maximum length in octets of data
-         packets that can be transmitted by the slice service.
-         The value needs to be less than or equal to the
-         minimum MTU value of all 'attachment-circuits'
-         in the SDPs.";
-    }
-    container steering-constraints {
-      description
-        "Container for the policy of steering constraints
-         applicable to the slice service.";
-      container path-constraints {
-        description
-          "Container for the policy of path constraints
-           applicable to the slice service.";
-      }
-      container service-function {
-        description
-          "Container for the policy of service function
-           applicable to the slice service.";
-      }
-    }
-  }
-
-  grouping service-metric-bounds {
-    description
-      "Slice service metric bounds grouping.";
-    container metric-bounds {
-      description
-        "Slice service metric bounds container.";
+        "Contains the SLO policy.";
       list metric-bound {
         key "metric-type";
         description
@@ -1752,6 +1694,70 @@ module ietf-network-slice-service {
             "The Bound on the slice service connection metric.
              A zero indicate an unbounded upper limit for the
              specific metric-type.";
+        }
+      }
+      leaf availability {
+        type identityref {
+          base availability-type;
+        }
+        description
+          "Service availability level";
+      }
+      leaf mtu {
+        type uint16;
+        units "bytes";
+        description
+          "The MTU specifies the maximum length in octets of data
+           packets of the slice service.
+           The value needs to be less than or equal to the
+           minimum MTU value of all 'attachment-circuits'
+           in the SDPs.";
+      }
+    }
+  }
+
+  grouping service-sles {
+    description
+      "Indirectly Measurable Objectives of a slice service.";
+    container sle-policy {
+      description
+        "Contains the SLE policy.";
+      leaf-list security {
+        type identityref {
+          base service-security-type;
+        }
+        description
+          "The security functions that the customer requests
+           the operator to apply to traffic between the two SDPs.";
+      }
+      leaf-list isolation {
+        type identityref {
+          base service-isolation-type;
+        }
+        description
+          "The slice service isolation requirement.";
+      }
+      leaf max-occupancy-level {
+        type uint8 {
+          range "1..100";
+        }
+        description
+          "The maximal occupancy level specifies the number of flows
+           to be admitted.";
+      }
+      container steering-constraints {
+        description
+          "Container for the policy of steering constraints
+           applicable to the slice service.";
+        container path-constraints {
+          description
+            "Container for the policy of path constraints
+             applicable to the slice service.";
+        }
+        container service-function {
+          description
+            "Container for the policy of service function
+             applicable to the slice service.";
         }
       }
     }
@@ -1802,7 +1808,7 @@ module ietf-network-slice-service {
           description
             "Indicates an attachment circuit service name,
              for association purposes, to refer to an AC that has been
-             created when an AC is used by multiple slices.
+             created before the slice creation.
              This node can override 'ac-svc-name' of the parent SDP.";
         }
         leaf description {
@@ -1865,7 +1871,7 @@ module ietf-network-slice-service {
             leaf-list value {
               type string;
               description
-                "The attachment circuit tag value. For example, the
+                "The attachment circuit tag values. For example, the
                  tag may indicate 'c-vlan' and 's-vlan'.";
             }
           }
@@ -2135,8 +2141,8 @@ module ietf-network-slice-service {
           default "vpn-common:any-to-any-role";
           description
             "Specifies the role of SDP in the connection group
-             When the service connection type is multi-point,
-             such as hub-spoke service connection type. In addition,
+             When the service connection type is MP2MP,
+             such as hub and spoke service connection type. In addition,
              this helps to create connectivity construct automatically
              , rather than explicitly specifying each one.";
         }
@@ -2155,13 +2161,31 @@ module ietf-network-slice-service {
       }
     }
     uses service-qos;
-    uses sdp-peering;
-    leaf ac-svc-name {
+    container sdp-peering {
+      description
+        "Describes SDP peering attributes.";
+      leaf-list peer-sap-id {
+        type string;
+        description
+          "Indicates the reference to the remote endpoints of the
+           attachment circuits. This information can be used for
+           correlation purposes, such as identifying service
+           attachment points (SAPs) of provider equipments when
+           requesting a service with CE based SDP attributes.";
+      }
+      container protocols {
+        description
+          "Serves as an augmentation target.
+           Protocols can be augmented into this container,
+           e.g. BGP, static routing.";
+      }
+    }
+    leaf-list ac-svc-name {
       type string;
       description
-        "Indicates an attachment circuit service name,
-         for association purposes, to refer to an AC that has been
-         created when an AC is used by multiple slices.";
+        "Indicates the attachment circuit service name,
+         for association purposes, to refer to ACs that have been
+         created before the slice creation.";
     }
     uses sdp-attachment-circuits;
     uses vpn-common:service-status;
@@ -2323,17 +2347,8 @@ module ietf-network-slice-service {
               indicates the base template over which further
               SLO/SLE policy changes are made.";
         }
-        container service-slo-sle-policy {
-          description
-            "Contains the SLO and SLE policy.";
-          leaf description {
-            type string;
-            description
-              "Description of the SLO and SLE policy.";
-          }
-          uses service-metric-bounds;
-          uses service-sles;
-        }
+        uses service-slos;
+        uses service-sles;
       }
     }
   }
@@ -2372,7 +2387,7 @@ module ietf-network-slice-service {
             description
               "Description of the SLO and SLE policy.";
           }
-          uses service-metric-bounds;
+          uses service-slos;
           uses service-sles;
         }
       }
@@ -2394,7 +2409,7 @@ module ietf-network-slice-service {
 
   container network-slice-services {
     description
-      "Containes a list of IETF network slice services";
+      "Contains a list of IETF network slice services";
     uses slice-service-template;
     list slice-service {
       key "id";
@@ -2427,8 +2442,8 @@ module ietf-network-slice-service {
           leaf-list value {
             type string;
             description
-              "The tag value, e.g. multiple customer names when sharing
-               same slice service in 5G scenario.";
+              "The tag values, e.g. customer names when multiple
+               customers sharing same slice service in 5G scenario.";
           }
         }
       }
@@ -2573,8 +2588,6 @@ module ietf-network-slice-service {
 
       <?rfc include='reference.RFC.7950'?>
 
-      <?rfc include='reference.RFC.7640'?>
-
       <?rfc include='reference.RFC.8040'?>
 
       <?rfc include='reference.RFC.6991'?>
@@ -2601,7 +2614,11 @@ module ietf-network-slice-service {
     <references title="Informative References">
       <?rfc include='reference.I-D.liu-teas-transport-network-slice-yang'?>
 
+      <?rfc include='reference.RFC.7640'?>
+
       <?rfc include='reference.I-D.boro-opsawg-teas-attachment-circuit'?>
+
+      <?rfc include='reference.I-D.boro-opsawg-teas-common-ac'?>
 
       <?rfc include='reference.I-D.ietf-opsawg-sap'?>
 
@@ -2612,18 +2629,22 @@ module ietf-network-slice-service {
       <?rfc include='reference.RFC.8309'?>
     </references>
 
-    <section anchor="ac-proto"
-             title="Attachment Circuit Augmentation Considerations">
-      <t>An AC is technology specific. The customer and provider need to
-      agree, through configuration, on the technology parameter values, such
-      as the protocol types and protocol parameters between the PE and the
-      CE.</t>
+    <section anchor="ac-proto" title="Augmentation Considerations">
+      <t>The NSSM defines the minimum attributes of slice services. In some
+      scenarios, further extension, e.g. the definition of AC technology
+      specific attributes and the "isolation" SLE characteristics are
+      required.</t>
 
-      <t>The following shows an example where BGP and static routing are
-      augmented to the Network Slice Service model.</t>
+      <t>For AC technology specific attributes, if the customer and provider
+      need to agree, through configuration, on the technology parameter
+      values, such as the protocol types and protocol parameters between the
+      PE and the CE. The following shows an example where BGP and static
+      routing are augmented to the Network Slice Service model. The protocol
+      types and definitions can reference <xref
+      target="I-D.boro-opsawg-teas-common-ac"/>.</t>
 
       <t><figure>
-          <artwork><![CDATA[  augment /ietf-nss:network-slice-services/ietf-nss:slice-service/ietf-nss:sdps\
+          <artwork><![CDATA[augment /ietf-nss:network-slice-services/ietf-nss:slice-service/ietf-nss:sdps\
   /ietf-nss:sdp/ietf-nss:sdp-peering/ietf-nss:protocols:
     +--rw bgp-attributes
     |  +--rw description?   string
@@ -2636,38 +2657,53 @@ module ietf-network-slice-service {
              +--rw next-hop    union
                    ...]]></artwork>
         </figure>In some scenarios, for example, when multiple slice services
-      share one or more ACs, or ACs change frequently, independent AC
-      services, defined in <xref
+      share one or more ACs, independent AC services, defined in <xref
       target="I-D.boro-opsawg-teas-attachment-circuit"/>, can be used.</t>
+
+      <t>For "isolation" SLE characteristics, the following identities can be
+      defined.</t>
+
+      <figure>
+        <artwork><![CDATA[  identity service-interference-isolation-dedicated {
+    base service-isolation-type;
+    description
+      "Specify the requirement that the slice service is not impacted 
+   by the existence of other customers or services in the same 
+   network, which may be provided by the service provider using 
+   dedicatd network resources, similar to a dedicated private network.";
+  }
+]]></artwork>
+      </figure>
+
+      <t/>
     </section>
 
     <section title="Examples of Network Slice Services">
       <section anchor="match-criteria"
-               title="Example-1: Two Any-to-any Slice Services with different match approachs">
+               title="Example-1: Two A2A Slice Services with different match approaches">
         <t>The following example describes a simplified service configuration
         of two IETF Network slice instances where the SDPs are the
         customer-facing ports on the PE:<list style="symbols">
-            <t>IETF Network Slice 1 on SDP1, SDP11a, and SDP4, with any-to-any
+            <t>IETF Network Slice 1 on SDP1, SDP11a, and SDP4, with an A2A
             connectivity type. This is a L3 slice service and using the
-            uniform low-latency slo-sle-template policy between all SDPs.
+            uniform low latency "slo-sle-template" policy between all SDPs.
             These SDPs will also have AC eBGP peering sessions with unmanaged
-            CE elements.</t>
+            CE elements (not shown) using an AC augmentation model such as the
+            one shown above.</t>
 
-            <t>IETF Network Slice 2 on SDP2, SDP11b, with any-to-any
-            connectivity type. This is a L3 slice service and using the
-            uniform high-BW slo-sle-template policy between all SDPs. These
-            SDPs will also have AC eBGP peering sessions with unmanaged CE
-            elements.</t>
+            <t>IETF Network Slice 2 on SDP2, SDP11b, with A2A connectivity
+            type. This is a L3 slice service and using the uniform high
+            bandwidth "slo-sle-template" policy between all SDPs.</t>
           </list>Slice 1 uses the explicit match approach for mapping SDP
-        traffic to a connectivity-construct, while slice 2 uses the implicit
+        traffic to a "connectivity-construct", while slice 2 uses the implicit
         approach. Both approaches are supported.</t>
 
         <t>Note: These two slices both use service-tags of "L3". This
-        service-tag is operator defined and has no specific meaning in the
-        YANG model other to give a "hint" to the NSC on the Service
-        Expectation being L3 forwarding. Other examples we may choose to
-        eliminate it. The usage of this tag is arbitrary and up to the
-        operator and the NSC on it's need and usage.</t>
+        "service-tag" is operator defined and has no specific meaning in the
+        YANG model other to give a hint to the NSC on the service expectation
+        being L3 forwarding. In other examples we may choose to eliminate it.
+        The usage of this tag is arbitrary and up to the operator and the NSC
+        on it's need and usage.</t>
 
         <figure>
           <artwork><![CDATA[+--------+         192.0.2.1 
@@ -2676,17 +2712,17 @@ module ietf-network-slice-service {
 +--------+      +------o|  PE A+---------------+
 |CE2     o-------/-----o|      |               |
 +--------+         SDP2 +---+--+               |
-               198.51.100.1 |                  |    192.0.4.1
+               198.51.100.1 |                  |    192.0.2.129
                   VLAN200   |              +---+--+ VLAN100
                             |              |      | SDP4      +--------+
                             |              |PE C  o-----/-----o CE21   |
-+--------+        192.0.3.1 |              +---+--+           +--------+
++--------+        192.0.2.65 |              +---+--+           +--------+
 |        o------/ VLAN101   |                  |
 |        |      | SDP11a+---+---+              |
 |CE11    |      +------o|PE B   +--------------+
 |        o-------/-----o|       |
 +--------+        SDP11b+------ +
-                  198.51.101.1
+                  198.51.100.65
                   VLAN201]]></artwork>
         </figure>
 
@@ -2700,34 +2736,33 @@ module ietf-network-slice-service {
         "slo-sle-template": [
           {
             "id": "high-BW-template",
-            "template-description": "take the highest BW forwarding path"
+            "description": "take the highest BW forwarding path"
           },
           {
             "id": "low-latency-template",
-            "template-description": "lowest possible latency forwarding behavior"
+            "description": "lowest possible latency forwarding behavior"
           }
         ]
       },
       "slice-service": [
         {
-          "service-id": "slice1",
-          "service-description": "example slice1",
+          "id": "slice1",
+          "description": "example slice1",
           "service-tags": {
             "tag-type": [
               {
                 "tag-type": "ietf-network-slice-service:service-tag-service",
-                "value": [
-                  "L3"
-                ]
+                "value": ["L3"]
               }
             ]
           },
           "slo-sle-template": "low-latency-template",
-          "status": {},
+          "status": {
+          },
           "sdps": {
             "sdp": [
               {
-                "sdp-id": "1",
+                "id": "1",
                 "node-id": "PE-A",
                 "service-match-criteria": {
                   "match-criterion": [
@@ -2742,56 +2777,30 @@ module ietf-network-slice-service {
                 "attachment-circuits": {
                   "attachment-circuit": [
                     {
-                      "ac-id": "ac1",
-                      "ac-description": "AC1 connected to device 1",
+                      "id": "ac1",
+                      "description": "AC1 connected to device 1",
                       "ac-node-id": "PE-A",
                       "ac-tp-id": "GigabitEthernet5/0/0/0.100",
-                      "ac-ip-address": "192.0.2.1",
-                      "ac-ip-prefix-length": 24,
+                      "ac-ipv4-address": "192.0.2.1",
+                      "ac-ipv4-prefix-length": 26,
                       "ac-tags": {
                         "ac-tags": [
                           {
-                            "ac-tag-type": "ietf-network-slice-service:attachment-circuit-tag-vlan-id",
-                            "value": [
-                              "100"
-                            ]
+                            "tag-type": "ietf-nss:attachment-circuit-tag-vlan-id",
+                            "value": ["100"]
                           }
                         ]
                       },
-                      "sdp-peering": {
-                        "protocol": [
-                          {
-                            "protocol-type": "ietf-network-slice-service:peering-protocol-bgp",
-                            "attribute": [
-                              {
-                                "attribute-type": "ietf-network-slice-service:neighbor",
-                                "value": [
-                                  "192.0.2.2"
-                                ]
-                              },
-                              {
-                                "attribute-type": "ietf-network-slice-service:remote-as",
-                                "value": [
-                                  "64001"
-                                ]
-                              },
-                              {
-                                "attribute-type": "ietf-network-slice-service:local-as",
-                                "value": [
-                                  "64000"
-                                ]
-                              }
-                            ]
-                          }
-                        ]
+                      "status": {
                       }
                     }
                   ]
                 },
-                "status": {}
+                "status": {
+                }
               },
               {
-                "sdp-id": "3a",
+                "id": "3a",
                 "node-id": "PE-B",
                 "service-match-criteria": {
                   "match-criterion": [
@@ -2806,56 +2815,30 @@ module ietf-network-slice-service {
                 "attachment-circuits": {
                   "attachment-circuit": [
                     {
-                      "ac-id": "ac3a",
-                      "ac-description": "AC3a connected to device 3",
+                      "id": "ac3a",
+                      "description": "AC3a connected to device 3",
                       "ac-node-id": "PE-B",
                       "ac-tp-id": "GigabitEthernet8/0/0/4.101",
-                      "ac-ip-address": "192.0.3.1",
-                      "ac-ip-prefix-length": 24,
+                      "ac-ipv4-address": "192.0.2.65",
+                      "ac-ipv4-prefix-length": 26,
                       "ac-tags": {
                         "ac-tags": [
                           {
-                            "ac-tag-type": "ietf-network-slice-service:attachment-circuit-tag-vlan-id",
-                            "value": [
-                              "101"
-                            ]
+                            "tag-type": "ietf-nss:attachment-circuit-tag-vlan-id",
+                            "value": ["101"]
                           }
                         ]
                       },
-                      "sdp-peering": {
-                        "protocol": [
-                          {
-                            "protocol-type": "ietf-network-slice-service:peering-protocol-bgp",
-                            "attribute": [
-                              {
-                                "attribute-type": "ietf-network-slice-service:neighbor",
-                                "value": [
-                                  "192.0.3.2"
-                                ]
-                              },
-                              {
-                                "attribute-type": "ietf-network-slice-service:remote-as",
-                                "value": [
-                                  "64002"
-                                ]
-                              },
-                              {
-                                "attribute-type": "ietf-network-slice-service:local-as",
-                                "value": [
-                                  "64000"
-                                ]
-                              }
-                            ]
-                          }
-                        ]
+                      "status": {
                       }
                     }
                   ]
                 },
-                "status": {}
+                "status": {
+                }
               },
               {
-                "sdp-id": "4",
+                "id": "4",
                 "node-id": "PE-C",
                 "service-match-criteria": {
                   "match-criterion": [
@@ -2870,64 +2853,38 @@ module ietf-network-slice-service {
                 "attachment-circuits": {
                   "attachment-circuit": [
                     {
-                      "ac-id": "ac4",
-                      "ac-description": "AC4 connected to device 4",
+                      "id": "ac4",
+                      "description": "AC4 connected to device 4",
                       "ac-node-id": "PE-C",
                       "ac-tp-id": "GigabitEthernet4/0/0/3.100",
-                      "ac-ip-address": "192.0.4.1",
-                      "ac-ip-prefix-length": 24,
+                      "ac-ipv4-address": "192.0.2.129",
+                      "ac-ipv4-prefix-length": 26,
                       "ac-tags": {
                         "ac-tags": [
                           {
-                            "ac-tag-type": "ietf-network-slice-service:attachment-circuit-tag-vlan-id",
-                            "value": [
-                              "100"
-                            ]
+                            "tag-type": "ietf-network-slice-service:attachment-circuit-tag-vlan-id",
+                            "value": ["100"]
                           }
                         ]
                       },
-                      "sdp-peering": {
-                        "protocol": [
-                          {
-                            "protocol-type": "ietf-network-slice-service:peering-protocol-bgp",
-                            "attribute": [
-                              {
-                                "attribute-type": "ietf-network-slice-service:neighbor",
-                                "value": [
-                                  "192.0.4.2"
-                                ]
-                              },
-                              {
-                                "attribute-type": "ietf-network-slice-service:remote-as",
-                                "value": [
-                                  "64004"
-                                ]
-                              },
-                              {
-                                "attribute-type": "ietf-network-slice-service:local-as",
-                                "value": [
-                                  "64000"
-                                ]
-                              }
-                            ]
-                          }
-                        ]
+                      "status": {
                       }
                     }
                   ]
                 },
-                "status": {}
+                "status": {
+                }
               }
             ]
           },
           "connection-groups": {
             "connection-group": [
               {
-                "connection-group-id": "matrix1",
+                "id": "matrix1",
                 "connectivity-type": "ietf-vpn-common:any-to-any",
                 "connectivity-construct": [
                   {
-                    "cc-id": 1,
+                    "id": 1,
                     "a2a-sdp": [
                       {
                         "sdp-id": "1"
@@ -2938,7 +2895,9 @@ module ietf-network-slice-service {
                       {
                         "sdp-id": "4"
                       }
-                    ]
+                    ],
+                    "status": {
+                    }
                   }
                 ]
               }
@@ -2946,140 +2905,87 @@ module ietf-network-slice-service {
           }
         },
         {
-          "service-id": "slice2",
-          "service-description": "example slice2",
+          "id": "slice2",
+          "description": "example slice2",
           "service-tags": {
             "tag-type": [
               {
-                "tag-type": "ietf-network-slice-service:service-tag-service",
-                "value": [
-                  "L3"
-                ]
+                "tag-type": "ietf-nss:service-tag-service",
+                "value": ["L3"]
               }
             ]
           },
           "slo-sle-template": "high-BW-template",
-          "status": {},
+          "status": {
+          },
           "sdps": {
             "sdp": [
               {
-                "sdp-id": "2",
+                "id": "2",
                 "node-id": "PE-A",
                 "attachment-circuits": {
                   "attachment-circuit": [
                     {
-                      "ac-id": "ac2",
-                      "ac-description": "AC2 connected to device 2",
+                      "id": "ac2",
+                      "description": "AC2 connected to device 2",
                       "ac-node-id": "PE-A",
                       "ac-tp-id": "GigabitEthernet7/0/0/3.200",
-                      "ac-ip-address": "198.51.100.1",
-                      "ac-ip-prefix-length": 24,
+                      "ac-ipv4-address": "198.51.100.1",
+                      "ac-ipv4-prefix-length": 26,
                       "ac-tags": {
                         "ac-tags": [
                           {
-                            "ac-tag-type": "ietf-network-slice-service:attachment-circuit-tag-vlan-id",
-                            "value": [
-                              "100"
-                            ]
+                            "tag-type": "ietf-nss:attachment-circuit-tag-vlan-id",
+                            "value": ["100"]
                           }
                         ]
                       },
-                      "sdp-peering": {
-                        "protocol": [
-                          {
-                            "protocol-type": "ietf-network-slice-service:peering-protocol-bgp",
-                            "attribute": [
-                              {
-                                "attribute-type": "ietf-network-slice-service:neighbor",
-                                "value": [
-                                  "192.51.100.2"
-                                ]
-                              },
-                              {
-                                "attribute-type": "ietf-network-slice-service:remote-as",
-                                "value": [
-                                  "64031"
-                                ]
-                              },
-                              {
-                                "attribute-type": "ietf-network-slice-service:local-as",
-                                "value": [
-                                  "64000"
-                                ]
-                              }
-                            ]
-                          }
-                        ]
+                      "status": {
                       }
                     }
                   ]
                 },
-                "status": {}
+                "status": {
+                }
               },
               {
-                "sdp-id": "3b",
+                "id": "3b",
                 "node-id": "PE-B",
                 "attachment-circuits": {
                   "attachment-circuit": [
                     {
-                      "ac-id": "ac3b",
-                      "ac-description": "AC3b connected to device 3",
+                      "id": "ac3b",
+                      "description": "AC3b connected to device 3",
                       "ac-node-id": "PE-B",
                       "ac-tp-id": "GigabitEthernet8/0/0/4.201",
-                      "ac-ip-address": "198.51.101.1",
-                      "ac-ip-prefix-length": 24,
+                      "ac-ipv4-address": "198.51.100.65",
+                      "ac-ipv4-prefix-length": 26,
                       "ac-tags": {
                         "ac-tags": [
                           {
-                            "ac-tag-type": "ietf-network-slice-service:attachment-circuit-tag-vlan-id",
-                            "value": [
-                              "201"
-                            ]
+                            "tag-type": "ietf-network-slice-service:attachment-circuit-tag-vlan-id",
+                            "value": ["201"]
                           }
                         ]
                       },
-                      "sdp-peering": {
-                        "protocol": [
-                          {
-                            "protocol-type": "ietf-network-slice-service:peering-protocol-bgp",
-                            "attribute": [
-                              {
-                                "attribute-type": "ietf-network-slice-service:neighbor",
-                                "value": [
-                                  "192.51.101.2"
-                                ]
-                              },
-                              {
-                                "attribute-type": "ietf-network-slice-service:remote-as",
-                                "value": [
-                                  "64032"
-                                ]
-                              },
-                              {
-                                "attribute-type": "ietf-network-slice-service:local-as",
-                                "value": [
-                                  "64000"
-                                ]
-                              }
-                            ]
-                          }
-                        ]
+                      "status": {
                       }
                     }
                   ]
                 },
-                "status": {}
+                "status": {
+                }
               }
             ]
           },
           "connection-groups": {
             "connection-group": [
               {
-                "connection-group-id": "matrix2",
+                "id": "matrix2",
                 "connectivity-type": "ietf-vpn-common:any-to-any",
                 "connectivity-construct": [
                   {
-                    "cc-id": 1,
+                    "id": 1,
                     "a2a-sdp": [
                       {
                         "sdp-id": "2"
@@ -3087,7 +2993,9 @@ module ietf-network-slice-service {
                       {
                         "sdp-id": "3b"
                       }
-                    ]
+                    ],
+                    "status": {
+                    }
                   }
                 ]
               }
@@ -3105,29 +3013,28 @@ module ietf-network-slice-service {
         <t>The following example describes a simplified service configuration
         of two IETF Network slice instances where the SDPs are the
         customer-facing ports on the PE:<list style="symbols">
-            <t>IETF Network Slice 3 on SDP5 and SDP7a with pt-to-pt
-            connectivity type. This is a L2 slice service and using the
-            uniform low-latency slo-sle-template policies between the
-            SDPs.</t>
+            <t>IETF Network Slice 3 on SDP5 and SDP7a with P2P connectivity
+            type. This is a L2 slice service and using the uniform low-latency
+            "slo-sle-template" policies between the SDPs.</t>
 
-            <t>IETF Network Slice 4 on SDP6 and SDP7b, with pt-to-pt
-            connectivity type. This is a L2 slice service and using the a
-            high-BW slo-sle-template policies between the SDPs. Traffic from
-            SDP6 and SDP7b is requesting a BW of 1000Mbps, while in the
-            reverse direction from SDO7b to SDP6, 5000Mbps is being
+            <t>IETF Network Slice 4 on SDP6 and SDP7b, with P2P connectivity
+            type. This is a L2 slice service and using the the high bandwidth
+            "slo-sle-template" policies between the SDPs. Traffic from SDP6
+            and SDP7b is requesting a bandwidth of 1000Mbps, while in the
+            reverse direction from SDP7b to SDP6, 5000Mbps is being
             requested.</t>
           </list></t>
 
         <t>Slice 3 uses the explicit match approach for mapping SDP traffic to
-        a Connectivity-group, while slice 2 uses the implicit approach. Both
+        a "connectivity-group", while slice 2 uses the implicit approach. Both
         approaches are supported.</t>
 
         <t>Note: These two slices both use service-tags of "L2". This
-        service-tag is operator defined and has no specific meaning in the
-        YANG model other to give a "hint" to the NSC on the Service
-        Expectation being L2 forwarding. Other examples we may choose to
-        eliminate it. The usage of this tag is arbitrary and up to the
-        operator and the NSC on it's need and usage.</t>
+        "service-tag" is operator defined and has no specific meaning in the
+        YANG model other to give a hint to the NSC on the service expectation
+        being L2 forwarding. Other examples we may choose to eliminate it. The
+        usage of this tag is arbitrary and up to the operator and the NSC on
+        it's need and usage.</t>
 
         <t><figure title="">
             <artwork><![CDATA[+--------+          
@@ -3156,24 +3063,25 @@ module ietf-network-slice-service {
         "slo-sle-template": [
           {
             "id": "high-BW-template",
-            "template-description": "take the highest BW forwarding path"
+            "description": "take the highest BW forwarding path"
           },
           {
             "id": "low-latency-template",
-            "template-description": "lowest possible latency forwarding behavior"
+            "description": "lowest possible latency forwarding behavior"
           }
         ]
       },
       "slice-service": [
         {
-          "service-id": "slice3",
-          "service-description": "example slice3",
+          "id": "slice3",
+          "description": "example slice3",
           "slo-sle-template": "low-latency-template",
-          "status": {},
+          "status": {
+          },
           "sdps": {
             "sdp": [
               {
-                "sdp-id": "5",
+                "id": "5",
                 "node-id": "PE-A",
                 "service-match-criteria": {
                   "match-criterion": [
@@ -3187,27 +3095,28 @@ module ietf-network-slice-service {
                 "attachment-circuits": {
                   "attachment-circuit": [
                     {
-                      "ac-id": "ac5",
-                      "ac-description": "AC5 connected to device 5",
+                      "id": "ac5",
+                      "description": "AC5 connected to device 5",
                       "ac-node-id": "PE-A",
                       "ac-tp-id": "GigabitEthernet5/0/0/1",
                       "ac-tags": {
                         "ac-tags": [
                           {
-                            "ac-tag-type": "ietf-network-slice-service:attachment-circuit-tag-vlan-id",
-                            "value": [
-                              "100"
-                            ]
+                            "tag-type": "ietf-network-slice-service:attachment-circuit-tag-vlan-id",
+                            "value": ["100"]
                           }
                         ]
+                      },
+                      "status": {
                       }
                     }
                   ]
                 },
-                "status": {}
+                "status": {
+                }
               },
               {
-                "sdp-id": "7a",
+                "id": "7a",
                 "node-id": "PE-B",
                 "service-match-criteria": {
                   "match-criterion": [
@@ -3221,42 +3130,47 @@ module ietf-network-slice-service {
                 "attachment-circuits": {
                   "attachment-circuit": [
                     {
-                      "ac-id": "ac7a",
-                      "ac-description": "AC7a connected to device 7",
+                      "id": "ac7a",
+                      "description": "AC7a connected to device 7",
                       "ac-node-id": "PE-B",
                       "ac-tp-id": "GigabitEthernet8/0/0/5",
                       "ac-tags": {
                         "ac-tags": [
                           {
-                            "ac-tag-type": "ietf-network-slice-service:attachment-circuit-tag-vlan-id",
-                            "value": [
-                              "200"
-                            ]
+                            "tag-type": "ietf-network-slice-service:attachment-circuit-tag-vlan-id",
+                            "value": ["200"]
                           }
                         ]
+                      },
+                      "status": {
                       }
                     }
                   ]
                 },
-                "status": {}
+                "status": {
+                }
               }
             ]
           },
           "connection-groups": {
             "connection-group": [
               {
-                "connection-group-id": "matrix3",
+                "id": "matrix3",
                 "connectivity-type": "ietf-network-slice-service:point-to-point",
                 "connectivity-construct": [
                   {
-                    "cc-id": 1,
+                    "id": 1,
                     "p2p-sender-sdp": "5",
-                    "p2p-receiver-sdp": "7a"
+                    "p2p-receiver-sdp": "7a",
+                    "status": {
+                    }
                   },
                   {
-                    "cc-id": 2,
+                    "id": 2,
                     "p2p-sender-sdp": "7a",
-                    "p2p-receiver-sdp": "5"
+                    "p2p-receiver-sdp": "5",
+                    "status": {
+                    }
                   }
                 ]
               }
@@ -3264,100 +3178,107 @@ module ietf-network-slice-service {
           }
         },
         {
-          "service-id": "slice4",
-          "service-description": "example slice4",
+          "id": "slice4",
+          "description": "example slice4",
           "slo-sle-template": "high-BW-template",
-          "status": {},
+          "status": {
+          },
           "sdps": {
             "sdp": [
               {
-                "sdp-id": "6",
+                "id": "6",
                 "node-id": "PE-A",
                 "attachment-circuits": {
                   "attachment-circuit": [
                     {
-                      "ac-id": "ac6",
-                      "ac-description": "AC6 connected to device 6",
+                      "id": "ac6",
+                      "description": "AC6 connected to device 6",
                       "ac-node-id": "PE-A",
                       "ac-tp-id": "GigabitEthernet7/0/0/4",
                       "ac-tags": {
                         "ac-tags": [
                           {
-                            "ac-tag-type": "ietf-network-slice-service:attachment-circuit-tag-vlan-id",
-                            "value": [
-                              "101"
-                            ]
+                            "tag-type": "ietf-network-slice-service:attachment-circuit-tag-vlan-id",
+                            "value": ["101"]
                           }
                         ]
+                      },
+                      "status": {
                       }
                     }
                   ]
                 },
-                "status": {}
+                "status": {
+                }
               },
               {
-                "sdp-id": "7b",
+                "id": "7b",
                 "node-id": "PE-B",
                 "attachment-circuits": {
                   "attachment-circuit": [
                     {
-                      "ac-id": "ac7b",
-                      "ac-description": "AC7b connected to device 7",
+                      "id": "ac7b",
+                      "description": "AC7b connected to device 7",
                       "ac-node-id": "PE-B",
                       "ac-tp-id": "GigabitEthernet8/0/0/5",
                       "ac-tags": {
                         "ac-tags": [
                           {
-                            "ac-tag-type": "ietf-network-slice-service:attachment-circuit-tag-vlan-id",
-                            "value": [
-                              "201"
-                            ]
+                            "tag-type": "ietf-network-slice-service:attachment-circuit-tag-vlan-id",
+                            "value": ["201"]
                           }
                         ]
+                      },
+                      "status": {
                       }
                     }
                   ]
                 },
-                "status": {}
+                "status": {
+                }
               }
             ]
           },
           "connection-groups": {
             "connection-group": [
               {
-                "connection-group-id": "matrix4",
+                "id": "matrix4",
                 "connectivity-type": "ietf-network-slice-service:point-to-point",
                 "connectivity-construct": [
                   {
-                    "cc-id": 1,
+                    "id": 1,
                     "p2p-sender-sdp": "6",
                     "p2p-receiver-sdp": "7b",
                     "service-slo-sle-policy": {
-                      "metric-bounds": {
+                      "slo-policy": {
                         "metric-bound": [
                           {
-                            "metric-type": "ietf-network-slice-service:service-slo-one-way-bandwidth",
-                            "metric-unit": "Mbps",
-                            "value-description": "1000"
-                          }
-                        ]
-                      }
+                            "metric-type": "ietf-network-slice-service:service-slo-one-way-delay-maximum",
+                            "metric-unit": "milliseconds",
+                            "bound": "10"
+                           }
+                         ]
+                       }
+                    },
+                    "status": {
                     }
                   },
                   {
-                    "cc-id": 2,
+                    "id": 2,
                     "p2p-sender-sdp": "7b",
                     "p2p-receiver-sdp": "6",
                     "service-slo-sle-policy": {
-                      "metric-bounds": {
+                      "slo-policy": {
                         "metric-bound": [
                           {
-                            "metric-type": "ietf-network-slice-service:service-slo-one-way-bandwidth",
+                            "metric-type": ietf-network-slice-service:service-slo-one-way-bandwidth",
                             "metric-unit": "Mbps",
-                            "value-description": "5000"
-                          }
-                        ]
-                      }
+                            "bound": "5000"
+                           }
+                         ]
+                       }
+                    },
+                    "status": {
                     }
                   }
                 ]
@@ -3373,7 +3294,7 @@ module ietf-network-slice-service {
       </section>
 
       <section anchor="ex3"
-               title="Example-3: A Hub-and-spoke Slice Service with a P2MP connectivity construct">
+               title="Example-3: A Hub and Spoke Slice Service with a P2MP Connectivity Construct">
         <t>The following example describes a simplified service configuration
         of one IETF Network slice instance where the SDPs are the
         customer-facing ports on the PE:</t>
@@ -3381,32 +3302,31 @@ module ietf-network-slice-service {
         <t><list style="hanging">
             <t>IETF Network Slice 5 is a hub-spoke slice with SDP14 as the hub
             and SDP11, SDP12, SDP13a, SDP13b as spokes. This is a L3 slice
-            service and using the uniform low-latency slo-sle-template
-            policies between all spokes and the hub SDP, but using an explicit
-            set of slo policies with a latency metric of 10ms for hub to spoke
-            traffic. There is no peering protocol's configured in this
-            example.</t>
+            service and using the uniform low-latency "slo-sle-template"
+            policies between all spokes and the hub SDPs, but using an
+            explicit set of SLO policies with a latency metric of 10ms for hub
+            to spoke traffic.</t>
           </list></t>
 
         <figure title="">
           <artwork><![CDATA[              
-+--------+         196.0.2.1 
++--------+         192.0.2.1 
 |Device11o------/  VLAN100
 +--------+      |  SDP11+------+
 +--------+      +------o|  A   +---------------+
 |Device12o-------/-----o|      |               |
 +--------+         SDP12+---+--+               |
-               196.51.100.1 |                  |    196.0.4.1
+               198.51.100.1 |                  |    192.0.2.129
                   VLAN200   |              +---+--+ VLAN100
                             |              |      | SDP14     +--------+
                             |              |   C  o-----/-----oDevice14|
-+--------+        196.0.3.1 |              +---+--+           +--------+
++--------+       192.0.2.65 |              +---+--+           +--------+
 |        o------/ VLAN101   |                  |
 |        |      | SDP13a+---+--+               |
 |Device13|      +------o|  B   +---------------+
 |        o-------/-----o|      |
 +--------+        SDP13b+------+
-                  196.51.101.1
+                  198.51.100.65
                   VLAN201
 
 ]]></artwork>
@@ -3420,34 +3340,33 @@ module ietf-network-slice-service {
         "slo-sle-template": [
           {
             "id": "high-BW-template",
-            "template-description": "take the highest BW forwarding path"
+            "description": "take the highest BW forwarding path"
           },
           {
             "id": "low-latency-template",
-            "template-description": "lowest possible latency forwarding behavior"
+            "description": "lowest possible latency forwarding behavior"
           }
         ]
       },
       "slice-service": [
         {
-          "service-id": "slice5",
-          "service-description": "example slice5",
+          "id": "slice5",
+          "description": "example slice5",
           "service-tags": {
             "tag-type": [
               {
                 "tag-type": "ietf-network-slice-service:service-tag-service",
-                "value": [
-                  "L3"
-                ]
+                "value": ["L3"]
               }
             ]
           },
           "slo-sle-template": "low-latency-template",
-          "status": {},
+          "status": {
+          },
           "sdps": {
             "sdp": [
               {
-                "sdp-id": "11",
+                "id": "11",
                 "node-id": "PE-A",
                 "service-match-criteria": {
                   "match-criterion": [
@@ -3462,29 +3381,30 @@ module ietf-network-slice-service {
                 "attachment-circuits": {
                   "attachment-circuit": [
                     {
-                      "ac-id": "ac11",
-                      "ac-description": "AC11 connected to device 11",
+                      "id": "ac11",
+                      "description": "AC11 connected to device 11",
                       "ac-node-id": "PE-A",
                       "ac-tp-id": "GigabitEthernet5/0/0/2",
-                      "ac-ip-address": "196.0.2.1",
-                      "ac-ip-prefix-length": 24,
+                      "ac-ipv4-address": "192.0.2.1",
+                      "ac-ipv4-prefix-length": 26,
                       "ac-tags": {
                         "ac-tags": [
                           {
-                            "ac-tag-type": "ietf-network-slice-service:attachment-circuit-tag-vlan-id",
-                            "value": [
-                              "100"
-                            ]
+                            "tag-type": "ietf-network-slice-service:attachment-circuit-tag-vlan-id",
+                            "value": ["100"]
                           }
                         ]
+                      },
+                      "status": {
                       }
                     }
                   ]
                 },
-                "status": {}
+                "status": {
+                }
               },
               {
-                "sdp-id": "12",
+                "id": "12",
                 "node-id": "PE-A",
                 "service-match-criteria": {
                   "match-criterion": [
@@ -3499,29 +3419,30 @@ module ietf-network-slice-service {
                 "attachment-circuits": {
                   "attachment-circuit": [
                     {
-                      "ac-id": "ac12",
-                      "ac-description": "AC12 connected to device 12",
+                      "id": "ac12",
+                      "description": "AC12 connected to device 12",
                       "ac-node-id": "PE-A",
                       "ac-tp-id": "GigabitEthernet7/0/0/5",
-                      "ac-ip-address": "196.51.100.1",
-                      "ac-ip-prefix-length": 24,
+                      "ac-ipv4-address": "198.51.100.1",
+                      "ac-ipv4-prefix-length": 26,
                       "ac-tags": {
                         "ac-tags": [
                           {
-                            "ac-tag-type": "ietf-network-slice-service:attachment-circuit-tag-vlan-id",
-                            "value": [
-                              "200"
-                            ]
+                            "tag-type": "ietf-network-slice-service:attachment-circuit-tag-vlan-id",
+                            "value": ["200"]
                           }
                         ]
+                      },
+                      "status": {
                       }
                     }
                   ]
                 },
-                "status": {}
+                "status": {
+                }
               },
               {
-                "sdp-id": "13a",
+                "id": "13a",
                 "node-id": "PE-B",
                 "service-match-criteria": {
                   "match-criterion": [
@@ -3536,29 +3457,30 @@ module ietf-network-slice-service {
                 "attachment-circuits": {
                   "attachment-circuit": [
                     {
-                      "ac-id": "ac13a",
-                      "ac-description": "AC13a connected to device 13",
+                      "id": "ac13a",
+                      "description": "AC13a connected to device 13",
                       "ac-node-id": "PE-B",
                       "ac-tp-id": "GigabitEthernet8/0/0/6",
-                      "ac-ip-address": "196.0.3.1",
-                      "ac-ip-prefix-length": 24,
+                      "ac-ipv4-address": "192.0.2.65",
+                      "ac-ipv4-prefix-length": 26,
                       "ac-tags": {
                         "ac-tags": [
                           {
-                            "ac-tag-type": "ietf-network-slice-service:attachment-circuit-tag-vlan-id",
-                            "value": [
-                              "101"
-                            ]
+                            "tag-type": "ietf-network-slice-service:attachment-circuit-tag-vlan-id",
+                            "value": ["101"]
                           }
                         ]
+                      },
+                      "status": {
                       }
                     }
                   ]
                 },
-                "status": {}
+                "status": {
+                }
               },
               {
-                "sdp-id": "13b",
+                "id": "13b",
                 "node-id": "PE-B",
                 "service-match-criteria": {
                   "match-criterion": [
@@ -3573,29 +3495,30 @@ module ietf-network-slice-service {
                 "attachment-circuits": {
                   "attachment-circuit": [
                     {
-                      "ac-id": "ac13b",
-                      "ac-description": "AC3b connected to device 13",
+                      "id": "ac13b",
+                      "description": "AC3b connected to device 13",
                       "ac-node-id": "PE-B",
                       "ac-tp-id": "GigabitEthernet8/0/0/4",
-                      "ac-ip-address": "196.51.101.1",
-                      "ac-ip-prefix-length": 24,
+                      "ac-ipv4-address": "198.51.100.65",
+                      "ac-ipv4-prefix-length": 26,
                       "ac-tags": {
                         "ac-tags": [
                           {
-                            "ac-tag-type": "ietf-network-slice-service:attachment-circuit-tag-vlan-id",
-                            "value": [
-                              "201"
-                            ]
+                            "tag-type": "ietf-network-slice-service:attachment-circuit-tag-vlan-id",
+                            "value": ["201"]
                           }
                         ]
+                      },
+                      "status": {
                       }
                     }
                   ]
                 },
-                "status": {}
+                "status": {
+                }
               },
               {
-                "sdp-id": "14",
+                "id": "14",
                 "node-id": "PE-C",
                 "service-match-criteria": {
                   "match-criterion": [
@@ -3610,75 +3533,53 @@ module ietf-network-slice-service {
                 "attachment-circuits": {
                   "attachment-circuit": [
                     {
-                      "ac-id": "ac14",
-                      "ac-description": "AC14 connected to device 14",
+                      "id": "ac14",
+                      "description": "AC14 connected to device 14",
                       "ac-node-id": "PE-C",
                       "ac-tp-id": "GigabitEthernet4/0/0/3",
-                      "ac-ip-address": "196.0.4.1",
-                      "ac-ip-prefix-length": 24,
+                      "ac-ipv4-address": "192.0.2.129",
+                      "ac-ipv4-prefix-length": 26,
                       "ac-tags": {
                         "ac-tags": [
                           {
-                            "ac-tag-type": "ietf-network-slice-service:attachment-circuit-tag-vlan-id",
-                            "value": [
-                              "100"
-                            ]
+                            "tag-type": "ietf-network-slice-service:attachment-circuit-tag-vlan-id",
+                            "value": ["100"]
                           }
                         ]
+                      },
+                      "status": {
                       }
                     }
                   ]
                 },
-                "status": {}
+                "status": {
+                }
               }
             ]
           },
           "connection-groups": {
             "connection-group": [
               {
-                "connection-group-id": "matrix5",
+                "id": "matrix5",
                 "connectivity-type": "ietf-vpn-common:hub-spoke",
                 "connectivity-construct": [
                   {
-                    "cc-id": 1,
+                    "id": 1,
                     "p2mp-sender-sdp": "14",
-                    "p2mp-receiver-sdp": [
-                      "11",
-                      "12",
-                      "13a",
-                      "13b"
-                    ],
+                    "p2mp-receiver-sdp": ["11", "12", "13a", "13b"],
                     "service-slo-sle-policy": {
-                      "metric-bounds": {
+                      "slo-policy": {
                         "metric-bound": [
                           {
-                            "metric-type": "ietf-network-slice-service:service-slo-one-way-delay",
-                            "metric-unit": "miliseconds",
-                            "value-description": "10"
-                          }
-                        ]
-                      }
+                            "metric-type": "ietf-network-slice-service:service-slo-one-way-delay-maximum",
+                            "metric-unit": "milliseconds",
+                            "bound": "10"
+                           }
+                         ]
+                       }
+                    },
+                    "status": {
                     }
-                  },
-                  {
-                    "cc-id": 2,
-                    "p2p-sender-sdp": "11",
-                    "p2p-receiver-sdp": "14"
-                  },
-                  {
-                    "cc-id": 3,
-                    "p2p-sender-sdp": "12",
-                    "p2p-receiver-sdp": "14"
-                  },
-                  {
-                    "cc-id": 4,
-                    "p2p-sender-sdp": "13a",
-                    "p2p-receiver-sdp": "14"
-                  },
-                  {
-                    "cc-id": 5,
-                    "p2p-sender-sdp": "13b",
-                    "p2p-receiver-sdp": "14"
                   }
                 ]
               }
@@ -3692,32 +3593,32 @@ module ietf-network-slice-service {
         </figure>
       </section>
 
-      <section title="Example-4: An Any-to-any Slice service with multiple SLOs and DSCP Matching">
+      <section title="Example-4: An A2A Slice service with multiple SLOs and DSCP Matching">
         <t>The following example describes a simplified service configuration
         of an IETF Network slice instance where the SDPs are the
         customer-facing ports on the PE:</t>
 
         <t><list style="hanging">
-            <t>IETF Network Slice 6 on SDP21, SDP23a, and SDP24, with
-            any-to-any connectivity type. This is a L3 slice service and using
-            the uniform standard slo-sle-template policies between all SDPs.
-            For traffic matching the dscp of EF, a slo-sle-template policy of
+            <t>IETF Network Slice 6 on SDP21, SDP23a, and SDP24, with A2A
+            connectivity type. This is a L3 slice service and using the
+            uniform standard slo-sle-template policies between all SDPs. For
+            traffic matching the DSCP of EF, a slo-sle-template policy of
             low-latency will be used. The slice uses the explicit match
-            approach for mapping SDP traffic to a connectivity-construct.</t>
+            approach for mapping SDP traffic to a connectivity construct.</t>
           </list></t>
 
         <figure>
-          <artwork><![CDATA[+--------+         194.0.2.1 
+          <artwork><![CDATA[+--------+         192.0.2.1 
 | CE21   o------/  VLAN100
 +--------+      |  SDP21+------+
                 +------o| PE A +---------------+
                         |      |               |
                         +---+--+               |
-                            |                  |    194.0.4.1
+                            |                  |    203.0.113.1
                             |              +---+--+ VLAN100
                             |              |      | SDP24     +--------+
                             |              | PE C o-----/-----o CE24   |
-+--------+        194.0.3.1 |              +---+--+           +--------+
++--------+     198.51.100.1 |              +---+--+           +--------+
 |        o------/ VLAN101   |                  |
 |        |      | SDP23a+---+--+               |
 |CE23    |      +------o| PE B +---------------+
@@ -3734,43 +3635,44 @@ module ietf-network-slice-service {
         "slo-sle-template": [
           {
             "id": "high-BW-template",
-            "template-description": "take the highest BW forwarding path"
+            "description": "take the highest BW forwarding path"
           },
           {
             "id": "low-latency-template",
-            "template-description": "lowest possible latency forwarding behavior"
+            "description": "lowest possible latency forwarding behavior"
           },
           {
             "id": "standard-template",
-            "template-description": "take the standard forwarding path"
+            "description": "take the standard forwarding path"
           }
         ]
       },
       "slice-service": [
         {
-          "service-id": "slice6",
-          "service-description": "example slice6",
+          "id": "slice6",
+          "description": "example slice6",
           "service-tags": {
             "tag-type": [
               {
                 "tag-type": "ietf-network-slice-service:service-tag-service",
-                "value": "L3"
+                "value": ["L3"]
               }
             ]
           },
           "slo-sle-template": "standard-template",
-          "status": {},
+          "status": {
+          },
           "sdps": {
             "sdp": [
               {
-                "sdp-id": "21",
+                "id": "21",
                 "node-id": "PE-A",
                 "service-match-criteria": {
                   "match-criterion": [
                     {
                       "index": 1,
                       "match-type": "ietf-network-slice-service:service-dscp-match",
-                      "value": "EF",
+                      "value": ["EF"],
                       "target-connection-group-id": "matrix6",
                       "target-connectivity-construct-id": 2
                     },
@@ -3785,36 +3687,37 @@ module ietf-network-slice-service {
                 "attachment-circuits": {
                   "attachment-circuit": [
                     {
-                      "ac-id": "ac21",
-                      "ac-description": "AC21 connected to device 21",
+                      "id": "ac21",
+                      "description": "AC21 connected to device 21",
                       "ac-node-id": "PE-A",
                       "ac-tp-id": "GigabitEthernet5/0/0/0",
-                      "ac-ip-address": "194.0.2.1",
-                      "ac-ip-prefix-length": 24,
+                      "ac-ipv4-address": "192.0.2.1",
+                      "ac-ipv4-prefix-length": 24,
                       "ac-tags": {
                         "ac-tags": [
                           {
-                            "ac-tag-type": "ietf-network-slice-service:attachment-circuit-tag-vlan-id",
-                            "value": [
-                              "100"
-                            ]
+                            "tag-type": "ietf-network-slice-service:attachment-circuit-tag-vlan-id",
+                            "value": ["100"]
                           }
                         ]
+                      },
+                      "status": {
                       }
                     }
                   ]
                 },
-                "status": {}
+                "status": {
+                }
               },
               {
-                "sdp-id": "23a",
+                "id": "23a",
                 "node-id": "PE-B",
                 "service-match-criteria": {
                   "match-criterion": [
                     {
                       "index": 1,
                       "match-type": "ietf-network-slice-service:service-dscp-match",
-                      "value": "EF",
+                      "value": ["EF"],
                       "target-connection-group-id": "matrix6",
                       "target-connectivity-construct-id": 2
                     },
@@ -3829,36 +3732,37 @@ module ietf-network-slice-service {
                 "attachment-circuits": {
                   "attachment-circuit": [
                     {
-                      "ac-id": "ac23a",
-                      "ac-description": "AC23a connected to device 23",
+                      "id": "ac23a",
+                      "description": "AC23a connected to device 23",
                       "ac-node-id": "PE-B",
                       "ac-tp-id": "GigabitEthernet8/0/0/4",
-                      "ac-ip-address": "194.0.3.1",
-                      "ac-ip-prefix-length": 24,
+                      "ac-ipv4-address": "198.51.100.1",
+                      "ac-ipv4-prefix-length": 24,
                       "ac-tags": {
                         "ac-tags": [
                           {
-                            "ac-tag-type": "ietf-network-slice-service:attachment-circuit-tag-vlan-id",
-                            "value": [
-                              "101"
-                            ]
+                            "tag-type": "ietf-network-slice-service:attachment-circuit-tag-vlan-id",
+                            "value": ["101"]
                           }
                         ]
+                      },
+                      "status": {
                       }
                     }
                   ]
                 },
-                "status": {}
+                "status": {
+                }
               },
               {
-                "sdp-id": "24",
+                "id": "24",
                 "node-id": "PE-C",
                 "service-match-criteria": {
                   "match-criterion": [
                     {
                       "index": 1,
                       "match-type": "ietf-network-slice-service:service-dscp-match",
-                      "value": "EF",
+                      "value": ["EF"],
                       "target-connection-group-id": "matrix6",
                       "target-connectivity-construct-id": 2
                     },
@@ -3873,51 +3777,38 @@ module ietf-network-slice-service {
                 "attachment-circuits": {
                   "attachment-circuit": [
                     {
-                      "ac-id": "ac24",
-                      "ac-description": "AC24 connected to device 24",
+                      "id": "ac24",
+                      "description": "AC24 connected to device 24",
                       "ac-node-id": "PE-C",
                       "ac-tp-id": "GigabitEthernet4/0/0/3",
-                      "ac-ip-address": "194.0.4.1",
-                      "ac-ip-prefix-length": 24,
+                      "ac-ipv4-address": "203.0.113.1",
+                      "ac-ipv4-prefix-length": 24,
                       "ac-tags": {
                         "ac-tags": [
                           {
-                            "ac-tag-type": "ietf-network-slice-service:attachment-circuit-tag-vlan-id",
-                            "value": [
-                              "100"
-                            ]
+                            "tag-type": "ietf-network-slice-service:attachment-circuit-tag-vlan-id",
+                            "value": ["100"]
                           }
                         ]
+                      },
+                      "status": {
                       }
                     }
                   ]
                 },
-                "status": {}
+                "status": {
+                }
               }
             ]
           },
           "connection-groups": {
             "connection-group": [
               {
-                "connection-group-id": "matrix6",
+                "id": "matrix6",
                 "connectivity-type": "ietf-vpn-common:any-to-any",
                 "connectivity-construct": [
                   {
-                    "cc-id": 1,
-                    "a2a-sdp": [
-                      {
-                        "sdp-id": "21"
-                      },
-                      {
-                        "sdp-id": "23a"
-                      },
-                      {
-                        "sdp-id": "24"
-                      }
-                    ]
-                  },
-                  {
-                    "cc-id": 2,
+                    "id": 1,
                     "a2a-sdp": [
                       {
                         "sdp-id": "21"
@@ -3929,7 +3820,25 @@ module ietf-network-slice-service {
                         "sdp-id": "24"
                       }
                     ],
-                    "slo-sle-template": "low-latency-template"
+                    "status": {
+                    }
+                  },
+                  {
+                    "id": 2,
+                    "a2a-sdp": [
+                      {
+                        "sdp-id": "21"
+                      },
+                      {
+                        "sdp-id": "23a"
+                      },
+                      {
+                        "sdp-id": "24"
+                      }
+                    ],
+                    "slo-sle-template": "low-latency-template",
+                    "status": {
+                    }
                   }
                 ]
               }
@@ -3944,20 +3853,20 @@ module ietf-network-slice-service {
       </section>
 
       <section anchor="preceding"
-               title="Example-5: An any-to-any Network Slice Service with SLO Precedence Policies">
+               title="Example-5: An A2A Network Slice Service with SLO Precedence Policies">
         <t>The following examples describes a simplified service configuration
-        of an IETF Network slice instance 'NS1' with four SDPs: SDP1, SDP2,
-        SDP3 and SDP4 with any-to-any connectivity type. All SDPs are
+        of an IETF Network slice instance "slice-7" with four SDPs: SDP1,
+        SDP2, SDP3 and SDP4 with A2A connectivity type. All SDPs are
         designated as customer-facing ports on the PE.</t>
 
-        <t>The service is realized using a single any-to-any connectivity
-        construct, and a uniform low-bandwidth slo-sle-template policy applied
-        to SDP4, SDP3, while a high-bandwidth slo-sle-template policy applied
-        to SDP1 and SDP2.</t>
+        <t>The service is realized using a single A2A connectivity construct,
+        and a uniform low-bandwidth "slo-sle-template" policy applied to SDP4,
+        SDP3, while a high-bandwidth "slo-sle-template" policy applied to SDP1
+        and SDP2.</t>
 
         <figure>
           <artwork><![CDATA[
-+--------+         192.0.1.1                        192.0.3.1
++--------+         2001:db8:0:1::1                  2001:db8:0:3::1
 |CE1     o------/  VLAN100                          VLAN100
 +--------+      |  SDP1 +------+           +------+ SDP3
                 +------o| PE A +-----------| PE C |           +--------+
@@ -3967,8 +3876,8 @@ module ietf-network-slice-service {
                             |                  |
                             |                  |
                             |                  |
-+--------+        192.0.2.1 |                  |
-|CE2     o------/ VLAN100   |                  |    192.0.4.1
++--------+  2001:db8:0:2::1 |                  |
+|CE2     o------/ VLAN100   |                  |    2001:db8:0:4::1
 +--------+      | SDP2  +---+--+           +---+--+ VLAN100
                 +------o| PE B +-----------|PE D  | SDP4      +--------+
                         |      |           |      o-----/-----o    CE4 |
@@ -3983,50 +3892,45 @@ module ietf-network-slice-service {
         "slo-sle-template": [
           {
             "id": "high-BW-template",
-            "template-description": "take the highest BW forwarding path"
+            "description": "take the highest BW forwarding path"
           },
           {
             "id": "low-BW-template",
-            "template-description": "lowest BW forwarding behavior"
+            "description": "lowest BW forwarding behavior"
           }
         ]
       },
       "slice-service": [
         {
-          "service-id": "NS1",
-          "service-description": "URLLC",
+          "id": "slice-7",
+          "description": "URLLC",
           "service-tags": {
             "tag-type": [
               {
                 "tag-type": "ietf-network-slice-service:service-tag-customer",
-                "value": [
-                  "Customer-FOO"
-                ]
+                "value": ["Customer-FOO"]
               },
               {
                 "tag-type": "ietf-network-slice-service:service-tag-service",
-                "value": [
-                  "L3"
-                ]
+                "value": ["L3"]
               }
             ]
           },
-          "status": {},
+          "status": {
+          },
           "sdps": {
             "sdp": [
               {
-                "sdp-id": "SDP1",
-                "sdp-description": "Central Office 1 at location PE-A",
+                "id": "SDP1",
+                "description": "Central Office 1 at location PE-A",
                 "node-id": "PE-A",
-                "sdp-ip": "192.0.1.1",
+                "sdp-ip-address": ["2001:db8:0:1::1"],
                 "service-match-criteria": {
                   "match-criterion": [
                     {
                       "index": 1,
                       "match-type": "ietf-network-slice-service:service-vlan-match",
-                      "value": [
-                        "100"
-                      ],
+                      "value": ["100"],
                       "target-connection-group-id": "matrix1"
                     }
                   ]
@@ -4034,80 +3938,48 @@ module ietf-network-slice-service {
                 "attachment-circuits": {
                   "attachment-circuit": [
                     {
-                      "ac-id": "AC-SDP1",
-                      "ac-description": "Device 1 to PE-A",
+                      "id": "AC-SDP1",
+                      "description": "Device 1 to PE-A",
                       "ac-node-id": "PE-A",
                       "ac-tp-id": "GigabitEthernet1/0/0/0",
-                      "ac-ip-address": "192.0.1.1",
-                      "ac-ip-prefix-length": 24,
+                      "ac-ipv6-address": "2001:db8:0:1::1",
+                      "ac-ipv6-prefix-length": 64,
                       "ac-tags": {
                         "ac-tags": [
                           {
-                            "ac-tag-type": "ietf-network-slice-service:attachment-circuit-tag-vlan-id",
-                            "value": [
-                              "100"
-                            ]
-                          }
-                        ],
-                        "ac-tag-opaque": [
-                          {
-                            "tag-name": "VRF",
-                            "value": [
-                              "FOO"
-                            ]
-                          }
-                        ]
-                      },
-                      "sdp-peering": {
-                        "protocol": [
-                          {
-                            "protocol-type": "ietf-network-slice-service:peering-protocol-bgp",
-                            "attribute": [
-                              {
-                                "attribute-type": "ietf-network-slice-service:neighbor",
-                                "value": [
-                                  "192.0.1.2"
-                                ]
-                              }
-                            ]
-                          }
-                        ],
-                        "opaque": [
-                          {
-                            "attribute-name": "color",
-                            "value": [
-                              "10"
-                            ]
+                            "tag-type": "ietf-network-slice-service:attachment-circuit-tag-vlan-id",
+                            "value": ["100"]
                           }
                         ]
                       },
                       "incoming-qos-policy": {
-                        "qos-policy-name": "QoS-Gold",
+                        "qos-policy-name": "Qos-Gold",
                         "rate-limits": {
                           "cir": "1000000",
                           "cbs": "1000",
                           "pir": "5000000",
                           "pbs": "1000"
                         }
+                      },
+                      "status": {
                       }
                     }
                   ]
                 },
-                "status": {}
+                "status": {
+                }
               },
               {
-                "sdp-id": "SDP2",
-                "sdp-description": "Central Office 2 at location PE-B",
+                "id": "SDP2",
+                "description": "Central Office 2 at location PE-B",
                 "node-id": "PE-B",
-                "sdp-ip": "192.0.2.1",
+                "sdp-ip-address": ["2001:db8:0:2::1"],
                 "service-match-criteria": {
                   "match-criterion": [
                     {
                       "index": 1,
                       "match-type": "ietf-network-slice-service:service-vlan-match",
-                      "value": [
-                        "100"
-                      ],
+                      "value": ["100"],
                       "target-connection-group-id": "matrix1"
                     }
                   ]
@@ -4115,80 +3987,48 @@ module ietf-network-slice-service {
                 "attachment-circuits": {
                   "attachment-circuit": [
                     {
-                      "ac-id": "AC-SDP2",
-                      "ac-description": "Device 2 to PE-B",
+                      "id": "AC-SDP2",
+                      "description": "Device 2 to PE-B",
                       "ac-node-id": "PE-B",
                       "ac-tp-id": "GigabitEthernet2/0/0/0",
-                      "ac-ip-address": "192.0.2.1",
-                      "ac-ip-prefix-length": 24,
+                      "ac-ipv6-address": "2001:db8:0:2::1",
+                      "ac-ipv6-prefix-length": 64,
                       "ac-tags": {
                         "ac-tags": [
                           {
-                            "ac-tag-type": "ietf-network-slice-service:attachment-circuit-tag-vlan-id",
-                            "value": [
-                              "100"
-                            ]
-                          }
-                        ],
-                        "ac-tag-opaque": [
-                          {
-                            "tag-name": "VRF",
-                            "value": [
-                              "FOO"
-                            ]
-                          }
-                        ]
-                      },
-                      "sdp-peering": {
-                        "protocol": [
-                          {
-                            "protocol-type": "ietf-network-slice-service:peering-protocol-bgp",
-                            "attribute": [
-                              {
-                                "attribute-type": "ietf-network-slice-service:neighbor",
-                                "value": [
-                                  "192.0.2.2"
-                                ]
-                              }
-                            ]
-                          }
-                        ],
-                        "opaque": [
-                          {
-                            "attribute-name": "color",
-                            "value": [
-                              "10"
-                            ]
+                            "tag-type": "ietf-network-slice-service:attachment-circuit-tag-vlan-id",
+                            "value": ["100"]
                           }
                         ]
                       },
                       "incoming-qos-policy": {
-                        "qos-policy-name": "QoS-Gold",
+                        "qos-policy-name": "Qos-Gold",
                         "rate-limits": {
                           "cir": "1000000",
                           "cbs": "1000",
                           "pir": "5000000",
                           "pbs": "1000"
                         }
+                      },
+                      "status": {
                       }
                     }
                   ]
                 },
-                "status": {}
+                "status": {
+                }
               },
               {
-                "sdp-id": "SDP3",
-                "sdp-description": "Remote Office 1 at location PE-C",
+                "id": "SDP3",
+                "description": "Remote Office 1 at location PE-C",
                 "node-id": "PE-C",
-                "sdp-ip": "192.0.3.1",
+                "sdp-ip-address": ["2001:db8:0:3::1"],
                 "service-match-criteria": {
                   "match-criterion": [
                     {
                       "index": 1,
                       "match-type": "ietf-network-slice-service:service-vlan-match",
-                      "value": [
-                        "100"
-                      ],
+                      "value": ["100"],
                       "target-connection-group-id": "matrix1"
                     }
                   ]
@@ -4196,80 +4036,48 @@ module ietf-network-slice-service {
                 "attachment-circuits": {
                   "attachment-circuit": [
                     {
-                      "ac-id": "AC-SDP3",
-                      "ac-description": "Device 3 to PE-C",
+                      "id": "AC-SDP3",
+                      "description": "Device 3 to PE-C",
                       "ac-node-id": "PE-C",
                       "ac-tp-id": "GigabitEthernet3/0/0/0",
-                      "ac-ip-address": "192.0.3.1",
-                      "ac-ip-prefix-length": 24,
+                      "ac-ipv6-address": "2001:db8:0:3::1",
+                      "ac-ipv6-prefix-length": 64,
                       "ac-tags": {
                         "ac-tags": [
                           {
-                            "ac-tag-type": "ietf-network-slice-service:attachment-circuit-tag-vlan-id",
-                            "value": [
-                              "100"
-                            ]
-                          }
-                        ],
-                        "ac-tag-opaque": [
-                          {
-                            "tag-name": "VRF",
-                            "value": [
-                              "FOO"
-                            ]
-                          }
-                        ]
-                      },
-                      "sdp-peering": {
-                        "protocol": [
-                          {
-                            "protocol-type": "ietf-network-slice-service:peering-protocol-bgp",
-                            "attribute": [
-                              {
-                                "attribute-type": "ietf-network-slice-service:neighbor",
-                                "value": [
-                                  "192.0.3.2"
-                                ]
-                              }
-                            ]
-                          }
-                        ],
-                        "opaque": [
-                          {
-                            "attribute-name": "color",
-                            "value": [
-                              "10"
-                            ]
+                            "tag-type": "ietf-network-slice-service:attachment-circuit-tag-vlan-id",
+                            "value": ["100"]
                           }
                         ]
                       },
                       "incoming-qos-policy": {
-                        "qos-policy-name": "QoS-Gold",
+                        "qos-policy-name": "Qos-Gold",
                         "rate-limits": {
                           "cir": "1000000",
                           "cbs": "1000",
                           "pir": "5000000",
                           "pbs": "1000"
                         }
+                      },
+                      "status": {
                       }
                     }
                   ]
                 },
-                "status": {}
+                "status": {
+                }
               },
               {
-                "sdp-id": "SDP4",
-                "sdp-description": "Remote Office 2 at location PE-D",
+                "id": "SDP4",
+                "description": "Remote Office 2 at location PE-D",
                 "node-id": "PE-D",
-                "sdp-ip": "192.0.4.1",
+                "sdp-ip-address": ["2001:db8:0:4::1"],
                 "service-match-criteria": {
                   "match-criterion": [
                     {
                       "index": 1,
                       "match-type": "ietf-network-slice-service:service-vlan-match",
-                      "value": [
-                        "100"
-                      ],
+                      "value": ["100"],
                       "target-connection-group-id": "matrix1"
                     }
                   ]
@@ -4277,77 +4085,47 @@ module ietf-network-slice-service {
                 "attachment-circuits": {
                   "attachment-circuit": [
                     {
-                      "ac-id": "AC-SDP4",
-                      "ac-description": "Device 4 to PE-D",
+                      "id": "AC-SDP4",
+                      "description": "Device 4 to PE-D",
                       "ac-node-id": "PE-A",
                       "ac-tp-id": "GigabitEthernet4/0/0/0",
-                      "ac-ip-address": "192.0.4.1",
-                      "ac-ip-prefix-length": 24,
+                      "ac-ipv6-address": "2001:db8:0:4::1",
+                      "ac-ipv6-prefix-length": 64,
                       "ac-tags": {
                         "ac-tags": [
                           {
-                            "ac-tag-type": "ietf-network-slice-service:attachment-circuit-tag-vlan-id",
-                            "value": [
-                              "100"
-                            ]
-                          }
-                        ],
-                        "ac-tag-opaque": [
-                          {
-                            "tag-name": "VRF",
-                            "value": [
-                              "FOO"
-                            ]
-                          }
-                        ]
-                      },
-                      "sdp-peering": {
-                        "protocol": [
-                          {
-                            "protocol-type": "ietf-network-slice-service:peering-protocol-bgp",
-                            "attribute": [
-                              {
-                                "attribute-type": "ietf-network-slice-service:neighbor",
-                                "value": [
-                                  "192.0.4.2"
-                                ]
-                              }
-                            ]
-                          }
-                        ],
-                        "opaque": [
-                          {
-                            "attribute-name": "color",
-                            "value": [
-                              "10"
-                            ]
+                            "tag-type": "ietf-network-slice-service:attachment-circuit-tag-vlan-id",
+                            "value": ["100"]
                           }
                         ]
                       },
                       "incoming-qos-policy": {
-                        "qos-policy-name": "QoS-Gold",
+                        "qos-policy-name": "Qos-Gold",
                         "rate-limits": {
                           "cir": "1000000",
                           "cbs": "1000",
                           "pir": "5000000",
                           "pbs": "1000"
                         }
+                      },
+                      "status": {
                       }
                     }
                   ]
                 },
-                "status": {}
+                "status": {
+                }
               }
             ]
           },
           "connection-groups": {
             "connection-group": [
               {
-                "connection-group-id": "matrix1",
+                "id": "matrix1",
                 "slo-sle-template": "low-BW-template",
                 "connectivity-construct": [
                   {
-                    "cc-id": 1,
+                    "id": 1,
                     "a2a-sdp": [
                       {
                         "sdp-id": "SDP1",
@@ -4363,7 +4141,9 @@ module ietf-network-slice-service {
                       {
                         "sdp-id": "SDP4"
                       }
-                    ]
+                    ],
+                    "status": {
+                    }
                   }
                 ]
               }
@@ -4377,23 +4157,26 @@ module ietf-network-slice-service {
         </figure>
       </section>
 
-      <section title="Example-6: SDP at CE, L3 any-to-any Slice Service">
+      <section title="Example-6: SDP at CE, L3 A2A Slice Service">
         <t>The following example describes a simplified service configuration
         of one IETF Network slice instances where the SDPs are located at the
         PE-facing ports on the CE:</t>
 
         <t><list style="symbols">
-            <t>IETF Network Slice 7 with SDP31 on CE Device1, SDP33 (with two
-            ACs) on Device 3 and SDP34 on Device 4, with an any-to-any
-            connectivity type. This is a L3 slice service and using the
-            uniform low-latency slo-sle-template policy between all SDPs.
-            These SDPs will also have AC eBGP peering sessions with the
-            corresponding PE elements.</t>
+            <t>IETF Network Slice 8 with SDP31 on CE Device1, SDP33 (with two
+            ACs) on Device 3 and SDP34 on Device 4, with an A2A connectivity
+            type. This is a L3 slice service and using the uniform low-latency
+            slo-sle-template policy between all SDPs. These SDPs will also
+            have AC eBGP peering sessions with the corresponding PE
+            elements.</t>
 
-            <t>This example also introduces the optional attribute of sdp-ip.
-            In this example it could be a loopback on the device. How this
-            sdp-ip is used by the NSC is out-of-scope here, but an example
-            could be it is the management interface of the device.</t>
+            <t>This example also introduces the optional attribute of
+            "sdp-ip". In this example it could be a loopback on the device.
+            How this sdp-ip is used by the NSC is out-of-scope here, but an
+            example could be it is the management interface of the device. The
+            SDP and AC details are from the perspective of the CE in this
+            example. How the CE ACs are mapped to the PE ACs are up to the NSC
+            implementation and out-of-scope in this example.</t>
           </list><list style="empty">
             <t>SDP31 ac-id=ac31, node-id=Device1, interface: GigabitEthernet0
             vlan 100</t>
@@ -4408,27 +4191,27 @@ module ietf-network-slice-service {
             vlan 100</t>
           </list><figure>
             <artwork><![CDATA[SDP31
-SDP-ip 10.1.1.1
+SDP-ip 203.0.113.1
 (Loopback)
     |
     |     192.0.2.2
     v      VLAN200      +------+
 +--------+ ac31         | PE A +---------------+
 |  CE1   o-------/-----o|      |               |                SDP34
-+--------+              +---+--+               |       SDP-ip 10.1.1.4
++--------+              +---+--+               |       SDP-ip 203.0.113.129
                             |                  |                 |
-SDP33                                                            |
-SDP-ip 101.1.3              |              +---+--+              v
-    |      192.0.3.2        |              |      |           +--------+
+SDP33                       |                  |                 |
+SDP-ip 203.0.113.65         |              +---+--+              v
+    |      192.0.2.66       |              |      |           +--------+
     v      VLAN101          |              | PE C o-----/-----o CE2    |
 +--------+ ac33a            |              +---+--+    ac34   +--------+
 |        o------/           |                  |       VLAN201
-|        |      |       +---+---+              |       198.51.101.2
+|        |      |       +---+---+              |       198.51.100.66
 |  CE3   |      +------o| PE B  +--------------+
 |        o-------/-----o|       |
 +--------+ ac33b        +-------+
            VLAN201
-           198.51.101.2
+           198.51.100.2
 
 ]]></artwork>
           </figure><figure>
@@ -4439,37 +4222,35 @@ SDP-ip 101.1.3              |              +---+--+              v
         "slo-sle-template": [
           {
             "id": "high-BW-template",
-            "template-description": "take the highest BW forwarding path"
+            "description": "take the highest BW forwarding path"
           },
           {
             "id": "low-latency-template",
-            "template-description": "lowest possible latency forwarding behavior"
+            "description": "lowest possible latency forwarding behavior"
           }
         ]
       },
       "slice-service": [
         {
-          "service-id": "slice7",
-          "service-description": "example slice7",
+          "id": "slice8",
+          "description": "slice-6",
           "service-tags": {
             "tag-type": [
               {
                 "tag-type": "ietf-network-slice-service:service-tag-service",
-                "value": [
-                  "L3"
-                ]
+                "value": ["L3"]
               }
             ]
           },
           "slo-sle-template": "low-latency-template",
-          "status": {},
+          "status": {
+          },
           "sdps": {
             "sdp": [
               {
-                "sdp-id": "31",
+                "id": "31",
                 "node-id": "Device-1",
-                "sdp-ip": "10.1.1.1",
-                "peer-sap-id": "PEA-SAP-NS-1",
+                "sdp-ip-address": ["203.0.113.1"],
                 "service-match-criteria": {
                   "match-criterion": [
                     {
@@ -4483,59 +4264,32 @@ SDP-ip 101.1.3              |              +---+--+              v
                 "attachment-circuits": {
                   "attachment-circuit": [
                     {
-                      "ac-id": "ac31",
-                      "ac-description": "AC1 connected to PE-A",
+                      "id": "ac31",
+                      "description": "AC1 connected to PE-A",
                       "ac-node-id": "Device-1",
                       "ac-tp-id": "GigabitEthernet0",
-                      "ac-ip-address": "192.0.2.2",
-                      "ac-ip-prefix-length": 24,
+                      "ac-ipv4-address": "192.0.2.2",
+                      "ac-ipv4-prefix-length": 26,
                       "ac-tags": {
                         "ac-tags": [
                           {
-                            "ac-tag-type": "ietf-network-slice-service:attachment-circuit-tag-vlan-id",
-                            "value": [
-                              "100"
-                            ]
+                            "tag-type": "ietf-network-slice-service:attachment-circuit-tag-vlan-id",
+                            "value": ["100"]
                           }
                         ]
                       },
-                      "sdp-peering": {
-                        "protocol": [
-                          {
-                            "protocol-type": "ietf-network-slice-service:peering-protocol-bgp",
-                            "attribute": [
-                              {
-                                "attribute-type": "ietf-network-slice-service:neighbor",
-                                "value": [
-                                  "192.0.2.1"
-                                ]
-                              },
-                              {
-                                "attribute-type": "ietf-network-slice-service:remote-as",
-                                "value": [
-                                  "64000"
-                                ]
-                              },
-                              {
-                                "attribute-type": "ietf-network-slice-service:local-as",
-                                "value": [
-                                  "64001"
-                                ]
-                              }
-                            ]
-                          }
-                        ]
+                      "status": {
                       }
                     }
                   ]
                 },
-                "status": {}
+                "status": {
+                }
               },
               {
-                "sdp-id": "33",
+                "id": "33",
                 "node-id": "Device-3",
-                "sdp-ip": "10.1.1.3",
-                "peer-sap-id": "PEB-SAP-NS-1",
+                "sdp-ip-address": ["203.0.113.65"],
                 "service-match-criteria": {
                   "match-criterion": [
                     {
@@ -4549,104 +4303,50 @@ SDP-ip 101.1.3              |              +---+--+              v
                 "attachment-circuits": {
                   "attachment-circuit": [
                     {
-                      "ac-id": "ac33a",
-                      "ac-description": "AC33a connected to PE-B",
+                      "id": "ac33a",
+                      "description": "AC33a connected to PE-B",
                       "ac-node-id": "Device-3",
                       "ac-tp-id": "GigabitEthernet0",
-                      "ac-ip-address": "192.0.3.2",
-                      "ac-ip-prefix-length": 24,
+                      "ac-ipv4-address": "192.0.2.66",
+                      "ac-ipv4-prefix-length": 26,
                       "ac-tags": {
                         "ac-tags": [
                           {
-                            "ac-tag-type": "ietf-network-slice-service:attachment-circuit-tag-vlan-id",
-                            "value": [
-                              "101"
-                            ]
+                            "tag-type": "ietf-network-slice-service:attachment-circuit-tag-vlan-id",
+                            "value": ["101"]
                           }
                         ]
                       },
-                      "sdp-peering": {
-                        "protocol": [
-                          {
-                            "protocol-type": "ietf-network-slice-service:peering-protocol-bgp",
-                            "attribute": [
-                              {
-                                "attribute-type": "ietf-network-slice-service:neighbor",
-                                "value": [
-                                  "192.0.3.1"
-                                ]
-                              },
-                              {
-                                "attribute-type": "ietf-network-slice-service:remote-as",
-                                "value": [
-                                  "64000"
-                                ]
-                              },
-                              {
-                                "attribute-type": "ietf-network-slice-service:local-as",
-                                "value": [
-                                  "64002"
-                                ]
-                              }
-                            ]
-                          }
-                        ]
+                      "status": {
                       }
                     },
                     {
-                      "ac-id": "ac33b",
-                      "ac-description": "AC33b connected to PE-B",
+                      "id": "ac33b",
+                      "description": "AC33b connected to PE-B",
                       "ac-node-id": "Device-3",
                       "ac-tp-id": "GigabitEthernet1",
-                      "ac-ip-address": "198.51.101.2",
-                      "ac-ip-prefix-length": 24,
+                      "ac-ipv4-address": "198.51.100.2",
+                      "ac-ipv4-prefix-length": 26,
                       "ac-tags": {
                         "ac-tags": [
                           {
-                            "ac-tag-type": "ietf-network-slice-service:attachment-circuit-tag-vlan-id",
-                            "value": [
-                              "201"
-                            ]
+                            "tag-type": "ietf-network-slice-service:attachment-circuit-tag-vlan-id",
+                            "value": ["201"]
                           }
                         ]
                       },
-                      "sdp-peering": {
-                        "protocol": [
-                          {
-                            "protocol-type": "ietf-network-slice-service:peering-protocol-bgp",
-                            "attribute": [
-                              {
-                                "attribute-type": "ietf-network-slice-service:neighbor",
-                                "value": [
-                                  "192.51.101.1"
-                                ]
-                              },
-                              {
-                                "attribute-type": "ietf-network-slice-service:remote-as",
-                                "value": [
-                                  "64000"
-                                ]
-                              },
-                              {
-                                "attribute-type": "ietf-network-slice-service:local-as",
-                                "value": [
-                                  "64002"
-                                ]
-                              }
-                            ]
-                          }
-                        ]
+                      "status": {
                       }
                     }
                   ]
                 },
-                "status": {}
+                "status": {
+                }
               },
               {
-                "sdp-id": "34",
-                "node-id": "CE2",
-                "sdp-ip": "10.1.1.4",
-                "peer-sap-id": "PEC-SAP-NS-1",
+                "id": "34",
+                "node-id": "Device-4",
+                "sdp-ip-address": ["203.0.113.129"],
                 "service-match-criteria": {
                   "match-criterion": [
                     {
@@ -4660,64 +4360,38 @@ SDP-ip 101.1.3              |              +---+--+              v
                 "attachment-circuits": {
                   "attachment-circuit": [
                     {
-                      "ac-id": "ac34",
-                      "ac-description": "AC34 connected to PE-C",
+                      "id": "ac34",
+                      "description": "AC34 connected to PE-C",
                       "ac-node-id": "Device-4",
                       "ac-tp-id": "GigabitEthernet3",
-                      "ac-ip-address": "192.0.4.2",
-                      "ac-ip-prefix-length": 24,
+                      "ac-ipv4-address": "198.51.100.66",
+                      "ac-ipv4-prefix-length": 26,
                       "ac-tags": {
                         "ac-tags": [
                           {
-                            "ac-tag-type": "ietf-network-slice-service:attachment-circuit-tag-vlan-id",
-                            "value": [
-                              "100"
-                            ]
+                            "tag-type": "ietf-network-slice-service:attachment-circuit-tag-vlan-id",
+                            "value": ["100"]
                           }
                         ]
                       },
-                      "sdp-peering": {
-                        "protocol": [
-                          {
-                            "protocol-type": "ietf-network-slice-service:peering-protocol-bgp",
-                            "attribute": [
-                              {
-                                "attribute-type": "ietf-network-slice-service:neighbor",
-                                "value": [
-                                  "192.0.4.1"
-                                ]
-                              },
-                              {
-                                "attribute-type": "ietf-network-slice-service:remote-as",
-                                "value": [
-                                  "64000"
-                                ]
-                              },
-                              {
-                                "attribute-type": "ietf-network-slice-service:local-as",
-                                "value": [
-                                  "64004"
-                                ]
-                              }
-                            ]
-                          }
-                        ]
+                      "status": {
                       }
                     }
                   ]
                 },
-                "status": {}
+                "status": {
+                }
               }
             ]
           },
           "connection-groups": {
             "connection-group": [
               {
-                "connection-group-id": "matrix1",
+                "id": "matrix1",
                 "connectivity-type": "ietf-vpn-common:any-to-any",
                 "connectivity-construct": [
                   {
-                    "cc-id": 1,
+                    "id": 1,
                     "a2a-sdp": [
                       {
                         "sdp-id": "31"
@@ -4728,7 +4402,9 @@ SDP-ip 101.1.3              |              +---+--+              v
                       {
                         "sdp-id": "34"
                       }
-                    ]
+                    ],
+                    "status": {
+                    }
                   }
                 ]
               }
@@ -4742,30 +4418,32 @@ SDP-ip 101.1.3              |              +---+--+              v
           </figure></t>
       </section>
 
-      <section title="Example-7: SDP at CE, L3 any-to-any Slice Service with Network abstraction">
+      <section title="Example-7: SDP at CE, L3 A2A Slice Service with Network Abstraction">
         <t>The following example describes a simplified service configuration
         of one IETF Network slice instances where the SDPs are located at the
         PE-facing ports on the CE.</t>
 
-        <t>In this example it is assumed that the NSC has either internal
-        circuit binding details between the CE and PE already configured or
-        has mechanisms to determine this. The NSC can use various mapping
-        mechanisms depending on the capabilities of the NSC including which
-        parameters the NSC considers as unique (this mapping is out-of-scope
-        of this document) such as using the CE device name, sdp-id, sdp-ip,
-        ac-id or the peer-sap-id to complete this circuit binding.<list
-            style="symbols">
-            <t>IETF Network Slice 9 with SDP31 on CPE Device1, SDP33 (with two
-            ACs) on Device 3 and SDP34 on Device 4, with an any-to-any
-            connectivity type. This is a L3 slice service and using the
-            uniform low-latency slo-sle-template policy between all SDPs.
-            These SDPs will also have AC eBGP peering sessions with the
-            corresponding PE elements.</t>
+        <t>In this example it is assumed that the NSC already has circuit
+        binding details between the CE and PE which were previously assigned
+        (method is out-of-scope) or the NSC has mechanisms to determine this
+        mapping. While the NSC capabilities are out-of-scope of this document,
+        the NSC may use the CE device name, "sdp-id", "sdp-ip", "ac-id" or the
+        "peer-sap-id" to complete this AC circuit binding.</t>
 
-            <t>This example also includes the optional attribute of sdp-ip. In
-            this example it could be a loopback on the device. How this sdp-ip
-            is used by the NSC is out-of-scope here, but an example could be
-            it is the management interface of the device.</t>
+        <t>We are introducing the "peer-sap-id" in this example, which in this
+        case, is an operator provided identifier that the slice requester can
+        use for the NSC to identify the service attachment point (saps) in an
+        abstracted way. How the NSC uses the "peer-sap-id" is out of scope of
+        this document, but a possible implementation would be that the NSC was
+        previously provisioned with a "peer-sap-id" to PE
+        device/interface/VLAN mapping table. Alternatively, the NSC can
+        request this mapping from an external database.</t>
+
+        <t><list style="symbols">
+            <t>IETF Network Slice 9 with SDP31 on CPE Device1, SDP33 (with two
+            ACs) on Device 3 and SDP34 on Device 4, with an A2A connectivity
+            type. This is a L3 slice service and using the uniform low-latency
+            slo-sle-template policy between all SDPs.</t>
           </list></t>
 
         <t><list style="empty">
@@ -4784,27 +4462,25 @@ SDP-ip 101.1.3              |              +---+--+              v
 
         <figure>
           <artwork><![CDATA[SDP31
-SDP-ip 10.1.1.1
-(Loopback)
+2001:db8:0:1::1
+(Loopback,etc)
     |
     |
-    v                   +------+
-+--------+ ac31         | PE A +---------------+
-|  CE1   o-------/-----o|      |               |                SDP34
-+--------+              +---+--+               |       SDP-ip 10.1.1.4
-                            |                  |                 |
-SDP32                                                            |
-SDP-ip 101.1.3              |              +---+--+              v
-    |                       |              |      |           +--------+
-    v                       |              | PE C o-----/-----o CE2    |
-+--------+ ac33a            |              +---+--+    ac34   +--------+
-|        o------/           |                  |
-|        |      |       +---+---+              |
-|  CE3   |      +------o| PE B  +--------------+
-|        o-------/-----o|       |
-+--------+ ac33b        +-------+
-
-
+    v                   +-------------------------+
++--------+ ac31         |                         |
+|Device1 o-------/-----o|sap                      |             SDP34
++--------+              |                         |       2001:db8:0:3::1
+                        |     Abstracted          |              |
+SDP33                   |   Provider Network      |              |
+2001:db8:0:2::1         |                         |              v
+    |                   |                         |           +--------+
+    v                   |                      sap|-----/-----o Device4|
++--------+ ac33a        |                         |    ac41   +--------+
+|        o------/       |                         |
+|        |      |       |                         |
+|Device3 |      +------o|sap                      |
+|        o-------/-----o|sap                      |
++--------+ ac33b        +-------------------------+
 ]]></artwork>
         </figure>
 
@@ -4818,22 +4494,18 @@ SDP-ip 101.1.3              |              +---+--+              v
         "slo-sle-template": [
           {
             "id": "high-BW-template",
-            "template-description": "take the highest BW forwarding path"
-          },
-          {
-            "id": "low-BW-template",
-            "template-description": "lowest BW forwarding behavior"
+            "description": "take the highest BW forwarding path"
           },
           {
             "id": "low-latency-template",
-            "template-description": "lowest possible latency forwarding behavior"
+            "description": "lowest possible latency forwarding behavior"
           }
         ]
       },
       "slice-service": [
         {
-          "service-id": "slice9",
-          "service-description": "example slice9",
+          "id": "slice-9",
+          "description": "example slice7",
           "service-tags": {
             "tag-type": [
               {
@@ -4848,9 +4520,9 @@ SDP-ip 101.1.3              |              +---+--+              v
           "sdps": {
             "sdp": [
               {
-                "sdp-id": "31",
+                "id": "31",
                 "node-id": "Device-1",
-                "sdp-ip": "10.1.1.1",
+                "sdp-ip-address": ["2001:db8:0:1::1"],
                 "service-match-criteria": {
                   "match-criterion": [
                     {
@@ -4863,8 +4535,12 @@ SDP-ip 101.1.3              |              +---+--+              v
                 "attachment-circuits": {
                   "attachment-circuit": [
                     {
-                      "ac-id": "ac31",
-                      "peer-sap-id": "foo.com-circuitID-12345"
+                      "id": "ac31",
+                      "sdp-peering": {
+                        "peer-sap-id": "foo.com-circuitID-12345"
+                      },
+                      "status": {
+                      }
                     }
                   ]
                 },
@@ -4872,9 +4548,9 @@ SDP-ip 101.1.3              |              +---+--+              v
                 }
               },
               {
-                "sdp-id": "33",
+                "id": "33",
                 "node-id": "Device-3",
-                "sdp-ip": "10.1.1.3",
+                "sdp-ip-address": ["2001:db8:0:2::1"],
                 "service-match-criteria": {
                   "match-criterion": [
                     {
@@ -4888,12 +4564,20 @@ SDP-ip 101.1.3              |              +---+--+              v
                 "attachment-circuits": {
                   "attachment-circuit": [
                     {
-                      "ac-id": "ac33a",
-                      "peer-sap-id": "foo.com-circuitID-67890"
+                      "id": "ac33a",
+                      "sdp-peering": {
+                        "peer-sap-id": "foo.com-circuitID-67890"
+                      },
+                      "status": {
+                      }
                     },
                     {
-                      "ac-id": "ac33b",
-                      "peer-sap-id": "foo.com-circuitID-54321ABC"
+                      "id": "ac33b",
+                      "sdp-peering": {
+                        "peer-sap-id": "foo.com-circuitID-54321ABC"
+                      },
+                      "status": {
+                      }
                     }
                   ]
                 },
@@ -4901,9 +4585,9 @@ SDP-ip 101.1.3              |              +---+--+              v
                 }
               },
               {
-                "sdp-id": "34",
+                "id": "34",
                 "node-id": "Device-4",
-                "sdp-ip": "10.1.1.4",
+                "sdp-ip-address": ["2001:db8:0:3::1"],
                 "service-match-criteria": {
                   "match-criterion": [
                     {
@@ -4916,8 +4600,12 @@ SDP-ip 101.1.3              |              +---+--+              v
                 "attachment-circuits": {
                   "attachment-circuit": [
                     {
-                      "ac-id": "ac34",
-                      "peer-sap-id": "foo.com-circuitID-9876"
+                      "id": "ac34",
+                      "sdp-peering": {
+                        "peer-sap-id": "foo.com-circuitID-9876"
+                      },
+                      "status": {
+                      }
                     }
                   ]
                 },
@@ -4929,11 +4617,11 @@ SDP-ip 101.1.3              |              +---+--+              v
           "connection-groups": {
             "connection-group": [
               {
-                "connection-group-id": "matrix1",
+                "id": "matrix1",
                 "connectivity-type": "ietf-vpn-common:any-to-any",
                 "connectivity-construct": [
                   {
-                    "cc-id": 1,
+                    "id": 1,
                     "a2a-sdp": [
                       {
                         "sdp-id": "31"
@@ -4944,7 +4632,9 @@ SDP-ip 101.1.3              |              +---+--+              v
                       {
                         "sdp-id": "34"
                       }
-                    ]
+                    ],
+                    "status": {
+                    }
                   }
                 ]
               }
@@ -4957,10 +4647,6 @@ SDP-ip 101.1.3              |              +---+--+              v
 }]]></artwork>
         </figure>
       </section>
-
-      <section title="Ancillary SDPs Example">
-        <t>TBD</t>
-      </section>
     </section>
 
     <section title="Complete Model Tree Structure">
@@ -4969,22 +4655,22 @@ SDP-ip 101.1.3              |              +---+--+              v
   +--rw network-slice-services
      +--rw slo-sle-templates
      |  +--rw slo-sle-template* [id]
-     |     +--rw id                        string
-     |     +--rw description?              string
-     |     +--rw template-ref?             leafref
-     |     +--rw service-slo-sle-policy
-     |        +--rw description?            string
-     |        +--rw metric-bounds
-     |        |  +--rw metric-bound* [metric-type]
-     |        |     +--rw metric-type          identityref
-     |        |     +--rw metric-unit          string
-     |        |     +--rw value-description?   string
-     |        |     +--rw percentile-value?    percentile
-     |        |     +--rw bound?               uint64
+     |     +--rw id              string
+     |     +--rw description?    string
+     |     +--rw template-ref?   leafref
+     |     +--rw slo-policy
+     |     |  +--rw metric-bound* [metric-type]
+     |     |  |  +--rw metric-type          identityref
+     |     |  |  +--rw metric-unit          string
+     |     |  |  +--rw value-description?   string
+     |     |  |  +--rw percentile-value?    percentile
+     |     |  |  +--rw bound?               uint64
+     |     |  +--rw availability?   identityref
+     |     |  +--rw mtu?            uint16
+     |     +--rw sle-policy
      |        +--rw security*               identityref
-     |        +--rw isolation?              identityref
+     |        +--rw isolation*              identityref
      |        +--rw max-occupancy-level?    uint8
-     |        +--rw mtu?                    uint16
      |        +--rw steering-constraints
      |           +--rw path-constraints
      |           +--rw service-function
@@ -5000,29 +4686,31 @@ SDP-ip 101.1.3              |              +---+--+              v
         |  |  +--rw slo-sle-template?         leafref
         |  +--:(custom)
         |     +--rw service-slo-sle-policy
-        |        +--rw description?            string
-        |        +--rw metric-bounds
+        |        +--rw description?   string
+        |        +--rw slo-policy
         |        |  +--rw metric-bound* [metric-type]
-        |        |     +--rw metric-type          identityref
-        |        |     +--rw metric-unit          string
-        |        |     +--rw value-description?   string
-        |        |     +--rw percentile-value?    percentile
-        |        |     +--rw bound?               uint64
-        |        +--rw security*               identityref
-        |        +--rw isolation?              identityref
-        |        +--rw max-occupancy-level?    uint8
-        |        +--rw mtu?                    uint16
-        |        +--rw steering-constraints
-        |           +--rw path-constraints
-        |           +--rw service-function
+        |        |  |  +--rw metric-type          identityref
+        |        |  |  +--rw metric-unit          string
+        |        |  |  +--rw value-description?   string
+        |        |  |  +--rw percentile-value?    percentile
+        |        |  |  +--rw bound?               uint64
+        |        |  +--rw availability?   identityref
+        |        |  +--rw mtu?            uint16
+        |        +--rw sle-policy
+        |           +--rw security*               identityref
+        |           +--rw isolation*              identityref
+        |           +--rw max-occupancy-level?    uint8
+        |           +--rw steering-constraints
+        |              +--rw path-constraints
+        |              +--rw service-function
         +--rw compute-only?                   empty
         +--rw status
         |  +--rw admin-status
-        |  |  +--rw status?         identityref
-        |  |  +--rw last-updated?   yang:date-and-time
+        |  |  +--rw status?        identityref
+        |  |  +--rw last-change?   yang:date-and-time
         |  +--ro oper-status
-        |     +--ro status?         identityref
-        |     +--ro last-updated?   yang:date-and-time
+        |     +--ro status?        identityref
+        |     +--ro last-change?   yang:date-and-time
         +--rw sdps
         |  +--rw sdp* [id]
         |     +--rw id                        string
@@ -5065,9 +4753,9 @@ SDP-ip 101.1.3              |              +---+--+              v
         |     |     +--rw pir?   uint64
         |     |     +--rw pbs?   uint64
         |     +--rw sdp-peering
-        |     |  +--rw peer-sap-id?   string
+        |     |  +--rw peer-sap-id*   string
         |     |  +--rw protocols
-        |     +--rw ac-svc-name?              string
+        |     +--rw ac-svc-name*              string
         |     +--rw attachment-circuits
         |     |  +--rw attachment-circuit* [id]
         |     |     +--rw id                       string
@@ -5109,20 +4797,18 @@ SDP-ip 101.1.3              |              +---+--+              v
         |     |     |  +--rw protocols
         |     |     +--rw status
         |     |        +--rw admin-status
-        |     |        |  +--rw status?         identityref
-        |     |        |  +--rw last-updated?
-        |     |        |          yang:date-and-time
+        |     |        |  +--rw status?        identityref
+        |     |        |  +--rw last-change?   yang:date-and-time
         |     |        +--ro oper-status
-        |     |           +--ro status?         identityref
-        |     |           +--ro last-updated?
-        |     |                   yang:date-and-time
+        |     |           +--ro status?        identityref
+        |     |           +--ro last-change?   yang:date-and-time
         |     +--rw status
         |     |  +--rw admin-status
-        |     |  |  +--rw status?         identityref
-        |     |  |  +--rw last-updated?   yang:date-and-time
+        |     |  |  +--rw status?        identityref
+        |     |  |  +--rw last-change?   yang:date-and-time
         |     |  +--ro oper-status
-        |     |     +--ro status?         identityref
-        |     |     +--ro last-updated?   yang:date-and-time
+        |     |     +--ro status?        identityref
+        |     |     +--ro last-change?   yang:date-and-time
         |     +--ro sdp-monitoring
         |        +--ro incoming-bw-value?
         |        |       te-types:te-bandwidth
@@ -5140,23 +4826,27 @@ SDP-ip 101.1.3              |              +---+--+              v
         |     |  |  +--rw slo-sle-template?            leafref
         |     |  +--:(custom)
         |     |     +--rw service-slo-sle-policy
-        |     |        +--rw description?            string
-        |     |        +--rw metric-bounds
+        |     |        +--rw description?   string
+        |     |        +--rw slo-policy
         |     |        |  +--rw metric-bound* [metric-type]
-        |     |        |     +--rw metric-type
-        |     |        |     |       identityref
-        |     |        |     +--rw metric-unit          string
-        |     |        |     +--rw value-description?   string
-        |     |        |     +--rw percentile-value?
-        |     |        |     |       percentile
-        |     |        |     +--rw bound?               uint64
-        |     |        +--rw security*               identityref
-        |     |        +--rw isolation?              identityref
-        |     |        +--rw max-occupancy-level?    uint8
-        |     |        +--rw mtu?                    uint16
-        |     |        +--rw steering-constraints
-        |     |           +--rw path-constraints
-        |     |           +--rw service-function
+        |     |        |  |  +--rw metric-type
+        |     |        |  |  |       identityref
+        |     |        |  |  +--rw metric-unit          string
+        |     |        |  |  +--rw value-description?   string
+        |     |        |  |  +--rw percentile-value?
+        |     |        |  |  |       percentile
+        |     |        |  |  +--rw bound?               uint64
+        |     |        |  +--rw availability?   identityref
+        |     |        |  +--rw mtu?            uint16
+        |     |        +--rw sle-policy
+        |     |           +--rw security*
+        |     |           |       identityref
+        |     |           +--rw isolation*
+        |     |           |       identityref
+        |     |           +--rw max-occupancy-level?    uint8
+        |     |           +--rw steering-constraints
+        |     |              +--rw path-constraints
+        |     |              +--rw service-function
         |     +--rw service-slo-sle-policy-override?
         |     |       identityref
         |     +--rw connectivity-construct* [id]
@@ -5182,65 +4872,69 @@ SDP-ip 101.1.3              |              +---+--+              v
         |     |  |           |  +--rw slo-sle-template?         leafref
         |     |  |           +--:(custom)
         |     |  |              +--rw service-slo-sle-policy
-        |     |  |                 +--rw description?
-        |     |  |                 |       string
-        |     |  |                 +--rw metric-bounds
+        |     |  |                 +--rw description?   string
+        |     |  |                 +--rw slo-policy
         |     |  |                 |  +--rw metric-bound*
-        |     |  |                 |          [metric-type]
-        |     |  |                 |     +--rw metric-type
-        |     |  |                 |     |       identityref
-        |     |  |                 |     +--rw metric-unit
-        |     |  |                 |     |       string
-        |     |  |                 |     +--rw value-description?
-        |     |  |                 |     |       string
-        |     |  |                 |     +--rw percentile-value?
-        |     |  |                 |     |       percentile
-        |     |  |                 |     +--rw bound?
-        |     |  |                 |             uint64
-        |     |  |                 +--rw security*
-        |     |  |                 |       identityref
-        |     |  |                 +--rw isolation?
-        |     |  |                 |       identityref
-        |     |  |                 +--rw max-occupancy-level?
-        |     |  |                 |       uint8
-        |     |  |                 +--rw mtu?
-        |     |  |                 |       uint16
-        |     |  |                 +--rw steering-constraints
-        |     |  |                    +--rw path-constraints
-        |     |  |                    +--rw service-function
+        |     |  |                 |  |       [metric-type]
+        |     |  |                 |  |  +--rw metric-type
+        |     |  |                 |  |  |       identityref
+        |     |  |                 |  |  +--rw metric-unit
+        |     |  |                 |  |  |       string
+        |     |  |                 |  |  +--rw value-description?
+        |     |  |                 |  |  |       string
+        |     |  |                 |  |  +--rw percentile-value?
+        |     |  |                 |  |  |       percentile
+        |     |  |                 |  |  +--rw bound?
+        |     |  |                 |  |          uint64
+        |     |  |                 |  +--rw availability?
+        |     |  |                 |  |       identityref
+        |     |  |                 |  +--rw mtu?
+        |     |  |                 |          uint16
+        |     |  |                 +--rw sle-policy
+        |     |  |                    +--rw security*
+        |     |  |                    |       identityref
+        |     |  |                    +--rw isolation*
+        |     |  |                    |       identityref
+        |     |  |                    +--rw max-occupancy-level?
+        |     |  |                    |       uint8
+        |     |  |                    +--rw steering-constraints
+        |     |  |                       +--rw path-constraints
+        |     |  |                       +--rw service-function
         |     |  +--rw (slo-sle-policy)?
         |     |  |  +--:(standard)
         |     |  |  |  +--rw slo-sle-template?              leafref
         |     |  |  +--:(custom)
         |     |  |     +--rw service-slo-sle-policy
-        |     |  |        +--rw description?            string
-        |     |  |        +--rw metric-bounds
+        |     |  |        +--rw description?   string
+        |     |  |        +--rw slo-policy
         |     |  |        |  +--rw metric-bound* [metric-type]
-        |     |  |        |     +--rw metric-type
-        |     |  |        |     |       identityref
-        |     |  |        |     +--rw metric-unit          string
-        |     |  |        |     +--rw value-description?   string
-        |     |  |        |     +--rw percentile-value?
-        |     |  |        |     |       percentile
-        |     |  |        |     +--rw bound?               uint64
-        |     |  |        +--rw security*
-        |     |  |        |       identityref
-        |     |  |        +--rw isolation?
-        |     |  |        |       identityref
-        |     |  |        +--rw max-occupancy-level?    uint8
-        |     |  |        +--rw mtu?                    uint16
-        |     |  |        +--rw steering-constraints
-        |     |  |           +--rw path-constraints
-        |     |  |           +--rw service-function
+        |     |  |        |  |  +--rw metric-type
+        |     |  |        |  |  |       identityref
+        |     |  |        |  |  +--rw metric-unit          string
+        |     |  |        |  |  +--rw value-description?   string
+        |     |  |        |  |  +--rw percentile-value?
+        |     |  |        |  |  |       percentile
+        |     |  |        |  |  +--rw bound?               uint64
+        |     |  |        |  +--rw availability?   identityref
+        |     |  |        |  +--rw mtu?            uint16
+        |     |  |        +--rw sle-policy
+        |     |  |           +--rw security*
+        |     |  |           |       identityref
+        |     |  |           +--rw isolation*
+        |     |  |           |       identityref
+        |     |  |           +--rw max-occupancy-level?    uint8
+        |     |  |           +--rw steering-constraints
+        |     |  |              +--rw path-constraints
+        |     |  |              +--rw service-function
         |     |  +--rw service-slo-sle-policy-override?
         |     |  |       identityref
         |     |  +--rw status
         |     |  |  +--rw admin-status
-        |     |  |  |  +--rw status?         identityref
-        |     |  |  |  +--rw last-updated?   yang:date-and-time
+        |     |  |  |  +--rw status?        identityref
+        |     |  |  |  +--rw last-change?   yang:date-and-time
         |     |  |  +--ro oper-status
-        |     |  |     +--ro status?         identityref
-        |     |  |     +--ro last-updated?   yang:date-and-time
+        |     |  |     +--ro status?        identityref
+        |     |  |     +--ro last-change?   yang:date-and-time
         |     |  +--ro connectivity-construct-monitoring
         |     |     +--ro one-way-min-delay?         uint32
         |     |     +--ro one-way-max-delay?         uint32
@@ -5262,6 +4956,7 @@ SDP-ip 101.1.3              |              +---+--+              v
         +--rw custom-topology-ref
            +--rw network-ref?
                    -> /nw:networks/network/network-id
+
 ]]></artwork>
       </figure>
     </section>
@@ -5277,12 +4972,12 @@ SDP-ip 101.1.3              |              +---+--+              v
       Model.</t>
 
       <t>This draft analyzes the following existing IETF models to identify
-      the gap between the IETF Network Slice service Interface
+      the gap between the IETF Network Slice Service Interface
       requirements.</t>
 
       <section title="ACTN VN Model Augmentation">
         <t>The difference between the ACTN VN model and the IETF Network Slice
-        service requirements is that the IETF Network Slice service interface
+        Service requirements is that the IETF Network Slice Service interface
         is a technology-agnostic interface, whereas the VN model is bound to
         the IETF TE Topologies. The realization of the IETF Network Slice does
         not necessarily require the slice network to support the TE
@@ -5315,14 +5010,14 @@ SDP-ip 101.1.3              |              +---+--+              v
         For example, the SLO requirement of the VN is defined through the IETF
         TE Topologies YANG model, but the TE Topologies model is related to a
         specific implementation technology. Also, VN-AP does not define
-        "service-match-criteria&ldquo; to specify a specific SDP belonging to
-        an IETF Network Slice service.</t>
+        "service-match-criteria" to specify a specific SDP belonging to an
+        IETF Network Slice Service.</t>
       </section>
 
       <section title="RFC8345 Augmentation Model">
-        <t>The difference between the IETF Network Slice service requirements
+        <t>The difference between the IETF Network Slice Service requirements
         and the IETF basic network model is that the IETF Network Slice
-        service requests abstract customer IETF Network Slices, with details
+        Service requests abstract customer IETF Network Slices, with details
         related to the slice Network hidden. But the IETF network model is
         used to describe the interconnection details of a Network. The
         customer service model does not need to provide details on the
