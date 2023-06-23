@@ -2,22 +2,22 @@ module: ietf-network-slice-service
   +--rw network-slice-services
      +--rw slo-sle-templates
      |  +--rw slo-sle-template* [id]
-     |     +--rw id                        string
-     |     +--rw description?              string
-     |     +--rw template-ref?             leafref
-     |     +--rw service-slo-sle-policy
-     |        +--rw description?            string
-     |        +--rw metric-bounds
-     |        |  +--rw metric-bound* [metric-type]
-     |        |     +--rw metric-type          identityref
-     |        |     +--rw metric-unit          string
-     |        |     +--rw value-description?   string
-     |        |     +--rw percentile-value?    percentile
-     |        |     +--rw bound?               uint64
+     |     +--rw id              string
+     |     +--rw description?    string
+     |     +--rw template-ref?   leafref
+     |     +--rw slo-policy
+     |     |  +--rw metric-bound* [metric-type]
+     |     |  |  +--rw metric-type          identityref
+     |     |  |  +--rw metric-unit          string
+     |     |  |  +--rw value-description?   string
+     |     |  |  +--rw percentile-value?    percentile
+     |     |  |  +--rw bound?               uint64
+     |     |  +--rw availability?   identityref
+     |     |  +--rw mtu?            uint16
+     |     +--rw sle-policy
      |        +--rw security*               identityref
-     |        +--rw isolation?              identityref
+     |        +--rw isolation*              identityref
      |        +--rw max-occupancy-level?    uint8
-     |        +--rw mtu?                    uint16
      |        +--rw steering-constraints
      |           +--rw path-constraints
      |           +--rw service-function
@@ -33,29 +33,31 @@ module: ietf-network-slice-service
         |  |  +--rw slo-sle-template?         leafref
         |  +--:(custom)
         |     +--rw service-slo-sle-policy
-        |        +--rw description?            string
-        |        +--rw metric-bounds
+        |        +--rw description?   string
+        |        +--rw slo-policy
         |        |  +--rw metric-bound* [metric-type]
-        |        |     +--rw metric-type          identityref
-        |        |     +--rw metric-unit          string
-        |        |     +--rw value-description?   string
-        |        |     +--rw percentile-value?    percentile
-        |        |     +--rw bound?               uint64
-        |        +--rw security*               identityref
-        |        +--rw isolation?              identityref
-        |        +--rw max-occupancy-level?    uint8
-        |        +--rw mtu?                    uint16
-        |        +--rw steering-constraints
-        |           +--rw path-constraints
-        |           +--rw service-function
+        |        |  |  +--rw metric-type          identityref
+        |        |  |  +--rw metric-unit          string
+        |        |  |  +--rw value-description?   string
+        |        |  |  +--rw percentile-value?    percentile
+        |        |  |  +--rw bound?               uint64
+        |        |  +--rw availability?   identityref
+        |        |  +--rw mtu?            uint16
+        |        +--rw sle-policy
+        |           +--rw security*               identityref
+        |           +--rw isolation*              identityref
+        |           +--rw max-occupancy-level?    uint8
+        |           +--rw steering-constraints
+        |              +--rw path-constraints
+        |              +--rw service-function
         +--rw compute-only?                   empty
         +--rw status
         |  +--rw admin-status
-        |  |  +--rw status?         identityref
-        |  |  +--rw last-updated?   yang:date-and-time
+        |  |  +--rw status?        identityref
+        |  |  +--rw last-change?   yang:date-and-time
         |  +--ro oper-status
-        |     +--ro status?         identityref
-        |     +--ro last-updated?   yang:date-and-time
+        |     +--ro status?        identityref
+        |     +--ro last-change?   yang:date-and-time
         +--rw sdps
         |  +--rw sdp* [id]
         |     +--rw id                        string
@@ -98,9 +100,9 @@ module: ietf-network-slice-service
         |     |     +--rw pir?   uint64
         |     |     +--rw pbs?   uint64
         |     +--rw sdp-peering
-        |     |  +--rw peer-sap-id?   string
+        |     |  +--rw peer-sap-id*   string
         |     |  +--rw protocols
-        |     +--rw ac-svc-name?              string
+        |     +--rw ac-svc-name*              string
         |     +--rw attachment-circuits
         |     |  +--rw attachment-circuit* [id]
         |     |     +--rw id                       string
@@ -142,20 +144,18 @@ module: ietf-network-slice-service
         |     |     |  +--rw protocols
         |     |     +--rw status
         |     |        +--rw admin-status
-        |     |        |  +--rw status?         identityref
-        |     |        |  +--rw last-updated?
-        |     |        |          yang:date-and-time
+        |     |        |  +--rw status?        identityref
+        |     |        |  +--rw last-change?   yang:date-and-time
         |     |        +--ro oper-status
-        |     |           +--ro status?         identityref
-        |     |           +--ro last-updated?
-        |     |                   yang:date-and-time
+        |     |           +--ro status?        identityref
+        |     |           +--ro last-change?   yang:date-and-time
         |     +--rw status
         |     |  +--rw admin-status
-        |     |  |  +--rw status?         identityref
-        |     |  |  +--rw last-updated?   yang:date-and-time
+        |     |  |  +--rw status?        identityref
+        |     |  |  +--rw last-change?   yang:date-and-time
         |     |  +--ro oper-status
-        |     |     +--ro status?         identityref
-        |     |     +--ro last-updated?   yang:date-and-time
+        |     |     +--ro status?        identityref
+        |     |     +--ro last-change?   yang:date-and-time
         |     +--ro sdp-monitoring
         |        +--ro incoming-bw-value?
         |        |       te-types:te-bandwidth
@@ -173,23 +173,27 @@ module: ietf-network-slice-service
         |     |  |  +--rw slo-sle-template?            leafref
         |     |  +--:(custom)
         |     |     +--rw service-slo-sle-policy
-        |     |        +--rw description?            string
-        |     |        +--rw metric-bounds
+        |     |        +--rw description?   string
+        |     |        +--rw slo-policy
         |     |        |  +--rw metric-bound* [metric-type]
-        |     |        |     +--rw metric-type
-        |     |        |     |       identityref
-        |     |        |     +--rw metric-unit          string
-        |     |        |     +--rw value-description?   string
-        |     |        |     +--rw percentile-value?
-        |     |        |     |       percentile
-        |     |        |     +--rw bound?               uint64
-        |     |        +--rw security*               identityref
-        |     |        +--rw isolation?              identityref
-        |     |        +--rw max-occupancy-level?    uint8
-        |     |        +--rw mtu?                    uint16
-        |     |        +--rw steering-constraints
-        |     |           +--rw path-constraints
-        |     |           +--rw service-function
+        |     |        |  |  +--rw metric-type
+        |     |        |  |  |       identityref
+        |     |        |  |  +--rw metric-unit          string
+        |     |        |  |  +--rw value-description?   string
+        |     |        |  |  +--rw percentile-value?
+        |     |        |  |  |       percentile
+        |     |        |  |  +--rw bound?               uint64
+        |     |        |  +--rw availability?   identityref
+        |     |        |  +--rw mtu?            uint16
+        |     |        +--rw sle-policy
+        |     |           +--rw security*
+        |     |           |       identityref
+        |     |           +--rw isolation*
+        |     |           |       identityref
+        |     |           +--rw max-occupancy-level?    uint8
+        |     |           +--rw steering-constraints
+        |     |              +--rw path-constraints
+        |     |              +--rw service-function
         |     +--rw service-slo-sle-policy-override?
         |     |       identityref
         |     +--rw connectivity-construct* [id]
@@ -215,65 +219,69 @@ module: ietf-network-slice-service
         |     |  |           |  +--rw slo-sle-template?         leafref
         |     |  |           +--:(custom)
         |     |  |              +--rw service-slo-sle-policy
-        |     |  |                 +--rw description?
-        |     |  |                 |       string
-        |     |  |                 +--rw metric-bounds
+        |     |  |                 +--rw description?   string
+        |     |  |                 +--rw slo-policy
         |     |  |                 |  +--rw metric-bound*
-        |     |  |                 |          [metric-type]
-        |     |  |                 |     +--rw metric-type
-        |     |  |                 |     |       identityref
-        |     |  |                 |     +--rw metric-unit
-        |     |  |                 |     |       string
-        |     |  |                 |     +--rw value-description?
-        |     |  |                 |     |       string
-        |     |  |                 |     +--rw percentile-value?
-        |     |  |                 |     |       percentile
-        |     |  |                 |     +--rw bound?
-        |     |  |                 |             uint64
-        |     |  |                 +--rw security*
-        |     |  |                 |       identityref
-        |     |  |                 +--rw isolation?
-        |     |  |                 |       identityref
-        |     |  |                 +--rw max-occupancy-level?
-        |     |  |                 |       uint8
-        |     |  |                 +--rw mtu?
-        |     |  |                 |       uint16
-        |     |  |                 +--rw steering-constraints
-        |     |  |                    +--rw path-constraints
-        |     |  |                    +--rw service-function
+        |     |  |                 |  |       [metric-type]
+        |     |  |                 |  |  +--rw metric-type
+        |     |  |                 |  |  |       identityref
+        |     |  |                 |  |  +--rw metric-unit
+        |     |  |                 |  |  |       string
+        |     |  |                 |  |  +--rw value-description?
+        |     |  |                 |  |  |       string
+        |     |  |                 |  |  +--rw percentile-value?
+        |     |  |                 |  |  |       percentile
+        |     |  |                 |  |  +--rw bound?
+        |     |  |                 |  |          uint64
+        |     |  |                 |  +--rw availability?
+        |     |  |                 |  |       identityref
+        |     |  |                 |  +--rw mtu?
+        |     |  |                 |          uint16
+        |     |  |                 +--rw sle-policy
+        |     |  |                    +--rw security*
+        |     |  |                    |       identityref
+        |     |  |                    +--rw isolation*
+        |     |  |                    |       identityref
+        |     |  |                    +--rw max-occupancy-level?
+        |     |  |                    |       uint8
+        |     |  |                    +--rw steering-constraints
+        |     |  |                       +--rw path-constraints
+        |     |  |                       +--rw service-function
         |     |  +--rw (slo-sle-policy)?
         |     |  |  +--:(standard)
         |     |  |  |  +--rw slo-sle-template?              leafref
         |     |  |  +--:(custom)
         |     |  |     +--rw service-slo-sle-policy
-        |     |  |        +--rw description?            string
-        |     |  |        +--rw metric-bounds
+        |     |  |        +--rw description?   string
+        |     |  |        +--rw slo-policy
         |     |  |        |  +--rw metric-bound* [metric-type]
-        |     |  |        |     +--rw metric-type
-        |     |  |        |     |       identityref
-        |     |  |        |     +--rw metric-unit          string
-        |     |  |        |     +--rw value-description?   string
-        |     |  |        |     +--rw percentile-value?
-        |     |  |        |     |       percentile
-        |     |  |        |     +--rw bound?               uint64
-        |     |  |        +--rw security*
-        |     |  |        |       identityref
-        |     |  |        +--rw isolation?
-        |     |  |        |       identityref
-        |     |  |        +--rw max-occupancy-level?    uint8
-        |     |  |        +--rw mtu?                    uint16
-        |     |  |        +--rw steering-constraints
-        |     |  |           +--rw path-constraints
-        |     |  |           +--rw service-function
+        |     |  |        |  |  +--rw metric-type
+        |     |  |        |  |  |       identityref
+        |     |  |        |  |  +--rw metric-unit          string
+        |     |  |        |  |  +--rw value-description?   string
+        |     |  |        |  |  +--rw percentile-value?
+        |     |  |        |  |  |       percentile
+        |     |  |        |  |  +--rw bound?               uint64
+        |     |  |        |  +--rw availability?   identityref
+        |     |  |        |  +--rw mtu?            uint16
+        |     |  |        +--rw sle-policy
+        |     |  |           +--rw security*
+        |     |  |           |       identityref
+        |     |  |           +--rw isolation*
+        |     |  |           |       identityref
+        |     |  |           +--rw max-occupancy-level?    uint8
+        |     |  |           +--rw steering-constraints
+        |     |  |              +--rw path-constraints
+        |     |  |              +--rw service-function
         |     |  +--rw service-slo-sle-policy-override?
         |     |  |       identityref
         |     |  +--rw status
         |     |  |  +--rw admin-status
-        |     |  |  |  +--rw status?         identityref
-        |     |  |  |  +--rw last-updated?   yang:date-and-time
+        |     |  |  |  +--rw status?        identityref
+        |     |  |  |  +--rw last-change?   yang:date-and-time
         |     |  |  +--ro oper-status
-        |     |  |     +--ro status?         identityref
-        |     |  |     +--ro last-updated?   yang:date-and-time
+        |     |  |     +--ro status?        identityref
+        |     |  |     +--ro last-change?   yang:date-and-time
         |     |  +--ro connectivity-construct-monitoring
         |     |     +--ro one-way-min-delay?         uint32
         |     |     +--ro one-way-max-delay?         uint32
