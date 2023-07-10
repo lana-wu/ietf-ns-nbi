@@ -169,6 +169,9 @@
           <t>state data</t>
         </list></t>
 
+      <t>The tree diagrams used in this document follow the notation defined
+      in <xref target="RFC8340"/>.</t>
+         
       <t>This document makes use of the terms defined in <xref
       target="RFC7950"/>.</t>
 
@@ -403,9 +406,6 @@
       <t>The "slo-sle-templates" container is used by an NSC to maintain a set
       of common network slice SLO and SLE templates that apply to one or
       several IETF Network Slice Services.</t>
-
-      <t>The tree diagrams used in this document follow the notation defined
-      in <xref target="RFC8340"/>.</t>
 
       <t>The figure below describes the overall structure of the YANG
       module:</t>
