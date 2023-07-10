@@ -111,7 +111,7 @@
       <t>This document defines a YANG data model for the IETF Network Slice
       Service. The model can be used in the IETF Network Slice Service
       interface between a customer and a provider that offers IETF Network
-      Slices.</t>
+      Slice Services.</t>
     </abstract>
   </front>
 
@@ -132,17 +132,17 @@
       the mapping between an IETF Network Slice Service and its realization is
       implementation and deployment specific.</t>
 
-      <t>The IETF Network Slice Service YANG model focuses on the requirements
+      <t>The IETF Network Slice Service Model (NSSM) focuses on the requirements
       of an IETF Network Slice Service from the point of view of the customer,
-      not how it is implemented by a provider. The module is classified as
+      not how it is implemented within a provider network. The module is classified as
       customer service model (Section 2 of <xref target="RFC8309"/>).</t>
 
       <t>The IETF Network Slice Service YANG model conforms to the Network
-      Management Datastore Architecture <xref target="RFC8342"/>.</t>
+      Management Datastore Architecture (NMDA) <xref target="RFC8342"/>.</t>
 
       <t>Editorial Note: (To be removed by RFC Editor)</t>
 
-      <t>This draft contains several placeholder values that need to be
+      <t>This document contains several placeholder values that need to be
       replaced with finalized values at the time of publication. Please apply
       the following replacements: <list style="symbols">
           <t>"XXXX" -- the assigned RFC value for this draft both in this
@@ -176,31 +176,31 @@
       target="I-D.ietf-teas-ietf-network-slices"/>:</t>
 
       <t><list style="symbols">
-          <t>Attachment Circuit (AC): See Section 3.1 <xref
+          <t>Attachment Circuit (AC): See Section 3.1 of <xref
           target="I-D.ietf-teas-ietf-network-slices"/>.</t>
 
-          <t>Connectivity Construct: See Section 2.1 and Section 3.2 <xref
+          <t>Connectivity Construct: See Sections 2.1 and 3.2 of <xref
           target="I-D.ietf-teas-ietf-network-slices"/>.</t>
 
-          <t>Customer: See Section 3.2 <xref
+          <t>Customer: See Section 3.2 of <xref
           target="I-D.ietf-teas-ietf-network-slices"/>.</t>
 
-          <t>Customer Higher-level Operation System: See Section 6.3.1 <xref
+          <t>Customer Higher-level Operation System: See Section 6.3.1 of <xref
           target="I-D.ietf-teas-ietf-network-slices"/>.</t>
 
-          <t>Service Demarcation Point (SDP): See Section 2.1 and Section 4.2
+          <t>Service Demarcation Point (SDP): See Sections 2.1 and 4.2 of
           <xref target="I-D.ietf-teas-ietf-network-slices"/>.</t>
         </list></t>
 
       <t>In addition, this document defines the following term: <list
           style="symbols">
-          <t>Connection Group: An arbitrary collection of one or more
-          connectivity constructs for administrative purposes, such as the
+          <t>Connection Group: Refers to one or more
+          connectivity constructs that are grouped for administrative purposes, such as the
           following: <list style="hanging">
-              <t>Combine multiple connectivity constructs to support the
+              <t>Combine multiple connectivity constructs to support a set of
               well-known connectivity service types, such as bidirectional
-              unicast service, multipoint-to-point (MP2P) service,
-              hub-and-spoke service etc.</t>
+              unicast service, multipoint-to-point (MP2P) service, or
+              hub-and-spoke service.</t>
 
               <t>Assign the same SLO/SLE policies to multiple connectivity
               constructs unless SLO/SLE policy is explicitly overridden at the
@@ -252,10 +252,10 @@
       Service is specified in terms of a set of SDPs, a set of one or more
       connectivity constructs between subsets of these SDPs, and a set of SLOs
       and SLEs for each SDP sending to each connectivity construct. A
-      communication type (point- to-point (P2P), point-to-multipoint (P2MP),
+      communication type (point-to-point (P2P), point-to-multipoint (P2MP),
       or any-to-any (A2A)) is specified for each connectivity construct.</t>
 
-      <t>The SDPs serve as the IETF Network Slice ingress/egress points. An
+      <t>The SDPs serve as the IETF Network Slice Service ingress/egress points. An
       SDP is identified by a unique identifier in the context of an IETF
       Network Slice Service.</t>
 
@@ -287,13 +287,13 @@
        |<----------IETF Network Slice Services------->|
        |        between endpoints SDP1 to SDP9       |
 
- CC:   Connectivity Construct
- O  : Represents Service Demarcation Point
-----: Represents Connectivity Construct
-< > : Inbound/Outbound directions
+  CC: Connectivity construct
+   O: Represents an SDP
+----: Represents connectivity construct
+< > : Inbound/outbound directions
 ]]></artwork>
         </figure>An example of IETF Network Slice Services that contain
-      multiple connectivity constructs are shown in <xref target="nss-ex2"/>.
+      multiple connectivity constructs is shown in <xref target="nss-ex2"/>.
       <figure align="center" anchor="nss-ex2"
           title="Examples of IETF Network Slice Services">
           <artwork><![CDATA[       +----------------------------------------------+
@@ -305,7 +305,7 @@
        |                                              |
        |      Slice Service 5 with 2 P2P CCs          |
        | +----------------->-----------------------+  |
- SDP14 o/                                           \ o SDP15
+ SDP14 O/                                           \ O SDP15
        |\                                           / |
        | +-----------------<-----------------------+  |
        |                                              |
@@ -315,55 +315,54 @@
 
 
  Slice Service: IETF Network Slice Service
- CC:   Connectivity Construct
- o  : Represents Service Demarcation Point
-----: Represents Connectivity Construct
-< > : Inbound/Outbound directions
+            CC: Connectivity Construct
+             O: Represents an SDP
+          ----: Represents connectivity construct
+           < >: Inbound/outbound directions
 ]]></artwork>
         </figure></t>
 
       <t>As shown in <xref target="nss-ex2"/>, the IETF Network Slice Service
       4 contains two P2P connectivity constructs between the set of SDPs. The
-      IETF network slice service 5 is a bidirectional unicast service between
+      IETF Network Slice Service 5 is a bidirectional unicast service between
       SDP14 and SDP15 that consists of two unidirectional P2P connectivity
       constructs.</t>
     </section>
 
-    <section title="IETF Network Slice Service Model Usage">
-      <t>The NSSM can be used by a provider to expose its Slice Service, and
+    <section title="IETF Network Slice Service Model (NSSM) Usage">
+      <t>The NSSM can be used by a provider to expose its IETF Network Slice Service, and
       by a customer to manage its IETF Network Slices Services (e.g., request,
-      delete, or change). The details about how service requests are handled
+      delete, or modify). The details about how service requests are handled
       by the provider, including which network operations are triggered, are
       internal to the provider. The details of the IETF Network Slices
       realization are hidden from customers.</t>
 
       <t>The IETF Network Slices are applicable to use cases, such as (but not
       limited to) network wholesale services, network infrastructure sharing
-      among operators, NFV (Network Function Virtualization) connectivity,
-      Data Center Interconnect, and 5G E2E network slice.</t>
+      among operators, Network Function Virtualization (NFV) connectivity,
+      Data Center interconnect, and 5G.</t>
 
-      <t>The IETF Network Slice Controller (NSC) is an entity that exposes the
+      <t>An IETF Network Slice Controller (NSC) is an entity that exposes the
       IETF Network Slice Service Interface to customers to manage IETF Network
-      Slice Services. Typically, the NSC receives requests from its
+      Slice Services. Typically, an NSC receives requests from its
       customer-facing interface (e.g., from a management system). During
-      service creation, this interface can carry data objects the IETF Network
-      Slice Service customer provides, describing the needed IETF network
-      slices service in terms of a set of SDPs, the associated connectivity
-      constructs and the service objectives that the customer wishes to be
+      service creation, this interface can convey data objects that the IETF Network
+      Slice Service customer provides, describing the needed IETF Network
+      Slices Service in terms of a set of SDPs, the associated connectivity
+      constructs, and the service objectives that the customer wishes to be
       fulfilled. These service requirements are then translated into
       technology-specific actions that are implemented in the underlying
       network using a network-facing interface. The details of how the IETF
       Network Slices are put into effect are out of scope for this
       document.</t>
 
-      <t>As shown in <xref target="ns-arch"/>, in all the use cases, the model
+      <t>As shown in <xref target="ns-arch"/>, in all the use cases, the NSSM
       is used by the customer's higher level operation system to communicate
-      with the NSC for life cycle management of IETF Network Slices including
-      both enablement and monitoring. For example, in the 5G E2E (End-to-end)
-      network slicing use-case the E2E network slice orchestrator acts as the
-      higher layer system to request the IETF Network Slices. The interface is
-      used to support dynamic IETF Network Slice creation and its lifecycle
-      management to facilitate end-to-end network slice services.</t>
+      with an NSC for life-cycle management of IETF Network Slice Services, including
+      both enablement and monitoring. For example, in the 5G  network slicing use-case an end-to-end orchestrator acts as the
+      higher layer system to request the IETF Network Slice Services. The interface is
+      used to support dynamic IETF Network Slice Service creation and its lifecycle
+      management to facilitate end-to-end Network Slice Services.</t>
 
       <figure anchor="ns-arch"
               title="IETF Network Slice Service Reference Architecture">
@@ -381,11 +380,11 @@
 ]]></artwork>
       </figure>
 
-      <t>Note: The model can be recursive (hierarchical mode), i.e. an NSSM
-      can map a child NSSM. As described in Section A.5 of <xref
-      target="I-D.ietf-teas-ietf-network-slices"/>, the IETF Network Slice can
+      <t>Note: The NSSM can be recursive (hierarchical mode), i.e., an NSS
+      can map a child NSS. As described in Section A.5 of <xref
+      target="I-D.ietf-teas-ietf-network-slices"/>, the IETF Network Slice Service can
       support a recursive composite architecture that allows one layer of IETF
-      network slices to be used by other layers.</t>
+      Network Slice Services to be used by other layers.</t>
     </section>
 
     <section title="IETF Network Slice Service Modeling Description">
