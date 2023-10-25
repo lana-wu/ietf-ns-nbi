@@ -106,8 +106,8 @@ module: ietf-network-slice-service
         |     +--rw attachment-circuits
         |     |  +--rw attachment-circuit* [id]
         |     |     +--rw id                       string
-        |     |     +--rw ac-svc-name?             string
         |     |     +--rw description?             string
+        |     |     +--rw ac-svc-name?             string
         |     |     +--rw ac-node-id?              string
         |     |     +--rw ac-tp-id?                string
         |     |     +--rw ac-ipv4-address?
@@ -157,11 +157,9 @@ module: ietf-network-slice-service
         |     |     +--ro status?        identityref
         |     |     +--ro last-change?   yang:date-and-time
         |     +--ro sdp-monitoring
-        |        +--ro incoming-bw-value?
-        |        |       te-types:te-bandwidth
+        |        +--ro incoming-bw-value?     uint64
         |        +--ro incoming-bw-percent    decimal64
-        |        +--ro outgoing-bw-value?
-        |        |       te-types:te-bandwidth
+        |        +--ro outgoing-bw-value?     uint64
         |        +--ro outgoing-bw-percent    decimal64
         +--rw connection-groups
         |  +--rw connection-group* [id]
@@ -300,6 +298,6 @@ module: ietf-network-slice-service
         |        +--ro two-way-max-delay?         uint32
         |        +--ro two-way-delay-variation?   uint32
         |        +--ro two-way-packet-loss?       decimal64
-        +--rw custom-topology-ref
+        +--rw custom-topology
            +--rw network-ref?
                    -> /nw:networks/network/network-id
