@@ -56,13 +56,10 @@ module ietf-network-slice-service {
      Editor: John Mullooly
           <jmullool@cisco.com>";
   description
-    "This YANG module defines a model for the IETF Network Slice
+    "This YANG module defines a model for the RFC AAAA Network Slice
      Service.
 
-     The model fully conforms to the Network Management
-     Datastore Architecture (NMDA).
-
-     Copyright (c) 2023 IETF Trust and the persons identified as
+     Copyright (c) 2024 IETF Trust and the persons identified as
      authors of the code.  All rights reserved.
 
      Redistribution and use in source and binary forms, with or
@@ -72,40 +69,41 @@ module ietf-network-slice-service {
      Relating to IETF Documents
      (https://trustee.ietf.org/license-info).
 
-     This version of this YANG module is part of RFC XXXX; see the
+     This version of this YANG module is part of RFC DDDD; see the
      RFC itself for full legal notices.";
 
-  revision 2023-12-05 {
+  revision 2024-02-17 {
     description
       "Initial revision.";
     reference
-      "RFC XXXX: A YANG Data Model for IETF Network Slice Service";
+      "RFC DDDD: A YANG Data Model for Network Slice Service";
   }
 
   /* Identities */
 
   identity service-tag-type {
     description
-      "Base identity for IETF Network Slice Service tag type.";
+      "Base identity for Network Slice Service tag type.";
   }
 
   identity service-tag-customer {
     base service-tag-type;
     description
-      "The IETF Network Slice Service customer name tag type.";
+      "The Network Slice Service customer name tag type.";
   }
 
   identity service-tag-service {
     base service-tag-type;
     description
-      "The IETF Network Slice service tag type, e.g. Layer 2 or
+      "The Network Slice Service tag type, e.g. Layer 2 or
        Layer 3 service.";
   }
 
   identity service-tag-opaque {
     base service-tag-type;
     description
-      "The IETF Network Slice Service opaque tag type.";
+      "An opaque type, which can be used for future use,
+       such as filtering of services.";
   }
 
   identity attachment-circuit-tag-type {
@@ -116,13 +114,30 @@ module ietf-network-slice-service {
   identity vlan-id {
     base attachment-circuit-tag-type;
     description
-      "Identity for VLAN ID tag type, e.g., 802.1Q dot1Q or
-       802.1ad QinQ VLAN IDs.";
+      "Identity for VLAN ID tag type, 802.1Q dot1Q.";
     reference
       "IEEE Std 802.1Q: IEEE Standard for Local and Metropolitan
                         Area Networks--Bridges and Bridged
-                        Networks
-       IEEE Std 802.1ad: IEEE Standard for Local and Metropolitan
+                        Networks";
+  }
+
+  identity cvlan-id {
+    base attachment-circuit-tag-type;
+    description
+      "Identity for C-VLAN ID tag type, 802.1ad QinQ VLAN IDs.";
+    reference
+      "IEEE Std 802.1ad: IEEE Standard for Local and Metropolitan
+                         Area Networks---Virtual Bridged Local
+                         Area Networks---Amendment 4: Provider
+                         Bridges";
+  }
+
+  identity svlan-id {
+    base attachment-circuit-tag-type;
+    description
+      "Identity for S-VLAN ID tag type, 802.1ad QinQ VLAN IDs.";
+    reference
+      "IEEE Std 802.1ad: IEEE Standard for Local and Metropolitan
                          Area Networks---Virtual Bridged Local
                          Area Networks---Amendment 4: Provider
                          Bridges";
@@ -136,21 +151,21 @@ module ietf-network-slice-service {
 
   identity service-isolation-type {
     description
-      "Base identity for IETF Network Slice Service isolation type.";
+      "Base identity for Network Slice Service isolation type.";
   }
 
   identity traffic-isolation {
     base service-isolation-type;
     description
       "Specify the requirement for separating the traffic of the
-       customer's IETF Network Slice Service from other services,
+       customer's Network Slice Service from other services,
        which may be provided by the service provider using VPN
        technologies, such as L3VPN, L2VPN, EVPN, etc.";
   }
 
   identity service-security-type {
     description
-      "Base identity for IETF Network Slice Service security type.";
+      "Base identity for Network Slice Service security type.";
   }
 
   identity authentication {
@@ -174,28 +189,28 @@ module ietf-network-slice-service {
   identity point-to-point {
     base vpn-common:vpn-topology;
     description
-      "Identity for point-to-point IETF Network Slice
+      "Identity for point-to-point Network Slice
        Service connectivity.";
   }
 
   identity point-to-multipoint {
     base vpn-common:vpn-topology;
     description
-      "Identity for point-to-multipoint IETF Network Slice
+      "Identity for point-to-multipoint Network Slice
        Service connectivity.";
   }
 
   identity multipoint-to-multipoint {
     base vpn-common:vpn-topology;
     description
-      "Identity for multipoint-to-multipoint IETF Network Slice
+      "Identity for multipoint-to-multipoint Network Slice
        Service connectivity.";
   }
 
   identity multipoint-to-point {
     base vpn-common:vpn-topology;
     description
-      "Identity for multipoint-to-point IETF Network Slice
+      "Identity for multipoint-to-point Network Slice
        Service connectivity.";
   }
 
@@ -213,7 +228,7 @@ module ietf-network-slice-service {
 
   identity service-slo-metric-type {
     description
-      "Base identity for IETF Network Slice Service SLO metric type.";
+      "Base identity for Network Slice Service SLO metric type.";
   }
 
   identity one-way-bandwidth {
@@ -380,7 +395,7 @@ module ietf-network-slice-service {
 
   identity service-match-type {
     description
-      "Base identity for IETF Network Slice Service traffic
+      "Base identity for Network Slice Service traffic
        match type.";
   }
 
@@ -521,9 +536,10 @@ module ietf-network-slice-service {
           description
             "The metric unit of the parameter. For example,
              for time units, where the options are hours, minutes,
-             seconds, milliseconds, microseconds, and nanoseconds,
+             seconds, milliseconds, microseconds, and nanoseconds;
              for bandwidth units, where the options are bps, Kbps,
-             Mbps, Gbps.";
+             Mbps, Gbps; for the packet loss rate unit,
+             the options can be percentage.";
         }
         leaf value-description {
           type string;
@@ -537,7 +553,6 @@ module ietf-network-slice-service {
         }
         leaf bound {
           type uint64;
-          default "0";
           description
             "The bound on the Slice Service connection metric.
              When set to zero, this indicates an unbounded
@@ -594,7 +609,7 @@ module ietf-network-slice-service {
           "The maximal occupancy level specifies the number of flows
            to be admitted and optionally a maximum number of
            countable resource units (e.g., IP or MAC addresses)
-           an IETF Network Slice Service can consume.";
+           a Network Slice Service can consume.";
       }
       container steering-constraints {
         description
@@ -840,11 +855,11 @@ module ietf-network-slice-service {
     uses te-packet-types:two-way-performance-metrics-packet;
   }
 
-  /* Main IETF Network Slice Services Container */
+  /* Main Network Slice Services Container */
 
   container network-slice-services {
     description
-      "Contains a list of IETF Network Slice Services";
+      "Contains a list of Network Slice Services";
     uses slice-service-template;
     list slice-service {
       key "id";
@@ -901,7 +916,8 @@ module ietf-network-slice-service {
           leaf id {
             type string;
             description
-              "Unique identifier for the referred Slice Service SDP.";
+              "The unique identifier of the SDP within the scope of
+               an NSC.";
           }
           leaf description {
             type string;
@@ -912,7 +928,8 @@ module ietf-network-slice-service {
           leaf node-id {
             type string;
             description
-              "Uniquely identifies an edge node of the SDP.";
+              "A unique identifier of an edge node of the SDP
+               within the scope of the NSC.";
           }
           leaf-list sdp-ip-address {
             type inet:ip-address;
@@ -942,8 +959,7 @@ module ietf-network-slice-service {
               leaf index {
                 type uint32;
                 description
-                  "The identifier that uniquely identifies a match
-                   criteria.";
+                  "The identifier of a match criteria.";
               }
               leaf match-type {
                 type identityref {
@@ -995,7 +1011,8 @@ module ietf-network-slice-service {
                   + "/ietf-nss:connectivity-construct/ietf-nss:id";
                 }
                 description
-                  "Reference to a Network Slice connection construct.";
+                  "Reference to a Network Slice connection
+                   construct.";
               }
             }
           }
@@ -1044,13 +1061,12 @@ module ietf-network-slice-service {
             list attachment-circuit {
               key "id";
               description
-                "The IETF Network Slice Service SDP attachment
-                 circuit related parameters.";
+                "The Network Slice Service SDP attachment circuit
+                 related parameters.";
               leaf id {
                 type string;
                 description
-                  "Uniquely identifies an attachment circuit within
-                   an NSC.";
+                  "The identifier of attachment circuit.";
               }
               leaf description {
                 type string;
@@ -1128,7 +1144,7 @@ module ietf-network-slice-service {
                     description
                       "The attachment circuit tag values.
                        For example, the tag may indicate
-                       'c-vlan' and 's-vlan'.";
+                       multiple VLAN identifiers.";
                   }
                 }
               }
@@ -1140,8 +1156,8 @@ module ietf-network-slice-service {
                   type string;
                   description
                     "Indicates a reference to the remote endpoints
-                     of an attachment circuit. This information can be
-                     used for correlation purposes, such as
+                     of an attachment circuit. This information can
+                     be used for correlation purposes, such as
                      identifying a service attachment point (SAP)
                      of a provider equipment when requesting a
                      service with CE based SDP attributes.";
